@@ -45,13 +45,13 @@ export default function Home() {
           <input 
             type="text" 
             placeholder="Describe what you saw (e.g., flowy beige linen dress)..." 
-            className="w-full bg-white rounded-full py-[16px] pl-[48px] pr-[150px] text-[14px] text-navy placeholder:text-[#aaa] outline-none shadow-sm transition-shadow focus:ring-2 ring-[#D4AF37]/50 font-sans"
+            className="w-full bg-white rounded-full py-[14px] sm:py-[16px] pl-[40px] sm:pl-[48px] pr-[64px] sm:pr-[150px] text-[13px] sm:text-[14px] text-navy placeholder:text-[#aaa] outline-none shadow-sm transition-shadow focus:ring-2 ring-[#D4AF37]/50 font-sans"
             onKeyDown={(e) => {
               if (e.key === 'Enter') navigate('/results');
             }}
           />
           <div className="absolute inset-y-0 right-1.5 flex items-center">
-            <label className="flex items-center justify-center gap-2 px-5 py-[10px] bg-accent hover:bg-[#c4a133] text-white rounded-full text-[13px] font-medium transition-colors cursor-pointer border-none shadow-sm">
+            <label className="flex items-center justify-center gap-2 px-3 sm:px-5 py-[8px] sm:py-[10px] bg-accent hover:bg-[#c4a133] text-white rounded-full text-[13px] font-medium transition-colors cursor-pointer border-none shadow-sm">
               <Upload size={14} strokeWidth={2} /> 
               <span className="hidden sm:inline">Upload photo</span>
               <input 
@@ -75,7 +75,7 @@ export default function Home() {
       <main className="px-5 md:px-12 py-10 max-w-7xl mx-auto w-full">
         {/* Shop Items Tabs */}
         <div className="text-[15px] font-medium text-text mb-3.5 font-sans">Shop for items you like</div>
-        <div className="flex gap-2 mb-5">
+        <div className="flex overflow-x-auto gap-2 mb-5 hide-scrollbar whitespace-nowrap pb-1">
           {["Neutral fashion", "Women's fashion", "Men's fashion"].map(t => (
             <button 
               key={t}
@@ -151,7 +151,7 @@ export default function Home() {
         </div>
 
         {/* Promo */}
-        <div className="bg-navy rounded-[20px] p-10 text-center mb-12 relative overflow-hidden">
+        <div className="bg-navy rounded-[20px] p-6 sm:p-10 text-center mb-12 relative overflow-hidden">
           <div className="absolute top-[-60px] right-[-60px] w-[240px] h-[240px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(212,175,55,0.2) 0%, transparent 70%)' }}></div>
           <div className="text-[11px] text-white/45 mb-2 tracking-[1px] font-sans">US$3.99 / month</div>
           <h3 className="font-serif text-[30px] font-medium text-white mb-2">Exclusive coupons & discounts.</h3>
@@ -186,7 +186,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-bordercolor px-5 md:px-12 py-7 flex flex-col md:flex-row items-center justify-between bg-card gap-3.5 font-sans">
         <div className="font-serif text-[22px] font-semibold text-navy">fi<span className="text-accent">f</span>y</div>
-        <div className="flex gap-5">
+        <div className="flex flex-wrap justify-center gap-4 sm:gap-5">
           {['About', 'Privacy', 'Terms', 'Contact'].map(l => (
             <a key={l} href="#" className="text-[12px] text-muted hover:text-navy-2 no-underline">{l}</a>
           ))}

@@ -30,6 +30,7 @@ TARGET_SITES = {
     "zara.com":     "https://www.zara.com/us/en/woman-dresses-l1066.html",
     "hm.com":       "https://www2.hm.com/en_us/women/products/dresses.html",
     "uniqlo.com":   "https://www.uniqlo.com/us/en/women/dresses",
+    "kandyselection.lk": "https://www.kandyselection.lk/category/...",
     "zalando.com":  "https://www.zalando.co.uk/womens-clothing-dresses/",
 }
 
