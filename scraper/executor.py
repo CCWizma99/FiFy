@@ -14,6 +14,7 @@ Images are downloaded into memory only — never written to disk.
 import asyncio
 import hashlib
 from datetime import datetime, timezone
+from pathlib import Path
 from urllib.parse import urljoin
 
 from playwright.async_api import async_playwright
@@ -104,7 +105,7 @@ async def _fetch_html_samples(listing_url: str) -> tuple[str, str, str, str]:
         # Wait for actual products to hydrate in the DOM before capturing HTML
         # This is critical for Next.js sites where the product grid is client-side rendered
         try:
-            await page.wait_for_selector("a[href*='/product/']", timeout=25000)
+            await page.wait_for_selector("a[href*='product']", timeout=25000)
             logger.info("Product links detected in DOM — page fully hydrated.")
         except Exception:
             logger.warning("Could not confirm product hydration. HTML may be incomplete.")
@@ -128,7 +129,7 @@ async def _fetch_html_samples(listing_url: str) -> tuple[str, str, str, str]:
             
             # Fallback: traverse from product link to its closest container
             if not card_html:
-                links = await page.query_selector_all("a[href*='/product/']")
+                links = await page.query_selector_all("a[href*='product']")
                 if links:
                     parent_html = await links[0].evaluate(
                         "el => (el.closest('li') || el.closest('article') || el.closest('div[class]') || el.parentElement)?.outerHTML || ''"
@@ -147,11 +148,11 @@ async def _fetch_html_samples(listing_url: str) -> tuple[str, str, str, str]:
 
         # NOW navigate to a detail page for extra context
         logger.info("Searching for first product link to get sample detail page…")
-        all_links = await page.query_selector_all("a[href*='/product/']")
+        all_links = await page.query_selector_all("a[href*='product']")
         first_link = None
         for link in all_links:
             href = await link.get_attribute("href")
-            if href and "/product/" in href:
+            if href and "product" in href:
                 first_link = link
                 break
 
@@ -194,7 +195,7 @@ async def _scrape_with_config(config: dict, site_domain: str, listing_url: str) 
             
             # Wait for products to hydrate (Next.js renders client-side after networkidle)
             try:
-                await page.wait_for_selector("a[href*='/product/']", timeout=25000)
+                await page.wait_for_selector("a[href*='product']", timeout=25000)
                 logger.info("Product links confirmed in DOM.")
             except Exception:
                 logger.warning(f"Timeout waiting for product links on page {page_num}. Trying anyway.")

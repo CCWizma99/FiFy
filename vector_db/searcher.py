@@ -23,7 +23,7 @@ def search_by_vector(
     Returns a list of dicts: {id, score, payload}.
     """
     client = get_client()
-    qdrant_filter = _build_filter(filters)
+    qdrant_filter = build_filter(filters)
 
     results = client.search(
         collection_name=collection,
@@ -40,17 +40,17 @@ def search_by_vector(
     ]
 
 
-def _build_filter(filters: dict) -> Filter | None:
+def build_filter(filters: dict) -> Filter | None:
     if not filters:
         return None
 
     conditions = []
 
-    if "category" in filters:
+    if filters.get("category"):
         conditions.append(FieldCondition(key="category", match=MatchValue(value=filters["category"])))
-    if "gender" in filters:
+    if filters.get("gender"):
         conditions.append(FieldCondition(key="gender", match=MatchValue(value=filters["gender"])))
-    if "min_price" in filters or "max_price" in filters:
+    if filters.get("min_price") is not None or filters.get("max_price") is not None:
         conditions.append(
             FieldCondition(
                 key="price",

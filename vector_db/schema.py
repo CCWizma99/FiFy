@@ -39,3 +39,9 @@ def create_collection(recreate: bool = False) -> None:
         }
     )
     logger.info("Created Qdrant collection '%s' with image+text named vectors.", collection)
+
+    # Add payload indexes for filtering
+    client.create_payload_index(collection, field_name="category", field_schema="keyword")
+    client.create_payload_index(collection, field_name="gender", field_schema="keyword")
+    client.create_payload_index(collection, field_name="price", field_schema="float")
+    logger.info("Created payload indexes for 'category', 'gender', and 'price'.")

@@ -109,7 +109,7 @@ def _sanitize_fields(fields: dict) -> dict:
         # Ban CSS4 pseudo-classes that Playwright's query_selector doesn't support
         if any(bad in selector for bad in [":has(", ":is(", ":has-text(", ":contains("]):
             if key == "product_url":
-                sanitized[key] = "a[href*='/product/']"
+                sanitized[key] = "a[href*='product']"
                 logger.warning(f"Replaced unsupported pseudo-class in '{key}': '{selector}' → '{sanitized[key]}'")
             else:
                 sanitized[key] = selector.split(":")[0] or selector  # Strip the pseudo-class

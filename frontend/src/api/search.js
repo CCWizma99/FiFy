@@ -40,3 +40,34 @@ export async function searchByText(query, filters = {}) {
   }
   return res.json();
 }
+/**
+ * Fetch a single product by ID.
+ * @param {string} id
+ */
+export async function getProductById(id) {
+  const res = await fetch(`${API_BASE}/products/${id}`);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch product ${id}`);
+  }
+  return res.json();
+}
+/**
+ * Fetch a list of products for the home page.
+ */
+export async function getAllProducts(limit = 8, filters = {}) {
+  const params = new URLSearchParams({ limit });
+  if (filters.category) params.append("category", filters.category);
+  if (filters.gender) params.append("gender", filters.gender);
+
+  const res = await fetch(`${API_BASE}/products/?${params.toString()}`);
+  if (!res.ok) throw new Error("Failed to fetch products");
+  return res.json();
+}
+
+/**
+ * Return a proxied image URL to avoid hotlinking.
+ */
+export function getProxyImageUrl(originalUrl) {
+  if (!originalUrl) return "";
+  return `${API_BASE}/products/proxy-image?url=${encodeURIComponent(originalUrl)}`;
+}

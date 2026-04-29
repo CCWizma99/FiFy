@@ -32,7 +32,7 @@ SINGLE PRODUCT CARD HTML (THE SOURCE OF TRUTH FOR FIELD SELECTORS):
 INSTRUCTIONS:
 1. Extract the 'product_card_selector' from the outermost element of the CARD HTML.
 2. Extract 'name', 'price', 'image_url', and 'product_url' selectors from WITHIN that card.
-3. For 'product_url', find the <a> tag. Use "a" or "a[href*='/product/']". DO NOT USE :has().
+3. For 'product_url', find the <a> tag. Use "a" or "a[href*='product']". DO NOT USE :has().
 4. For 'listing_url_pattern', find the URL of the current product grid.
 
 Return ONLY this JSON:

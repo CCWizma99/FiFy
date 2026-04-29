@@ -27,7 +27,6 @@ export default function ScraperDashboard() {
   const [refreshing, setRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState("overview"); // "overview" | "history" | "failures"
   
-  // New site form state
   const [showAddForm, setShowAddForm] = useState(false);
   const [newSite, setNewSite] = useState({ domain: "", listing_url: "" });
 
@@ -54,7 +53,7 @@ export default function ScraperDashboard() {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(() => fetchData(), 30000); // Auto refresh every 30s
+    const interval = setInterval(() => fetchData(), 30000);
     return () => clearInterval(interval);
   }, [fetchData]);
 
@@ -81,26 +80,25 @@ export default function ScraperDashboard() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 animate-pulse">
-        <Activity className="w-12 h-12 text-brand-400 mb-4 animate-spin-slow" />
-        <p className="text-zinc-500 font-medium">Loading analytics engine...</p>
+      <div className="flex flex-col items-center justify-center py-32 animate-pulse bg-light">
+        <Activity className="w-12 h-12 text-accent mb-4 animate-spin" strokeWidth={1.5} />
+        <p className="text-muted font-serif italic text-lg">Initializing fashion engine...</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 animate-fade-in">
-      {/* ── Header & Tabs ─────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="flex-1 bg-light px-5 md:px-12 py-10 space-y-12">
+      {/* ── Header & Navigation ─────────────────────────────────── */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-bordercolor pb-8">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <LayoutDashboard className="w-6 h-6 text-brand-400" />
-            Scraper Analytics
-          </h2>
-          <p className="text-sm text-zinc-500">Monitor and manage the ingestion pipeline</p>
+          <h1 className="text-4xl md:text-5xl font-serif font-semibold text-navy tracking-tight mb-2">
+            Scraper <span className="text-accent italic font-light">Analytics</span>
+          </h1>
+          <p className="text-muted font-sans text-sm tracking-wide uppercase">Monitor and manage the ingestion pipeline</p>
         </div>
 
-        <div className="flex items-center gap-2 bg-white/5 p-1 rounded-xl w-fit">
+        <div className="flex items-center gap-1 bg-white border border-bordercolor p-1 rounded-full shadow-sm">
           {[
             { id: "overview", label: "Overview", icon: BarChart3 },
             { id: "history",  label: "History",  icon: History },
@@ -109,21 +107,21 @@ export default function ScraperDashboard() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-medium transition-all ${
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-bold transition-all ${
                 activeTab === tab.id 
-                  ? "bg-brand-500 text-white shadow-lg shadow-brand-500/20" 
-                  : "text-zinc-400 hover:text-zinc-200 hover:bg-white/5"
+                  ? "bg-navy text-white shadow-md" 
+                  : "text-muted hover:text-navy hover:bg-light"
               }`}
             >
               <tab.icon className="w-3.5 h-3.5" />
               {tab.label}
             </button>
           ))}
-          <div className="w-px h-4 bg-white/10 mx-1" />
+          <div className="w-px h-4 bg-bordercolor mx-2" />
           <button 
             onClick={() => fetchData(true)}
             disabled={refreshing}
-            className="p-2 text-zinc-500 hover:text-brand-400 transition-colors disabled:opacity-50"
+            className="p-2.5 text-muted hover:text-accent transition-colors disabled:opacity-50"
           >
             <RefreshCcw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
           </button>
@@ -137,53 +135,50 @@ export default function ScraperDashboard() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="space-y-8"
+            className="space-y-12"
           >
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               <StatCard 
                 label="Total Products" 
                 value={stats?.total_products || 0} 
                 icon={Database}
-                sub={`Active: ${stats?.active_products || 0}`}
-                color="brand"
+                sub={`${stats?.active_products || 0} Active`}
               />
               <StatCard 
                 label="Success Rate" 
                 value={`${stats?.success_rate || 0}%`} 
                 icon={CheckCircle2}
                 sub="Last 50 jobs"
-                color="green"
               />
               <StatCard 
                 label="Dead Letters" 
                 value={stats?.failed_products_count || 0} 
                 icon={AlertCircle}
                 sub="Requires review"
-                color="red"
+                isAlert={stats?.failed_products_count > 0}
               />
               <StatCard 
                 label="Total Jobs" 
                 value={stats?.total_jobs || 0} 
                 icon={Clock}
                 sub="Lifetime runs"
-                color="purple"
               />
             </div>
 
-            {/* Site Management */}
-            <div className="glass rounded-3xl p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold flex items-center gap-2">
-                  <Activity className="w-5 h-5 text-brand-400" />
-                  Target Site Control
-                </h3>
+            {/* Site Management Section */}
+            <section>
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-2xl font-serif font-semibold text-navy flex items-center gap-3">
+                  <Activity className="w-6 h-6 text-accent" />
+                  Target Sites
+                </h2>
                 <button 
                   onClick={() => setShowAddForm(!showAddForm)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-brand-500/10 text-brand-400 hover:bg-brand-500 hover:text-white transition-all text-xs font-bold"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent text-white hover:bg-navy transition-all text-xs font-bold shadow-lg shadow-accent/20"
                 >
-                  <Plus className="w-3.5 h-3.5" />
-                  Add Site
+                  <Plus className="w-4 h-4" />
+                  Register New Site
                 </button>
               </div>
 
@@ -194,124 +189,126 @@ export default function ScraperDashboard() {
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     onSubmit={handleAddSite}
-                    className="mb-8 p-6 rounded-2xl bg-white/5 border border-brand-500/20 overflow-hidden"
+                    className="mb-10 p-8 rounded-3xl bg-white border border-accent/20 shadow-xl shadow-accent/5 overflow-hidden"
                   >
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                       <div>
-                        <label className="block text-[10px] uppercase tracking-wider text-zinc-500 mb-1.5 font-bold">Domain (e.g. nike.com)</label>
+                        <label className="block text-[11px] uppercase tracking-widest text-muted mb-2 font-bold">Domain (e.g. vogue.com)</label>
                         <input 
                           required
                           type="text" 
                           placeholder="nike.com"
-                          className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:border-brand-500 outline-none transition-colors"
+                          className="w-full bg-light border border-bordercolor rounded-2xl px-5 py-3.5 text-sm focus:border-accent outline-none transition-all font-sans"
                           value={newSite.domain}
                           onChange={e => setNewSite({...newSite, domain: e.target.value.toLowerCase()})}
                         />
                       </div>
                       <div>
-                        <label className="block text-[10px] uppercase tracking-wider text-zinc-500 mb-1.5 font-bold">Listing URL (Search Page)</label>
+                        <label className="block text-[11px] uppercase tracking-widest text-muted mb-2 font-bold">Listing URL (Source)</label>
                         <input 
                           required
                           type="url" 
                           placeholder="https://..."
-                          className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:border-brand-500 outline-none transition-colors"
+                          className="w-full bg-light border border-bordercolor rounded-2xl px-5 py-3.5 text-sm focus:border-accent outline-none transition-all font-sans"
                           value={newSite.listing_url}
                           onChange={e => setNewSite({...newSite, listing_url: e.target.value})}
                         />
                       </div>
                     </div>
-                    <div className="flex justify-end gap-3">
+                    <div className="flex justify-end gap-4">
                       <button 
                         type="button"
                         onClick={() => setShowAddForm(false)}
-                        className="px-4 py-2 text-xs font-medium text-zinc-400 hover:text-zinc-200 transition-colors"
+                        className="px-6 py-3 text-xs font-bold text-muted hover:text-navy transition-colors"
                       >
                         Cancel
                       </button>
                       <button 
                         type="submit"
-                        className="px-6 py-2 bg-brand-500 text-white rounded-lg text-xs font-bold shadow-lg shadow-brand-500/20 hover:shadow-brand-500/40 transition-all"
+                        className="px-8 py-3 bg-navy text-white rounded-full text-xs font-bold shadow-xl hover:bg-accent transition-all"
                       >
-                        Register Site
+                        Add to Ingestion Engine
                       </button>
                     </div>
                   </motion.form>
                 )}
               </AnimatePresence>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {sites.map((site) => {
                   const lastJob = jobs.find(j => j.site === site.domain);
                   return (
-                    <div key={site.domain} className="p-4 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-between group hover:bg-white/[0.07] transition-all">
+                    <div key={site.domain} className="bg-white p-6 rounded-3xl border border-bordercolor shadow-sm hover:shadow-md transition-all group flex items-center justify-between">
                       <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                          <Globe className="w-3 h-3 text-zinc-500" />
-                          <p className="font-medium text-sm truncate">{site.domain}</p>
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 rounded-xl bg-light text-muted group-hover:text-accent group-hover:bg-accent/5 transition-all">
+                            <Globe className="w-4 h-4" />
+                          </div>
+                          <p className="font-bold text-navy truncate">{site.domain}</p>
                         </div>
-                        <p className="text-[10px] text-zinc-500 mt-1 uppercase tracking-wider">
-                          {lastJob ? `Last Scraped: ${new Date(lastJob.started_at).toLocaleDateString()}` : 'Never run'}
+                        <p className="text-[10px] text-muted mt-2 uppercase tracking-widest font-sans">
+                          {lastJob ? `Last Run: ${new Date(lastJob.started_at).toLocaleDateString()}` : 'No Activity'}
                         </p>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         <a 
                           href={site.listing_url} 
                           target="_blank" 
                           rel="noreferrer"
-                          className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-zinc-500 hover:text-zinc-200 hover:bg-white/10 transition-all"
+                          className="w-10 h-10 rounded-full border border-bordercolor flex items-center justify-center text-muted hover:text-navy hover:bg-light transition-all"
                           title="Open listing URL"
                         >
-                          <ExternalLink className="w-3.5 h-3.5" />
+                          <ExternalLink className="w-4 h-4" />
                         </a>
                         <button 
                           onClick={() => handleTrigger(site.domain)}
-                          className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-brand-500 hover:text-white transition-all group-hover:scale-110 shadow-lg"
+                          className="w-10 h-10 rounded-full bg-navy flex items-center justify-center text-white hover:bg-accent transition-all shadow-lg shadow-navy/10"
                         >
-                          <Play className="w-3.5 h-3.5 fill-current" />
+                          <Play className="w-4 h-4 fill-current ml-0.5" />
                         </button>
                       </div>
                     </div>
                   );
                 })}
               </div>
-            </div>
+            </section>
 
-            {/* Quick Job View */}
-            <div className="glass rounded-3xl p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold flex items-center gap-2">
-                  <History className="w-5 h-5 text-brand-400" />
-                  Recent Activity
-                </h3>
-                <button onClick={() => setActiveTab("history")} className="text-xs text-brand-400 hover:underline">View all</button>
+            {/* Recent Activity Section */}
+            <section className="bg-white rounded-[40px] p-8 border border-bordercolor shadow-sm">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-2xl font-serif font-semibold text-navy flex items-center gap-3">
+                  <History className="w-6 h-6 text-accent" />
+                  Recent Pipeline Activity
+                </h2>
+                <button onClick={() => setActiveTab("history")} className="text-xs font-bold text-accent hover:underline uppercase tracking-widest">Explore all jobs</button>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="text-zinc-500 text-[10px] uppercase tracking-wider border-b border-white/5">
-                      <th className="pb-3 pl-2">Site</th>
-                      <th className="pb-3">Started</th>
-                      <th className="pb-3">Status</th>
-                      <th className="pb-3 text-right pr-2">Scraped</th>
+                    <tr className="text-muted text-[10px] uppercase tracking-[0.2em] border-b border-bordercolor">
+                      <th className="pb-4 pl-2 font-black">Site</th>
+                      <th className="pb-4 font-black">Started</th>
+                      <th className="pb-4 font-black">Status</th>
+                      <th className="pb-4 text-right pr-2 font-black">Scraped</th>
                     </tr>
                   </thead>
                   <tbody className="text-sm">
                     {jobs.slice(0, 5).map((job) => (
-                      <tr key={job.id} className="border-b border-white/5 hover:bg-white/5 transition-colors group">
-                        <td className="py-4 pl-2 font-medium">{job.site}</td>
-                        <td className="py-4 text-zinc-400 text-xs">
+                      <tr key={job.id} className="border-b border-bordercolor/50 hover:bg-light/30 transition-colors group">
+                        <td className="py-5 pl-2 font-bold text-navy">{job.site}</td>
+                        <td className="py-5 text-muted text-xs">
                           {new Date(job.started_at).toLocaleString([], { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' })}
                         </td>
-                        <td className="py-4">
+                        <td className="py-5">
                           <StatusBadge status={job.status} />
                         </td>
-                        <td className="py-4 text-right pr-2 font-mono text-xs">{job.products_scraped}</td>
+                        <td className="py-5 text-right pr-2 font-sans font-medium text-navy">{job.products_scraped}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-            </div>
+            </section>
           </motion.div>
         )}
 
@@ -321,18 +318,18 @@ export default function ScraperDashboard() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="glass rounded-3xl p-6"
+            className="bg-white rounded-[40px] p-10 border border-bordercolor shadow-sm"
           >
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="text-zinc-500 text-[10px] uppercase tracking-wider border-b border-white/5">
-                    <th className="pb-3 pl-2">Job ID</th>
-                    <th className="pb-3">Site</th>
-                    <th className="pb-3">Started</th>
-                    <th className="pb-3">Duration</th>
-                    <th className="pb-3">Status</th>
-                    <th className="pb-3 text-right pr-2">Products</th>
+                  <tr className="text-muted text-[10px] uppercase tracking-[0.2em] border-b border-bordercolor">
+                    <th className="pb-6 pl-2 font-black">Job ID</th>
+                    <th className="pb-6 font-black">Site</th>
+                    <th className="pb-6 font-black">Started</th>
+                    <th className="pb-6 font-black">Duration</th>
+                    <th className="pb-6 font-black">Status</th>
+                    <th className="pb-6 text-right pr-2 font-black">Products</th>
                   </tr>
                 </thead>
                 <tbody className="text-sm">
@@ -341,24 +338,24 @@ export default function ScraperDashboard() {
                       ? Math.round((new Date(job.finished_at) - new Date(job.started_at)) / 1000)
                       : null;
                     return (
-                      <tr key={job.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                        <td className="py-4 pl-2 text-zinc-500 font-mono text-[10px]">#{job.id}</td>
-                        <td className="py-4 font-medium">{job.site}</td>
-                        <td className="py-4 text-zinc-400 text-xs">
+                      <tr key={job.id} className="border-b border-bordercolor/50 hover:bg-light/30 transition-colors">
+                        <td className="py-5 pl-2 text-muted font-sans text-[10px]">#{job.id}</td>
+                        <td className="py-5 font-bold text-navy">{job.site}</td>
+                        <td className="py-5 text-muted text-xs">
                           {new Date(job.started_at).toLocaleString()}
                         </td>
-                        <td className="py-4 text-zinc-500 text-xs">
+                        <td className="py-5 text-muted text-xs font-medium">
                           {duration ? `${duration}s` : job.status === 'running' ? '—' : 'n/a'}
                         </td>
-                        <td className="py-4">
+                        <td className="py-5">
                           <StatusBadge status={job.status} />
                           {job.error_message && (
-                            <p className="text-[10px] text-red-400 mt-1 max-w-[200px] truncate" title={job.error_message}>
+                            <p className="text-[10px] text-red-500 mt-2 max-w-[240px] leading-relaxed italic" title={job.error_message}>
                               {job.error_message}
                             </p>
                           )}
                         </td>
-                        <td className="py-4 text-right pr-2 font-mono text-xs">{job.products_scraped}</td>
+                        <td className="py-5 text-right pr-2 font-bold text-navy">{job.products_scraped}</td>
                       </tr>
                     );
                   })}
@@ -374,39 +371,41 @@ export default function ScraperDashboard() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="space-y-4"
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
           >
             {deadLetters.length === 0 ? (
-              <div className="glass rounded-3xl p-12 text-center">
-                <CheckCircle2 className="w-12 h-12 text-green-400 mx-auto mb-4 opacity-50" />
-                <p className="text-zinc-400">No failed products detected. The pipeline is healthy!</p>
+              <div className="col-span-full bg-white rounded-[40px] p-24 text-center border border-bordercolor shadow-sm">
+                <CheckCircle2 className="w-16 h-16 text-green-500/30 mx-auto mb-6" />
+                <h3 className="text-2xl font-serif font-semibold text-navy mb-2">Immaculate Pipeline</h3>
+                <p className="text-muted">No ingestion failures detected. Your data stream is perfectly curated.</p>
               </div>
             ) : (
               deadLetters.map((entry, i) => (
-                <div key={i} className="glass rounded-2xl p-4 flex flex-col sm:flex-row gap-4 items-start border-l-4 border-red-500/50">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[10px] font-bold uppercase tracking-tighter px-1.5 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20">
+                <div key={i} className="bg-white rounded-3xl p-6 flex flex-col gap-4 items-start border border-bordercolor hover:border-red-200 transition-all shadow-sm group">
+                  <div className="w-full flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full bg-red-50 text-red-600 border border-red-100">
                         {entry.source_site}
                       </span>
-                      <span className="text-[10px] text-zinc-500">
+                      <span className="text-[10px] text-muted font-sans tracking-wide">
                         {new Date(entry.timestamp).toLocaleString()}
                       </span>
                     </div>
-                    <p className="text-xs text-zinc-300 font-medium mb-1 truncate" title={entry.product_url}>
+                    <p className="text-sm text-navy font-bold mb-2 truncate group-hover:text-red-600 transition-colors" title={entry.product_url}>
                       {entry.product_url}
                     </p>
-                    <p className="text-[11px] text-red-400/80 leading-relaxed">
-                      Reason: {entry.reason}
-                    </p>
+                    <div className="p-4 rounded-2xl bg-red-50/30 border border-red-50 text-[12px] text-red-600/80 leading-relaxed font-sans">
+                      <span className="font-black uppercase text-[9px] block mb-1">Issue Detected</span>
+                      {entry.reason}
+                    </div>
                   </div>
                   <a 
                     href={entry.product_url} 
                     target="_blank" 
                     rel="noreferrer"
-                    className="shrink-0 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-[10px] text-zinc-400 hover:text-zinc-200 transition-all"
+                    className="w-full text-center py-3 rounded-full bg-light hover:bg-navy hover:text-white text-xs font-black transition-all uppercase tracking-widest"
                   >
-                    Inspect Link
+                    Resolve in browser
                   </a>
                 </div>
               ))
@@ -418,25 +417,18 @@ export default function ScraperDashboard() {
   );
 }
 
-function StatCard({ label, value, icon: Icon, sub, color }) {
-  const colorMap = {
-    brand: "text-brand-400 bg-brand-500/10 border-brand-500/20",
-    green: "text-green-400 bg-green-500/10 border-green-500/20",
-    red: "text-red-400 bg-red-500/10 border-red-500/20",
-    purple: "text-purple-400 bg-purple-500/10 border-purple-500/20",
-  };
-
+function StatCard({ label, value, icon: Icon, sub, isAlert }) {
   return (
-    <div className="glass rounded-2xl p-5 hover:border-white/10 transition-colors group">
-      <div className="flex items-center justify-between mb-4">
-        <div className={`p-2 rounded-xl border ${colorMap[color]}`}>
-          <Icon className="w-5 h-5" />
+    <div className={`bg-white rounded-3xl p-7 border transition-all hover:shadow-xl hover:shadow-navy/5 group ${isAlert ? 'border-red-100 ring-2 ring-red-50 ring-opacity-50' : 'border-bordercolor'}`}>
+      <div className="flex items-center justify-between mb-6">
+        <div className={`p-3.5 rounded-2xl transition-all ${isAlert ? 'bg-red-50 text-red-600' : 'bg-light text-muted group-hover:bg-accent group-hover:text-white group-hover:scale-110 shadow-sm'}`}>
+          <Icon className="w-6 h-6" strokeWidth={1.5} />
         </div>
       </div>
       <div>
-        <p className="text-3xl font-bold tracking-tight mb-1">{value}</p>
-        <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">{label}</p>
-        {sub && <p className="text-[10px] text-zinc-500 mt-2 font-medium">{sub}</p>}
+        <p className={`text-4xl font-serif font-semibold mb-1 ${isAlert ? 'text-red-600' : 'text-navy'}`}>{value}</p>
+        <p className="text-[11px] font-black text-muted uppercase tracking-[0.15em]">{label}</p>
+        {sub && <p className="text-[11px] text-muted mt-3 font-sans opacity-70 italic">{sub}</p>}
       </div>
     </div>
   );
@@ -444,13 +436,13 @@ function StatCard({ label, value, icon: Icon, sub, color }) {
 
 function StatusBadge({ status }) {
   const styles = {
-    running: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    completed: "bg-green-500/10 text-green-400 border-green-500/20",
-    failed: "bg-red-500/10 text-red-400 border-red-500/20",
+    running: "bg-blue-50 text-blue-600 border-blue-100",
+    completed: "bg-green-50 text-green-600 border-green-100",
+    failed: "bg-red-50 text-red-600 border-red-100",
   };
 
   return (
-    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-tight border ${styles[status] || styles.failed}`}>
+    <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border shadow-sm ${styles[status] || styles.failed}`}>
       {status}
     </span>
   );

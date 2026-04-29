@@ -7,9 +7,22 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["'DM Sans'", "sans-serif"],
+        serif: ["'Cormorant Garamond'", "serif"],
       },
       colors: {
+        navy: {
+          DEFAULT: '#111111',
+          2: '#222222',
+          3: '#333333',
+        },
+        accent: '#D4AF37',
+        light: '#fcfaf5',
+        lighter: '#ffffff',
+        bordercolor: '#eaeaea',
+        text: '#111111',
+        muted: '#666666',
+        card: '#ffffff',
         brand: {
           50:  "#fdf2f8",
           100: "#fce7f3",
