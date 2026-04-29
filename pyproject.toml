@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=81.0"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "fify"
+version = "0.1.0"
+description = "Multimodal fashion search engine — CLIP embeddings + Qdrant + Playwright scraper"
+readme = "README.md"
+requires-python = ">=3.11"
+
+dependencies = [
+    # ── FastAPI Backend ──────────────────────────────────
+    "fastapi>=0.136.1",
+    "uvicorn[standard]>=0.46.0",
+    "python-multipart>=0.0.27",
+    "starlette>=1.0.0",
+
+    # ── Data validation ──────────────────────────────────
+    "pydantic>=2.13.3",
+    "pydantic-settings>=2.14.0",
+
+    # ── Vector DB ────────────────────────────────────────
+    "qdrant-client>=1.17.1",
+
+    # ── CLIP / Embeddings ────────────────────────────────
+    "torch>=2.11.0",
+    "transformers>=5.7.0",
+    "pillow>=12.2.0",
+    "safetensors>=0.7.0",
+    "huggingface-hub>=1.12.0",
+    "tokenizers>=0.22.2",
+
+    # ── Scraper ──────────────────────────────────────────
+    "playwright>=1.58.0",
+    "httpx>=0.28.1",
+
+    # ── LLM Agent ────────────────────────────────────────
+    "anthropic>=0.97.0",
+
+    # ── Scheduling ───────────────────────────────────────
+    "apscheduler>=3.11.2",
+
+    # ── Utilities ────────────────────────────────────────
+    "python-dotenv>=1.2.2",
+    "aiofiles>=25.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+]
+
+[project.scripts]
+fify-backend = "backend.main:app"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["backend*", "scraper*", "embeddings*", "vector_db*", "jobs*"]

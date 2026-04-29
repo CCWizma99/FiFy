@@ -1,0 +1,44 @@
+# Note: requirements.lock is intentionally committed (exact pinned versions).
+# requirements.txt contains abstract ranges for humans; pyproject.toml is the canonical spec.
+# ── Python ──────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ── Environment ─────────────────────────────────────────
+.env
+*.env.local
+
+# ── Data / local DBs ────────────────────────────────────
+data/
+*.db
+*.sqlite
+*.sqlite3
+dead_letter.log
+
+# ── Scraper runtime artefacts ───────────────────────────
+scraper/configs/*.json
+
+# ── CLIP model cache ────────────────────────────────────
+.cache/
+huggingface/
+
+# ── Node / Frontend ─────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# ── IDE / OS ────────────────────────────────────────────
+.vscode/
+.idea/
+*.DS_Store
+Thumbs.db

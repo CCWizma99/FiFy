@@ -1,0 +1,180 @@
+# FiFy — Fashion RAG System: Folder Structure Plan
+
+A multimodal fashion search engine that scrapes retail sites, embeds product images/text via CLIP, stores vectors in Qdrant, and serves results through a FastAPI backend with a React frontend.
+
+---
+
+## Open Questions
+
+> [!IMPORTANT]
+> **Frontend Framework**: The spec recommends React + TailwindCSS. Do you want to go with that, or keep it plain HTML/CSS for now?
+
+> [!IMPORTANT]
+> **Monorepo or Split?**: Should the frontend (`/frontend`) live inside this same repo, or do you want it as a separate repository?
+
+> [!NOTE]
+> **Your friend's modules** (CLIP Engine, Qdrant integration, validation pipeline) are included in the structure below. You can coordinate interface contracts at the clearly marked boundaries.
+
+---
+
+## Proposed Folder Structure
+
+```
+d:\FiFy\
+│
+├── README.md                        # Project overview & setup guide
+├── system-idea.txt                  # Original spec (already here)
+├── .env                             # Secrets: API keys, Qdrant URL, etc.
+├── .env.example                     # Safe copy of .env to commit
+├── .gitignore
+├── requirements.txt                 # Python dependencies (backend)
+│
+├── backend/                         # FastAPI Application
+│   ├── main.py                      # App entry point, mounts routers
+│   ├── config.py                    # Settings loader (reads .env)
+│   ├── database.py                  # SQLite setup (APScheduler job tracking)
+│   │
+│   ├── routers/                     # FastAPI route handlers
+│   │   ├── search.py                # POST /search/image, POST /search/text
+│   │   ├── products.py              # GET /products/{id}
+│   │   └── admin.py                 # POST /admin/scrape/trigger, GET /admin/scrape/status
+│   │
+│   ├── services/                    # Business logic (orchestration layer)
+│   │   ├── search_service.py        # Coordinates embedding → Qdrant query → response
+│   │   ├── embedding_service.py     # CLIP model wrapper (image + text)
+│   │   └── qdrant_service.py        # Qdrant client wrapper
+│   │
+│   ├── models/                      # Pydantic request/response schemas
+│   │   ├── search.py                # SearchRequest, SearchResponse, ProductResult
+│   │   └── job.py                   # ScrapeJobStatus
+│   │
+│   └── utils/
+│       ├── validators.py            # Image size/type validation, text length checks
+│       └── logger.py                # Structured logging setup
+│
+├── scraper/                         # Scraping & Ingestion Pipeline
+│   ├── scheduler.py                 # APScheduler setup — cron jobs per site
+│   ├── executor.py                  # Playwright-based scraper runner
+│   ├── site_analyzer/
+│   │   ├── agent.py                 # Site Analyzer LLM agent (Claude API)
+│   │   └── prompt_templates.py      # Prompts sent to Claude for selector extraction
+│   ├── pipeline/
+│   │   ├── validator.py             # Data validation layer (price, URL, image check)
+│   │   └── dead_letter.py           # Dead letter queue logging + retry logic
+│   └── configs/                     # Auto-generated per-site scraping configs (JSON)
+│       ├── asos.json
+│       ├── zara.json
+│       ├── hm.json
+│       ├── uniqlo.json
+│       └── zalando.json
+│
+├── embeddings/                      # CLIP Embedding Engine
+│   ├── clip_model.py                # Model loader, singleton pattern
+│   ├── image_embedder.py            # Image download → preprocess → encode → return vector
+│   └── text_embedder.py             # Text string → encode → return vector
+│
+├── vector_db/                       # Qdrant Integration
+│   ├── client.py                    # Qdrant client init
+│   ├── schema.py                    # Collection creation, named vectors config
+│   ├── indexer.py                   # Insert/upsert product points
+│   └── searcher.py                  # Cosine similarity search + filter helpers
+│
+├── jobs/                            # Maintenance Background Jobs
+│   ├── dead_link_checker.py         # Pings image URLs every 24h, sets is_active=false
+│   └── config_invalidator.py        # Flags stale configs after 3 consecutive empty scrapes
+│
+├── data/                            # Local persistent data (gitignored except examples)
+│   ├── url_hash_registry.db         # SQLite: tracks scraped URLs + hashes
+│   ├── job_status.db                # SQLite: scraping job tracking
+│   └── dead_letter.log              # Failed products awaiting retry
+│
+├── tests/                           # Test suite
+│   ├── test_embedding.py            # CLIP output shape/value sanity checks
+│   ├── test_search.py               # Search endpoint integration tests
+│   ├── test_scraper.py              # Scraper config generation + execution tests
+│   └── test_validation.py           # Data validation layer tests
+│
+└── frontend/                        # React + TailwindCSS SPA
+    ├── package.json
+    ├── index.html
+    ├── src/
+    │   ├── App.jsx                  # Root component, manages search state machine
+    │   ├── main.jsx                 # ReactDOM entry point
+    │   ├── components/
+    │   │   ├── SearchBar.jsx        # Text input + search button
+    │   │   ├── ImageUpload.jsx      # Drag-and-drop image upload zone
+    │   │   ├── ProductCard.jsx      # Product card: image, name, brand, price, badge, link
+    │   │   ├── ProductGrid.jsx      # Responsive grid layout for results
+    │   │   └── SkeletonLoader.jsx   # Loading skeleton (1-3s wait state)
+    │   ├── api/
+    │   │   └── search.js            # API calls to FastAPI backend
+    │   └── styles/
+    │       └── index.css            # Global styles / Tailwind directives
+    └── public/
+        └── favicon.ico
+```
+
+---
+
+## Component ↔ Module Ownership Map
+
+| Module | Owner | Key Files |
+|---|---|---|
+| Site Analyzer Agent | **You** | `scraper/site_analyzer/agent.py` |
+| Scraper Executor | **You** | `scraper/executor.py` |
+| FastAPI Endpoints | **You** | `backend/routers/` |
+| APScheduler Jobs | **You** | `scraper/scheduler.py`, `jobs/` |
+| Frontend UI | **You** | `frontend/src/` |
+| CLIP Embedding Engine | **Your Friend** | `embeddings/` |
+| Qdrant Schema + Integration | **Your Friend** | `vector_db/` |
+| Embedding Quality Testing | **Your Friend** | `tests/test_embedding.py` |
+| Data Validation Pipeline | **Your Friend** | `scraper/pipeline/validator.py` |
+
+---
+
+## Integration Boundaries (Sync Points)
+
+Two clean interfaces where you and your friend must agree on contracts:
+
+### 1. Scraper → Embedding Engine
+The scraper produces a dict per product and hands it to your friend's embedder:
+```python
+# scraper/executor.py passes this to embedding_service.py
+product_data = {
+    "product_name": "Floral Midi Dress",
+    "category": "dresses",
+    "image_url": "https://...",      # Your friend downloads + embeds this
+    "product_url": "https://...",
+    "price": 45.99,
+    "currency": "USD",
+    "brand": "ASOS Design",
+    "gender": "women",
+    "source_site": "asos.com"
+}
+```
+
+### 2. Embedding Engine → Qdrant
+Your friend's embedder returns vectors; their Qdrant indexer stores them:
+```python
+# embeddings/image_embedder.py returns
+image_vector: list[float]  # 512-dim
+
+# embeddings/text_embedder.py returns
+text_vector: list[float]   # 512-dim
+
+# vector_db/indexer.py stores as named vectors
+{
+  "image": image_vector,
+  "text": text_vector
+}
+```
+
+---
+
+## Verification Plan
+
+- `d:\FiFy\` root is clean — no scripts or logic at the top level
+- All Python imports work (`backend` is importable as a package via `main.py`)
+- `.env.example` committed; actual `.env` in `.gitignore`
+- `scraper/configs/` starts empty; JSON files are generated at runtime
+- `data/` folder is gitignored entirely (local SQLite DBs and logs)
