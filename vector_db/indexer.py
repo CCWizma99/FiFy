@@ -40,7 +40,7 @@ async def upsert_product(product: dict) -> str:
         points=[
             PointStruct(
                 id=product_id,
-                vectors={"image": image_vector, "text": text_vector},
+                vector={"image": image_vector, "text": text_vector},
                 payload=payload,
             )
         ],

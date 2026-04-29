@@ -33,11 +33,9 @@ def create_collection(recreate: bool = False) -> None:
 
     client.create_collection(
         collection_name=collection,
-        vectors_config=VectorsConfig(
-            params={
-                "image": VectorParams(size=VECTOR_DIM, distance=Distance.COSINE),
-                "text":  VectorParams(size=VECTOR_DIM, distance=Distance.COSINE),
-            }
-        ),
+        vectors_config={
+            "image": VectorParams(size=VECTOR_DIM, distance=Distance.COSINE),
+            "text":  VectorParams(size=VECTOR_DIM, distance=Distance.COSINE),
+        }
     )
     logger.info("Created Qdrant collection '%s' with image+text named vectors.", collection)

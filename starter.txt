@@ -1,0 +1,8 @@
+# From the root directory (d:\FiFy)
+.venv\Scripts\python run_server.py
+
+# First navigate to the frontend folder
+cd frontend
+
+# Then start the dev server
+npm run dev

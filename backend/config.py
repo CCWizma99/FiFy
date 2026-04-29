@@ -16,6 +16,7 @@ class Settings(BaseSettings):
 
     # Google Gemini (Site Analyzer Agent)
     google_api_key: str = ""
+    gemini_model_name: str = "gemini-2.5-flash-lite"
 
     # CLIP
     clip_model_name: str = "openai/clip-vit-base-patch32"

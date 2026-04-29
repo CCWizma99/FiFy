@@ -1,9 +1,6 @@
-"""
-backend/utils/logger.py
-Structured logging setup. All modules call get_logger(__name__).
-"""
 import logging
 import sys
+from pathlib import Path
 
 
 def get_logger(name: str) -> logging.Logger:
@@ -12,12 +9,25 @@ def get_logger(name: str) -> logging.Logger:
         return logger
 
     logger.setLevel(logging.DEBUG)
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setLevel(logging.DEBUG)
+    
+    # Formatter
     formatter = logging.Formatter(
         fmt="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
         datefmt="%Y-%m-%dT%H:%M:%S",
     )
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
+
+    # Console Handler
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setLevel(logging.DEBUG)
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
+
+    # File Handler
+    log_dir = Path("logs")
+    log_dir.mkdir(exist_ok=True)
+    file_handler = logging.FileHandler(log_dir / "fify.log", encoding="utf-8")
+    file_handler.setLevel(logging.INFO)
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+
     return logger

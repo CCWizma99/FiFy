@@ -38,4 +38,24 @@ def init_db() -> None:
                 is_active   INTEGER NOT NULL DEFAULT 1
             )
         """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS target_sites (
+                domain      TEXT PRIMARY KEY,
+                listing_url TEXT NOT NULL,
+                is_active   INTEGER NOT NULL DEFAULT 1
+            )
+        """)
+        
+        # Initialise with defaults
+        default_sites = [
+            ("asos.com", "https://www.asos.com/women/dresses/cat/?cid=8799"),
+            ("zara.com", "https://www.zara.com/us/en/woman-dresses-l1066.html"),
+            ("hm.com", "https://www2.hm.com/en_us/women/products/dresses.html"),
+            ("uniqlo.com", "https://www.uniqlo.com/us/en/women/dresses"),
+            ("zalando.com", "https://www.zalando.co.uk/womens-clothing-dresses/"),
+        ]
+        conn.executemany(
+            "INSERT OR IGNORE INTO target_sites (domain, listing_url) VALUES (?, ?)",
+            default_sites
+        )
         conn.commit()
