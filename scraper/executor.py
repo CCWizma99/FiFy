@@ -13,9 +13,14 @@ Images are downloaded into memory only — never written to disk.
 """
 import asyncio
 import hashlib
+import json
+import logging
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urljoin
+
+from bs4 import BeautifulSoup
 
 from playwright.async_api import async_playwright
 
@@ -27,42 +32,39 @@ from vector_db.indexer import upsert_product
 
 logger = get_logger(__name__)
 
-async def run_site(site_domain: str) -> None:
+async def run_site(site_domain: str, category: str = None, gender: str = None) -> None:
     """Entry point for scraping a single site. Called by scheduler or admin endpoint."""
+    global SCRAPED_HASHES
+    SCRAPED_HASHES = set()  # Force reset to allow re-triggering for debugging
     logger.info("Starting scrape for %s", site_domain)
     job_id = _start_job(site_domain)
 
     try:
         # Fetch listing URL from DB
         with get_connection() as conn:
-            row = conn.execute("SELECT listing_url FROM target_sites WHERE domain = ?", (site_domain,)).fetchone()
+            row = conn.execute("SELECT root_url FROM sites WHERE domain = ?", (site_domain,)).fetchone()
         
         if not row:
-            raise ValueError(f"Site {site_domain} not found in target_sites registry")
+            logger.error(f"Domain {site_domain} not found in sites table.")
+            return 0
+            
+        listing_url = row["root_url"]
         
-        listing_url = row["listing_url"]
-        
-        # Always re-run card discovery on every trigger — selectors may have changed.
-        cached = load_config(site_domain)
-        analysis_url = listing_url
-        if cached and cached.get("listing_url_pattern"):
-            analysis_url = cached["listing_url_pattern"]
-            logger.info("Trying cached listing_url_pattern: %s", analysis_url)
-
-        logger.info("Running card discovery for %s...", site_domain)
-        listing_html, detail_html, card_html, confirmed_url = await _fetch_html_samples(analysis_url)
-        
-        # FALLBACK: If discovery failed on the cached URL, try again from the base URL
-        if not card_html and analysis_url != listing_url:
-            logger.warning("Discovery failed on cached URL %s. Reverting to base URL %s", analysis_url, listing_url)
+        # Check for cached config first to avoid expensive and flaky AI re-analysis
+        config = load_config(site_domain)
+        if config:
+            logger.info("Using cached scraping config for %s", site_domain)
+        else:
+            logger.info("No cached config found for %s. Starting discovery...", site_domain)
             listing_html, detail_html, card_html, confirmed_url = await _fetch_html_samples(listing_url)
+            
+            if not card_html:
+                raise ValueError(f"Could not find any product cards for {site_domain}.")
 
-        if not card_html:
-            raise ValueError(f"Could not find any product cards for {site_domain} even after fallback.")
-
-        config = analyze_site(site_domain, listing_html, detail_html, card_html, confirmed_listing_url=confirmed_url)
-
-        count = await _scrape_with_config(config, site_domain, listing_url)
+            config = analyze_site(site_domain, listing_html, detail_html, card_html, confirmed_listing_url=confirmed_url)
+        
+        # Inject category/gender hints if provided
+        count = await _scrape_with_config(config, site_domain, listing_url, category=category, gender=gender)
         _finish_job(job_id, count)
         logger.info("Scrape complete for %s — %d products processed", site_domain, count)
 
@@ -82,7 +84,7 @@ async def _fetch_html_samples(listing_url: str) -> tuple[str, str, str, str]:
         page = await browser.new_page()
         
         logger.info(f"Navigating to: {listing_url}")
-        await page.goto(listing_url, wait_until="networkidle", timeout=30_000)
+        await page.goto(listing_url, wait_until="load", timeout=60_000)
         
         # EXPLORATION: If this looks like a homepage (no clear product grid), try to find a category link
         # Look for "Shop", "Men", "Women", "Category", etc.
@@ -96,7 +98,7 @@ async def _fetch_html_samples(listing_url: str) -> tuple[str, str, str, str]:
             if target_cat_url.rstrip("/") != listing_url.rstrip("/"):
                 logger.info(f"Discovery: Home page detected. Navigating to potential category: {target_cat_url}")
                 try:
-                    await page.goto(target_cat_url, wait_until="networkidle", timeout=30000)
+                    await page.goto(target_cat_url, wait_until="load", timeout=60000)
                 except Exception:
                     logger.warning(f"Discovery: Category navigation failed to {target_cat_url}, staying on current page.")
             else:
@@ -105,13 +107,25 @@ async def _fetch_html_samples(listing_url: str) -> tuple[str, str, str, str]:
         # Wait for actual products to hydrate in the DOM before capturing HTML
         # This is critical for Next.js sites where the product grid is client-side rendered
         try:
-            await page.wait_for_selector("a[href*='product']", timeout=25000)
-            logger.info("Product links detected in DOM — page fully hydrated.")
+            await page.wait_for_function(
+                """() => {
+                    const headings = document.querySelectorAll(
+                        'h1, h2, h3, [class*="title"], [class*="name"]'
+                    );
+                    for (const el of headings) {
+                        if (el.textContent.trim().length > 3) return true;
+                    }
+                    return false;
+                }""",
+                timeout=15000
+            )
+            logger.info("Product text content confirmed in DOM — page fully hydrated.")
         except Exception:
-            logger.warning("Could not confirm product hydration. HTML may be incomplete.")
+            logger.warning("Timeout waiting for text hydration during discovery. Trying anyway.")
 
-        listing_html = await page.content()
+        listing_html = _minimize_html(_strip_head(await page.content()))
         logger.info(f"Listing HTML fetched ({len(listing_html)} chars)")
+        logger.info(f"--- LISTING HTML SAMPLE (first 2000 chars) ---\n{listing_html[:2000]}\n--- END LISTING HTML ---")
 
         # Extract card HTML BEFORE navigating away — we are still on the shop/listing page
         card_html = ""
@@ -122,9 +136,8 @@ async def _fetch_html_samples(listing_url: str) -> tuple[str, str, str, str]:
                 if len(cards) >= 3:  # Need at least 3 to confirm it's a repeating grid, not a one-off
                     # Use outer_html so AI sees the full wrapper element (e.g. <div class="group">)
                     card_html = await cards[0].evaluate("el => el.outerHTML")
-                    card_html = card_html[:3000]
-                    logger.info(f"Card sample extracted ({len(card_html)} chars) using '{card_selector}'")
-                    logger.info(f"--- CARD HTML SAMPLE ---\n{card_html}\n--- END CARD HTML ---")
+                    logger.info(f"Card sample extracted ({len(card_html)} chars) using {repr(card_selector)}")
+                    logger.info(f"--- FULL CARD HTML SAMPLE (Sent to AI) ---\n{card_html}\n--- END CARD HTML ---")
                     break
             
             # Fallback: traverse from product link to its closest container
@@ -162,9 +175,10 @@ async def _fetch_html_samples(listing_url: str) -> tuple[str, str, str, str]:
             target_url = urljoin(page.url, href)
             logger.info(f"Found sample product link: {target_url}. Navigating…")
             try:
-                await page.goto(target_url, wait_until="networkidle", timeout=30000)
-                detail_html = await page.content()
+                await page.goto(target_url, wait_until="load", timeout=60000)
+                detail_html = _minimize_html(_strip_head(await page.content()))
                 logger.info(f"Detail HTML fetched ({len(detail_html)} chars)")
+                logger.info(f"--- DETAIL HTML SAMPLE (first 2000 chars) ---\n{detail_html[:2000]}\n--- END DETAIL HTML ---")
             except Exception as e:
                 logger.warning(f"Failed to navigate to detail page {target_url}: {e}. Proceeding with listing only.")
         else:
@@ -175,7 +189,13 @@ async def _fetch_html_samples(listing_url: str) -> tuple[str, str, str, str]:
     return listing_html, detail_html, card_html, confirmed_url
 
 
-async def _scrape_with_config(config: dict, site_domain: str, listing_url: str) -> int:
+async def _scrape_with_config(
+    config: dict, 
+    site_domain: str, 
+    listing_url: str, 
+    category: str = None, 
+    gender: str = None
+) -> int:
     """Navigate paginated listing pages using the config and process each product."""
     count = 0
     logger.info(f"Starting scrape for {site_domain} with generated config.")
@@ -187,7 +207,15 @@ async def _scrape_with_config(config: dict, site_domain: str, listing_url: str) 
         # Use listing URL from config if present (override), else from DB
         start_url = config.get("listing_url_pattern") or listing_url
         logger.info(f"Navigating to start URL: {start_url}")
-        await page.goto(start_url, wait_until="networkidle", timeout=30_000)
+        
+        # Derive expected domain for validation from the actual start URL
+        from urllib.parse import urlparse
+        expected_domain = urlparse(start_url).netloc.replace("www.", "")
+        logger.info(f"Validation will expect domain: {expected_domain}")
+        logger.info(f"Using selectors: {json.dumps(config.get('fields', {}), indent=2)}")
+
+        await page.goto(start_url, wait_until="load", timeout=60_000)
+        logger.info(f"Page loaded: {page.url} | Title: {await page.title()}")
 
         page_num = 1
         while True:
@@ -195,10 +223,21 @@ async def _scrape_with_config(config: dict, site_domain: str, listing_url: str) 
             
             # Wait for products to hydrate (Next.js renders client-side after networkidle)
             try:
-                await page.wait_for_selector("a[href*='product']", timeout=25000)
-                logger.info("Product links confirmed in DOM.")
+                await page.wait_for_function(
+                    """() => {
+                        const headings = document.querySelectorAll(
+                            'h1, h2, h3, [class*="title"], [class*="name"]'
+                        );
+                        for (const el of headings) {
+                            if (el.textContent.trim().length > 3) return true;
+                        }
+                        return false;
+                    }""",
+                    timeout=15000
+                )
+                logger.info("Product text content confirmed in DOM — page fully hydrated.")
             except Exception:
-                logger.warning(f"Timeout waiting for product links on page {page_num}. Trying anyway.")
+                logger.warning(f"Timeout waiting for text hydration on page {page_num}. Trying anyway.")
 
             # Now wait for the specific card selector from config
             card_selector = config["product_card_selector"]
@@ -212,21 +251,28 @@ async def _scrape_with_config(config: dict, site_domain: str, listing_url: str) 
                 logger.info(f"Debug HTML saved to {debug_path}")
 
             cards = await page.query_selector_all(card_selector)
-            logger.info(f"Found {len(cards)} product cards on page {page_num}")
+            logger.info(f"Page {page_num}: Found {len(cards)} cards using selector '{card_selector}'")
             
             page_processed_count = 0
             for i, card in enumerate(cards):
-                product = await _extract_product(card, config, site_domain)
+                product = await _extract_product(card, config, site_domain, page.url)
                 if product:
+                    logger.info(f"Card {i} Extracted: {json.dumps(product, indent=2)}")
                     if not _already_scraped(product):
                         try:
-                            validated = await validate_product(product, site_domain)
+                            # Inject manual category/gender hints if they were passed at trigger time
+                            if category: product["category"] = category
+                            if gender: product["gender"] = gender
+
+                            validated = await validate_product(product, expected_domain)
                             await upsert_product(validated)
                             _register_hash(validated)
                             count += 1
                             page_processed_count += 1
                         except ValidationError as ve:
-                            logger.debug(f"Product {i} failed validation: {ve}")
+                            card_html = await card.evaluate("el => el.outerHTML")
+                            logger.warning(f"Product {i} failed validation: {ve}")
+                            logger.info(f"--- FAILING CARD HTML ---\n{card_html}\n--- END CARD HTML ---")
                     else:
                         logger.debug(f"Product {i} already scraped, skipping.")
             
@@ -246,7 +292,7 @@ async def _scrape_with_config(config: dict, site_domain: str, listing_url: str) 
             logger.info("Clicking next page…")
             try:
                 await next_btn.click()
-                await page.wait_for_load_state("networkidle", timeout=15000)
+                await page.wait_for_load_state("load", timeout=15000)
                 page_num += 1
             except Exception as e:
                 logger.warning(f"Pagination failed: {e}. Stopping.")
@@ -257,44 +303,136 @@ async def _scrape_with_config(config: dict, site_domain: str, listing_url: str) 
     return count
 
 
-async def _extract_product(card, config: dict, site_domain: str) -> dict | None:
+async def _extract_product(card, config: dict, site_domain: str, base_url: str) -> dict | None:
     """Extract raw product fields from a Playwright element using config selectors."""
     fields = config.get("fields", {})
     try:
-        name_el = await card.query_selector(fields.get("name", ""))
+        name_el  = await card.query_selector(fields.get("name", ""))
         price_el = await card.query_selector(fields.get("price", ""))
-        img_el = await card.query_selector(fields.get("image_url", ""))
-        url_el = await card.query_selector(fields.get("product_url", ""))
+        img_el   = await card.query_selector(fields.get("image_url", ""))
+        url_el   = await card.query_selector(fields.get("product_url", ""))
 
-        name = (await name_el.inner_text()).strip() if name_el else ""
-        price_raw = (await price_el.inner_text()).strip() if price_el else ""
-        image = (await img_el.get_attribute("src") or await img_el.get_attribute("data-src") or "") if img_el else ""
+        if not name_el:  logger.debug(f"Selector for 'name' ({fields.get('name')}) failed for this card.")
+        if not price_el: logger.debug(f"Selector for 'price' ({fields.get('price')}) failed for this card.")
+        if not img_el:   logger.debug(f"Selector for 'image_url' ({fields.get('image_url')}) failed for this card.")
+        if not url_el:   logger.debug(f"Selector for 'product_url' ({fields.get('product_url')}) failed for this card.")
+
+        # Use textContent (raw DOM) instead of inner_text() (CSS-aware).
+        # inner_text() returns '' for elements with color:transparent — a common
+        # Next.js SSR pattern where text nodes exist but are styled invisible until hydration.
+        name      = (await name_el.evaluate("el => el.textContent")).strip()  if name_el  else ""
+        price_raw = (await price_el.evaluate("el => el.textContent")).strip() if price_el else ""
+
+        # Attributes are unaffected by CSS so these can stay as-is
+        image   = (await img_el.get_attribute("src") or await img_el.get_attribute("data-src") or "") if img_el else ""
         url_raw = (await url_el.get_attribute("href") or "") if url_el else ""
 
-        logger.debug(f"Extracted raw: name={name!r}, price={price_raw!r}, url={url_raw!r}")
+        logger.info(f"Field Extraction -> name: {repr(name)}, price_raw: {repr(price_raw)}, image: {repr(image)}, url: {repr(url_raw)}")
 
         # Resolve relative URLs to absolute
-        if image and image.startswith("/"):
-            image = f"https://{site_domain}{image}"
-        if url_raw and not url_raw.startswith("http"):
-            url_raw = f"https://www.{site_domain}{url_raw}" if not url_raw.startswith("//") else f"https:{url_raw}"
+        image   = urljoin(base_url, image)   if image   else ""
+        url_raw = urljoin(base_url, url_raw) if url_raw else ""
 
-        # Clean price: strip currency labels, non-breaking spaces, commas
-        price_cleaned = price_raw.replace("LKR", "").replace("\xa0", "").replace(",", "").replace("$", "").strip()
+        # Clean price: strip nbsp, take first numeric match.
+        # textContent on a Pattern B price div returns the full node including instalment
+        # text — the regex deliberately takes the FIRST (largest) number, which is the retail price.
+        import re
+        price_no_nbsp = price_raw.replace("\xa0", " ").replace(",", "").strip()
+        price_match   = re.search(r"(\d+[\d.]*)", price_no_nbsp)
+        price_cleaned = price_match.group(1) if price_match else ""
 
-        product = {
+        logger.debug(f"Price Cleaning: raw={repr(price_raw)} -> cleaned={repr(price_cleaned)}")
+
+        return {
             "product_name": name,
-            "price": price_cleaned,
-            "image_url": image,
-            "product_url": url_raw,
-            "source_site": site_domain,
-            "scraped_at": datetime.now(timezone.utc).isoformat(),
-            "is_active": True,
+            "price":        price_cleaned,
+            "image_url":    image,
+            "product_url":  url_raw,
+            "source_site":  site_domain,
+            "scraped_at":   datetime.now(timezone.utc).isoformat(),
+            "is_active":    True,
         }
-        return product
     except Exception as e:
         logger.debug("Extraction error on card: %s", e)
         return None
+
+
+def _strip_head(html: str) -> str:
+    """Remove the <head> element from HTML to reduce noise for logging and LLM analysis."""
+    if not html:
+        return ""
+    return re.sub(r"<head>.*?</head>", "", html, flags=re.DOTALL | re.IGNORECASE)
+
+
+def _minimize_html(html: str) -> str:
+    """
+    Minimize HTML by removing redundant sibling elements with identical semantic structures.
+    This version is aggressive against unique IDs and metadata blobs (like Shopify JSON)
+    to ensure the AI receives a compact, template-like view of the page.
+    """
+    if not html:
+        return ""
+    
+    # Use lxml for speed
+    soup = BeautifulSoup(html, "lxml")
+    
+    # 1. Global Stripping of high-noise/high-bulk elements
+    # We remove scripts/styles entirely. For SVGs, we clear paths but keep the tag 
+    # to let the AI know an icon is present (useful for selectors).
+    for tag in soup.find_all(["script", "style", "svg", "noscript"]):
+        if tag.name == "svg":
+            tag.clear() 
+        else:
+            tag.decompose()
+
+    # Blacklist of attributes that are either too large or unique per-item (non-semantic).
+    # Stripping these allows the deduplication logic to see through 'watermarked' elements.
+    ATTR_BLACKLIST = {
+        "id", "href", "src", "srcset", "style", "title", "alt", 
+        "data-product-id", "data-variant-id", "data-id", "data-view-id"
+    }
+
+    def prune(element):
+        # Group children by their semantic signature (tag and class)
+        children = element.find_all(recursive=False)
+        seen_signatures = set()
+        
+        for child in children:
+            # First, strip non-semantic attributes from this child
+            for attr in list(child.attrs.keys()):
+                if attr in ATTR_BLACKLIST or attr.startswith("data-json-") or attr.startswith("data-view-"):
+                    del child[attr]
+            
+            # Recursive call to prune deep structures first
+            prune(child)
+            
+            # Signature is tag name and its classes (the most semantic attribute)
+            # We ignore other attributes like 'id' or 'href' for repeating detection
+            classes = child.get("class", [])
+            if isinstance(classes, list):
+                classes = tuple(sorted(classes))
+            elif isinstance(classes, str):
+                classes = (classes,)
+            else:
+                classes = ()
+            
+            signature = (child.name, classes)
+            
+            # If we've seen this exact tag+class combo as a sibling, it's a repeat
+            if signature in seen_signatures:
+                child.decompose()
+            else:
+                seen_signatures.add(signature)
+                
+    # Prune from body if it exists, otherwise from soup root
+    target = soup.body if soup.body else soup
+    prune(target)
+    
+    # Return as string, removing extra whitespace but keeping it somewhat readable
+    content = str(soup)
+    # Collapse multiple spaces/newlines into single spaces
+    content = re.sub(r"\s+", " ", content).strip()
+    return content
 
 
 def _already_scraped(product: dict) -> bool:

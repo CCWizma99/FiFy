@@ -20,7 +20,7 @@ export default function Home() {
         const genderMap = {
           "Women's fashion": "women",
           "Men's fashion": "men",
-          "Neutral fashion": "neutral"
+          "Neutral fashion": null
         };
         
         const filters = {

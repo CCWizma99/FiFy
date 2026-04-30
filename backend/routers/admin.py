@@ -1,155 +1,164 @@
-"""
-backend/routers/admin.py
-POST /admin/scrape/trigger — manually trigger a scrape job
-GET  /admin/scrape/status  — list recent scrape job records
-"""
-from fastapi import APIRouter
-from typing import List
-
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, HTTPException
+from pydantic import BaseModel
+from typing import List, Optional
 from backend.database import get_connection
-from backend.models.job import ScrapeJobStatus, ScrapeJobsResponse, ScraperStats, DeadLetterEntry, TargetSite
-from scraper.pipeline.dead_letter import load_dead_letters
-from backend.utils.logger import get_logger
+from backend.services.crawl_manager import crawl_manager
+import asyncio
+import json
 
 router = APIRouter()
-logger = get_logger(__name__)
 
+class SiteBase(BaseModel):
+    domain: str
+    root_url: str
 
-import threading
-import asyncio
-import sys
-import traceback
+class SiteResponse(SiteBase):
+    id: int
+    is_active: bool
+    status: str
+    last_crawl_at: Optional[str]
+    total_products: int
 
-def run_scraper_in_thread(site: str):
-    """Worker function to run the async scraper in a dedicated thread with its own loop."""
-    try:
-        # Emergency console print in case logger is broken
-        print(f"DEBUG: Scraper thread for {site} is actually starting...")
-        
-        logger.info(f"--- THREAD START: Scraper worker for {site} ---")
-        
-        if sys.platform == 'win32':
-            logger.info("Worker: Forcing Windows ProactorEventLoopPolicy...")
-            asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
-        
-        logger.info("Worker: Creating fresh event loop...")
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        
-        try:
-            from scraper.executor import run_site
-            logger.info(f"Worker: Calling run_site({site})…")
-            loop.run_until_complete(run_site(site))
-            logger.info(f"Worker: Scrape job finished for {site}")
-        except Exception as e:
-            logger.error(f"Worker ERROR during run_site: {str(e)}")
-            logger.error(traceback.format_exc())
-        finally:
-            logger.info("Worker: Closing event loop...")
-            loop.close()
-            
-    except Exception as e:
-        # This catches errors that happen BEFORE the loop is even created
-        msg = f"CRITICAL THREAD INITIALIZATION FAILURE: {str(e)}\n{traceback.format_exc()}"
-        print(msg)
-        logger.critical(msg)
-
-@router.post("/scrape/trigger")
-async def trigger_scrape(site: str):
-    """Manually kick off a scrape job for a given site."""
-    logger.info(f"API: Received trigger request for {site}")
-    
-    with get_connection() as conn:
-        row = conn.execute("SELECT domain FROM target_sites WHERE domain = ?", (site,)).fetchone()
-    
-    if not row:
-        logger.warning(f"API: Rejecting trigger for unknown site {site}")
-        from fastapi import HTTPException
-        raise HTTPException(
-            status_code=400,
-            detail=f"Unknown site '{site}'. Please add it to Target Sites first.",
-        )
-
-    logger.info(f"API: Spawning background thread for {site}...")
-    try:
-        thread = threading.Thread(target=run_scraper_in_thread, args=(site,), daemon=True)
-        thread.start()
-        logger.info(f"API: Thread spawned successfully for {site}")
-    except Exception as e:
-        logger.error(f"API: Failed to spawn thread: {e}")
-        return {"error": str(e)}
-    
-    return {"message": f"Scrape job triggered for {site} in background thread.", "site": site}
-
-
-@router.get("/sites", response_model=List[TargetSite])
+@router.get("/sites", response_model=List[SiteResponse])
 async def get_sites():
-    """Return all configured target sites."""
     with get_connection() as conn:
-        rows = conn.execute("SELECT * FROM target_sites").fetchall()
-    return [TargetSite(**dict(row)) for row in rows]
+        rows = conn.execute("SELECT * FROM sites").fetchall()
+        return [dict(row) for row in rows]
 
-
-@router.post("/sites", response_model=TargetSite)
-async def add_site(site: TargetSite):
-    """Add a new target site to the registry."""
+@router.post("/sites", response_model=SiteResponse)
+async def add_site(site: SiteBase):
     with get_connection() as conn:
-        conn.execute(
-            "INSERT INTO target_sites (domain, listing_url, is_active) VALUES (?, ?, ?)",
-            (site.domain, site.listing_url, 1 if site.is_active else 0)
-        )
+        try:
+            cur = conn.execute(
+                "INSERT INTO sites (domain, root_url) VALUES (?, ?)",
+                (site.domain, site.root_url)
+            )
+            conn.commit()
+            row = conn.execute("SELECT * FROM sites WHERE id = ?", (cur.lastrowid,)).fetchone()
+            return dict(row)
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=str(e))
+
+@router.post("/sites/{site_id}/start")
+async def start_crawl(site_id: int):
+    await crawl_manager.start_crawl(site_id)
+    return {"status": "started"}
+
+@router.post("/sites/{site_id}/pause")
+async def pause_crawl(site_id: int):
+    crawl_manager.pause_crawl(site_id)
+    return {"status": "paused"}
+
+@router.post("/sites/{site_id}/resume")
+async def resume_crawl(site_id: int):
+    crawl_manager.resume_crawl(site_id)
+    return {"status": "resumed"}
+
+@router.post("/sites/{site_id}/stop")
+async def stop_crawl(site_id: int):
+    crawl_manager.stop_crawl(site_id)
+    return {"status": "stopped"}
+
+@router.delete("/sites/{site_id}")
+async def delete_site(site_id: int):
+    from vector_db.client import get_client
+    from qdrant_client.models import Filter, FieldCondition, MatchValue
+    from backend.config import settings
+
+    with get_connection() as conn:
+        site = conn.execute("SELECT domain FROM sites WHERE id = ?", (site_id,)).fetchone()
+        if not site:
+            raise HTTPException(status_code=404, detail="Site not found")
+        
+        domain = site["domain"]
+
+        # 1. Delete from Qdrant
+        try:
+            client = get_client()
+            client.delete(
+                collection_name=settings.qdrant_collection,
+                points_selector=Filter(
+                    must=[FieldCondition(key="source_site", match=MatchValue(value=domain))]
+                )
+            )
+        except Exception as e:
+            print(f"Warning: Failed to delete from Qdrant: {e}")
+
+        # 2. Delete from DB tables (Cascading manually since we don't have FK constraints everywhere)
+        conn.execute("DELETE FROM url_hashes WHERE url IN (SELECT url FROM url_hashes WHERE url LIKE ?)", (f"%{domain}%",))
+        conn.execute("DELETE FROM crawl_queue WHERE site_id = ?", (site_id,))
+        conn.execute("DELETE FROM indexing_stats WHERE site_id = ?", (site_id,))
+        conn.execute("DELETE FROM scrape_jobs WHERE site = ?", (domain,))
+        conn.execute("DELETE FROM sites WHERE id = ?", (site_id,))
         conn.commit()
-    return site
 
+    return {"status": "deleted"}
 
-@router.get("/scrape/status", response_model=ScrapeJobsResponse)
-async def scrape_status(limit: int = 20):
-    """Return the most recent scrape job records."""
-    with get_connection() as conn:
-        rows = conn.execute(
-            "SELECT * FROM scrape_jobs ORDER BY id DESC LIMIT ?", (limit,)
-        ).fetchall()
-    jobs = [ScrapeJobStatus(**dict(row)) for row in rows]
-    return ScrapeJobsResponse(jobs=jobs)
-
-
-@router.get("/stats", response_model=ScraperStats)
+@router.get("/stats")
 async def get_stats():
-    """Return aggregated scraper stats."""
     with get_connection() as conn:
-        # Total products
-        res = conn.execute("SELECT COUNT(*) as total, SUM(is_active) as active FROM url_hashes").fetchone()
-        total_products = res["total"] or 0
-        active_products = res["active"] or 0
+        total_products = conn.execute("SELECT SUM(total_products) FROM sites").fetchone()[0] or 0
+        active_products = conn.execute("SELECT COUNT(*) FROM url_hashes WHERE is_active = 1").fetchone()[0]
+        total_jobs = conn.execute("SELECT COUNT(*) FROM scrape_jobs").fetchone()[0]
+        success_rate = 100 # Placeholder
+        return {
+            "total_products": total_products,
+            "active_products": active_products,
+            "total_jobs": total_jobs,
+            "success_rate": success_rate,
+            "failed_products_count": 0
+        }
 
-        # Job stats
-        res = conn.execute("SELECT COUNT(*) as count FROM scrape_jobs").fetchone()
-        total_jobs = res["count"] or 0
+@router.get("/scrape/status")
+async def get_scrape_status(limit: int = 10):
+    with get_connection() as conn:
+        rows = conn.execute("SELECT * FROM scrape_jobs ORDER BY started_at DESC LIMIT ?", (limit,)).fetchall()
+        return {"jobs": [dict(row) for row in rows]}
 
-        # Success rate (last 50 jobs)
-        rows = conn.execute(
-            "SELECT status FROM scrape_jobs ORDER BY id DESC LIMIT 50"
-        ).fetchall()
-        if rows:
-            successes = sum(1 for r in rows if r["status"] == "completed")
-            success_rate = round((successes / len(rows)) * 100, 1)
-        else:
-            success_rate = 0.0
+@router.get("/dead-letters")
+async def get_dead_letters(limit: int = 20):
+    # Placeholder: currently we don't have a dead_letters table, 
+    # but the frontend expects an array.
+    return []
 
-    # Dead letter count
-    dead_letters = load_dead_letters()
-    
-    return ScraperStats(
-        total_products=total_products,
-        active_products=active_products,
-        total_jobs=total_jobs,
-        success_rate=success_rate,
-        failed_products_count=len(dead_letters)
-    )
+@router.post("/reset")
+async def reset_all_data():
+    from vector_db.client import get_client
+    from backend.config import settings
+    from qdrant_client.models import Filter
 
+    # 1. Clear Qdrant
+    try:
+        client = get_client()
+        # Delete all points in the collection
+        # We can also recreate the collection, but delete by filter is safer if collection config is complex
+        client.delete(
+            collection_name=settings.qdrant_collection,
+            points_selector=Filter() # Empty filter matches all
+        )
+    except Exception as e:
+        print(f"Warning: Failed to clear Qdrant: {e}")
 
-@router.get("/dead-letters", response_model=List[DeadLetterEntry])
-async def get_dead_letters(limit: int = 50):
-    """Return recent dead letter log entries."""
-    entries = load_dead_letters()
-    return entries[-limit:][::-1]  # Last 'limit' entries, reversed (newest first)
+    # 2. Clear DB tables
+    with get_connection() as conn:
+        conn.execute("DELETE FROM url_hashes")
+        conn.execute("DELETE FROM crawl_queue")
+        conn.execute("DELETE FROM indexing_stats")
+        conn.execute("DELETE FROM scrape_jobs")
+        conn.execute("DELETE FROM sites")
+        conn.commit()
+
+    return {"status": "reset_complete"}
+
+@router.websocket("/ws/logs/{site_id}")
+async def websocket_endpoint(websocket: WebSocket, site_id: int):
+    await websocket.accept()
+    queue = await crawl_manager.subscribe_logs(site_id)
+    try:
+        while True:
+            data = await queue.get()
+            await websocket.send_text(data)
+    except WebSocketDisconnect:
+        crawl_manager.unsubscribe_logs(site_id, queue)
+    except Exception:
+        crawl_manager.unsubscribe_logs(site_id, queue)

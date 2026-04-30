@@ -51,7 +51,7 @@ async def upsert_product(product: dict) -> str:
 
 async def _get_image_vector(image_url: str) -> list[float]:
     async with httpx.AsyncClient(timeout=10.0) as client:
-        resp = await client.get(image_url)
+        resp = await client.get(image_url, follow_redirects=True)
         resp.raise_for_status()
     image = Image.open(io.BytesIO(resp.content)).convert("RGB")
     return embed_image(image)

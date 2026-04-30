@@ -38,5 +38,5 @@ class DeadLetterEntry(BaseModel):
 
 class TargetSite(BaseModel):
     domain: str
-    listing_url: str
+    root_url: str
     is_active: bool = True

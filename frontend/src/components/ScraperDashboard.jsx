@@ -14,9 +14,11 @@ import {
   LayoutDashboard,
   Plus,
   Globe,
-  ExternalLink
+  ExternalLink,
+  Trash2
 } from "lucide-react";
-import { getScraperStats, getScraperJobs, getDeadLetters, triggerScrape, getSites, addSite } from "../api/admin";
+import { getScraperStats, getScraperJobs, getDeadLetters, triggerScrape, getSites, addSite, startCrawl, deleteSite, resetAllData } from "../api/admin";
+import CrawlerConsole from "./admin/CrawlerConsole";
 
 export default function ScraperDashboard() {
   const [stats, setStats] = useState(null);
@@ -28,7 +30,9 @@ export default function ScraperDashboard() {
   const [activeTab, setActiveTab] = useState("overview"); // "overview" | "history" | "failures"
   
   const [showAddForm, setShowAddForm] = useState(false);
-  const [newSite, setNewSite] = useState({ domain: "", listing_url: "" });
+  const [newSite, setNewSite] = useState({ domain: "", root_url: "" });
+  
+  const [activeIndexingSite, setActiveIndexingSite] = useState(null);
 
   const fetchData = useCallback(async (showRefresh = false) => {
     if (showRefresh) setRefreshing(true);
@@ -57,9 +61,9 @@ export default function ScraperDashboard() {
     return () => clearInterval(interval);
   }, [fetchData]);
 
-  const handleTrigger = async (site) => {
+  const handleTrigger = async (site, category = null, gender = null) => {
     try {
-      await triggerScrape(site);
+      await triggerScrape(site, category, gender);
       fetchData(true);
     } catch (error) {
       alert(`Failed to trigger: ${error.message}`);
@@ -70,11 +74,40 @@ export default function ScraperDashboard() {
     e.preventDefault();
     try {
       await addSite(newSite);
-      setNewSite({ domain: "", listing_url: "" });
+      setNewSite({ domain: "", root_url: "" });
       setShowAddForm(false);
       fetchData(true);
     } catch (error) {
       alert(`Failed to add site: ${error.message}`);
+    }
+  };
+
+  const handleStartIndexing = async (site) => {
+    try {
+      await startCrawl(site.id);
+      setActiveIndexingSite(site);
+    } catch (error) {
+      alert(`Failed to start indexing: ${error.message}`);
+    }
+  };
+
+  const handleDeleteSite = async (siteId) => {
+    if (!confirm("Are you sure you want to delete this site and all its indexed products?")) return;
+    try {
+      await deleteSite(siteId);
+      fetchData(true);
+    } catch (error) {
+      alert(`Failed to delete site: ${error.message}`);
+    }
+  };
+
+  const handleReset = async () => {
+    if (!confirm("CRITICAL ACTION: This will wipe ALL sites, products, and crawl history. Proceed?")) return;
+    try {
+      await resetAllData();
+      fetchData(true);
+    } catch (error) {
+      alert(`Failed to reset data: ${error.message}`);
     }
   };
 
@@ -124,6 +157,14 @@ export default function ScraperDashboard() {
             className="p-2.5 text-muted hover:text-accent transition-colors disabled:opacity-50"
           >
             <RefreshCcw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
+          </button>
+          <div className="w-px h-4 bg-bordercolor mx-2" />
+          <button 
+            onClick={handleReset}
+            className="p-2.5 text-red-400 hover:text-red-600 transition-colors"
+            title="Reset All Data"
+          >
+            <Trash2 className="w-4 h-4" />
           </button>
         </div>
       </div>
@@ -204,14 +245,14 @@ export default function ScraperDashboard() {
                         />
                       </div>
                       <div>
-                        <label className="block text-[11px] uppercase tracking-widest text-muted mb-2 font-bold">Listing URL (Source)</label>
+                        <label className="block text-[11px] uppercase tracking-widest text-muted mb-2 font-bold">Root URL (Homepage)</label>
                         <input 
                           required
                           type="url" 
                           placeholder="https://..."
                           className="w-full bg-light border border-bordercolor rounded-2xl px-5 py-3.5 text-sm focus:border-accent outline-none transition-all font-sans"
-                          value={newSite.listing_url}
-                          onChange={e => setNewSite({...newSite, listing_url: e.target.value})}
+                          value={newSite.root_url}
+                          onChange={e => setNewSite({...newSite, root_url: e.target.value})}
                         />
                       </div>
                     </div>
@@ -234,42 +275,16 @@ export default function ScraperDashboard() {
                 )}
               </AnimatePresence>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {sites.map((site) => {
-                  const lastJob = jobs.find(j => j.site === site.domain);
-                  return (
-                    <div key={site.domain} className="bg-white p-6 rounded-3xl border border-bordercolor shadow-sm hover:shadow-md transition-all group flex items-center justify-between">
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 rounded-xl bg-light text-muted group-hover:text-accent group-hover:bg-accent/5 transition-all">
-                            <Globe className="w-4 h-4" />
-                          </div>
-                          <p className="font-bold text-navy truncate">{site.domain}</p>
-                        </div>
-                        <p className="text-[10px] text-muted mt-2 uppercase tracking-widest font-sans">
-                          {lastJob ? `Last Run: ${new Date(lastJob.started_at).toLocaleDateString()}` : 'No Activity'}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <a 
-                          href={site.listing_url} 
-                          target="_blank" 
-                          rel="noreferrer"
-                          className="w-10 h-10 rounded-full border border-bordercolor flex items-center justify-center text-muted hover:text-navy hover:bg-light transition-all"
-                          title="Open listing URL"
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
-                        <button 
-                          onClick={() => handleTrigger(site.domain)}
-                          className="w-10 h-10 rounded-full bg-navy flex items-center justify-center text-white hover:bg-accent transition-all shadow-lg shadow-navy/10"
-                        >
-                          <Play className="w-4 h-4 fill-current ml-0.5" />
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="grid grid-cols-1 gap-6">
+                {sites.map((site) => (
+                  <SiteCard 
+                    key={site.domain} 
+                    site={site} 
+                    lastJob={jobs.find(j => j.site === site.domain)} 
+                    onTrigger={handleStartIndexing}
+                    onDelete={() => handleDeleteSite(site.id)}
+                  />
+                ))}
               </div>
             </section>
 
@@ -413,6 +428,93 @@ export default function ScraperDashboard() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <AnimatePresence>
+        {activeIndexingSite && (
+          <CrawlerConsole 
+            site={activeIndexingSite} 
+            onClose={() => setActiveIndexingSite(null)} 
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function SiteCard({ site, lastJob, onTrigger, onDelete }) {
+  const [category, setCategory] = useState("");
+  const [gender, setGender] = useState("");
+
+  return (
+    <div className="bg-white p-6 md:p-8 rounded-[32px] border border-bordercolor shadow-sm hover:shadow-xl hover:shadow-navy/5 transition-all group flex flex-col md:flex-row md:items-center justify-between gap-8">
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-2xl bg-light text-muted group-hover:text-accent group-hover:bg-accent/5 transition-all shadow-sm">
+            <Globe className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="font-serif text-xl font-semibold text-navy truncate">{site.domain}</p>
+            <p className="text-[10px] text-muted mt-1 uppercase tracking-widest font-sans font-bold flex items-center gap-2">
+              <Clock className="w-3 h-3" />
+              {lastJob ? `Last Active: ${new Date(lastJob.started_at).toLocaleString()}` : 'Never processed'}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col sm:flex-row items-center gap-4 bg-light/50 p-2 rounded-[24px] border border-bordercolor/50">
+        <div className="flex flex-col gap-1 px-3">
+          <label className="text-[9px] uppercase tracking-tighter text-muted font-black">Tag Category</label>
+          <input 
+            type="text" 
+            placeholder="e.g. Shoes"
+            className="bg-transparent border-none outline-none text-xs text-navy font-bold placeholder:text-muted/50 w-24"
+            value={category}
+            onChange={e => setCategory(e.target.value)}
+          />
+        </div>
+        <div className="w-px h-8 bg-bordercolor/50 hidden sm:block" />
+        <div className="flex flex-col gap-1 px-3">
+          <label className="text-[9px] uppercase tracking-tighter text-muted font-black">Tag Gender</label>
+          <select 
+            className="bg-transparent border-none outline-none text-xs text-navy font-bold cursor-pointer"
+            value={gender}
+            onChange={e => setGender(e.target.value)}
+          >
+            <option value="">Unisex/Auto</option>
+            <option value="women">Women</option>
+            <option value="men">Men</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <a 
+          href={site.root_url} 
+          target="_blank" 
+          rel="noreferrer"
+          className="w-12 h-12 rounded-full border border-bordercolor flex items-center justify-center text-muted hover:text-navy hover:bg-white hover:shadow-md transition-all group/link"
+          title="Open listing URL"
+        >
+          <ExternalLink className="w-4 h-4 transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" />
+        </a>
+        <button 
+          onClick={onDelete}
+          className="w-12 h-12 rounded-full border border-red-100 flex items-center justify-center text-red-300 hover:text-red-500 hover:bg-red-50 transition-all"
+          title="Delete Site"
+        >
+          <Trash2 className="w-4 h-4" />
+        </button>
+        <button 
+          onClick={() => onTrigger(site)}
+          className="flex items-center gap-3 pl-6 pr-4 py-3 rounded-full bg-navy text-white hover:bg-accent transition-all shadow-xl shadow-navy/10 group/btn"
+        >
+          <span className="text-xs font-black uppercase tracking-widest">Start Indexing</span>
+          <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center transition-transform group-hover/btn:scale-110">
+            <Play className="w-3 h-3 fill-current ml-0.5" />
+          </div>
+        </button>
+      </div>
     </div>
   );
 }

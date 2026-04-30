@@ -7,7 +7,7 @@ if __name__ == "__main__":
     if sys.platform == 'win32':
         asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
     
-    print("🚀 Starting FiFy Backend with ProactorEventLoop...")
+    print("[INFO] Starting FiFy Backend with ProactorEventLoop...")
     uvicorn.run(
         "backend.main:app",
         host="0.0.0.0",

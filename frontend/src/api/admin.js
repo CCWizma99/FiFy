@@ -23,8 +23,12 @@ export async function getDeadLetters(limit = 50) {
   return resp.json();
 }
 
-export async function triggerScrape(site) {
-  const resp = await fetch(`${API_BASE}/scrape/trigger?site=${encodeURIComponent(site)}`, {
+export async function triggerScrape(site, category = null, gender = null) {
+  const params = new URLSearchParams({ site });
+  if (category) params.append("category", category);
+  if (gender) params.append("gender", gender);
+
+  const resp = await fetch(`${API_BASE}/scrape/trigger?${params.toString()}`, {
     method: "POST",
   });
   if (!resp.ok) throw new Error(`Failed to trigger scrape for ${site}`);
@@ -44,5 +48,40 @@ export async function addSite(site) {
     body: JSON.stringify(site),
   });
   if (!resp.ok) throw new Error("Failed to add new site");
+  return resp.json();
+}
+export async function startCrawl(siteId) {
+  const resp = await fetch(`${API_BASE}/sites/${siteId}/start`, { method: "POST" });
+  if (!resp.ok) throw new Error("Failed to start crawl");
+  return resp.json();
+}
+
+export async function pauseCrawl(siteId) {
+  const resp = await fetch(`${API_BASE}/sites/${siteId}/pause`, { method: "POST" });
+  if (!resp.ok) throw new Error("Failed to pause crawl");
+  return resp.json();
+}
+
+export async function resumeCrawl(siteId) {
+  const resp = await fetch(`${API_BASE}/sites/${siteId}/resume`, { method: "POST" });
+  if (!resp.ok) throw new Error("Failed to resume crawl");
+  return resp.json();
+}
+
+export async function stopCrawl(siteId) {
+  const resp = await fetch(`${API_BASE}/sites/${siteId}/stop`, { method: "POST" });
+  if (!resp.ok) throw new Error("Failed to stop crawl");
+  return resp.json();
+}
+
+export async function deleteSite(siteId) {
+  const resp = await fetch(`${API_BASE}/sites/${siteId}`, { method: "DELETE" });
+  if (!resp.ok) throw new Error("Failed to delete site");
+  return resp.json();
+}
+
+export async function resetAllData() {
+  const resp = await fetch(`${API_BASE}/reset`, { method: "POST" });
+  if (!resp.ok) throw new Error("Failed to reset data");
   return resp.json();
 }

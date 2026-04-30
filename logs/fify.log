@@ -1,199 +1,47 @@
-2026-04-29T16:03:38 | INFO     | backend.main | Starting FiFy backend (Loop: _WindowsSelectorEventLoop)…
-2026-04-29T16:03:39 | INFO     | backend.main | SQLite DB initialised.
-2026-04-29T16:03:39 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.18s
-2026-04-29T16:03:39 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.18s
-2026-04-29T16:03:39 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.18s
-2026-04-29T16:03:39 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.18s
-2026-04-29T16:03:39 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.18s
-2026-04-29T16:03:39 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.18s
-2026-04-29T16:03:39 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:03:39 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.01s
-2026-04-29T16:03:39 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.01s
-2026-04-29T16:03:39 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.01s
-2026-04-29T16:03:39 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.01s
-2026-04-29T16:03:39 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:04:34 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:04:34 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.01s
-2026-04-29T16:04:34 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.01s
-2026-04-29T16:04:34 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:04:34 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.01s
-2026-04-29T16:04:34 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.01s
-2026-04-29T16:04:34 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.01s
-2026-04-29T16:04:34 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.01s
-2026-04-29T16:04:55 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:04:55 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-04-29T16:04:55 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:04:55 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:05:25 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:05:25 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-04-29T16:05:25 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:05:25 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:05:34 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:05:34 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-04-29T16:05:34 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:05:34 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:05:56 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:05:56 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-04-29T16:05:56 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:05:56 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:06:26 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:06:26 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-04-29T16:06:26 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:06:26 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:06:34 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:06:34 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.02s
-2026-04-29T16:06:34 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.01s
-2026-04-29T16:06:34 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:06:40 | INFO     | backend.routers.admin | API: Received trigger request for kandyselection.lk
-2026-04-29T16:06:40 | INFO     | backend.routers.admin | API: Spawning background thread for kandyselection.lk...
-2026-04-29T16:06:40 | INFO     | backend.routers.admin | API: Thread spawned successfully for kandyselection.lk
-2026-04-29T16:06:40 | INFO     | backend.routers.admin | --- THREAD START: Scraper worker for kandyselection.lk ---
-2026-04-29T16:06:40 | INFO     | backend.main | POST /admin/scrape/trigger | Status: 200 | Duration: 0.00s
-2026-04-29T16:06:40 | INFO     | backend.routers.admin | Worker: Forcing Windows ProactorEventLoopPolicy...
-2026-04-29T16:06:40 | INFO     | backend.routers.admin | Worker: Creating fresh event loop...
-2026-04-29T16:06:40 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:06:40 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-04-29T16:06:40 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:06:40 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:06:48 | INFO     | backend.routers.admin | Worker: Calling run_site(kandyselection.lk)…
-2026-04-29T16:06:48 | INFO     | scraper.executor | Starting scrape for kandyselection.lk
-2026-04-29T16:06:49 | INFO     | scraper.executor | Trying cached listing_url_pattern: https://www.kandyselection.lk/shop
-2026-04-29T16:06:49 | INFO     | scraper.executor | Running card discovery for kandyselection.lk...
-2026-04-29T16:06:49 | INFO     | scraper.executor | Fetching HTML samples from https://www.kandyselection.lk/shop…
-2026-04-29T16:06:50 | INFO     | scraper.executor | Launching browser (Chromium)…
-2026-04-29T16:06:50 | INFO     | scraper.executor | Navigating to: https://www.kandyselection.lk/shop
-2026-04-29T16:06:55 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:06:55 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-04-29T16:06:55 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:06:55 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:07:15 | INFO     | scraper.executor | Discovery: Already on a valid shop/category page.
-2026-04-29T16:07:25 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:07:25 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-04-29T16:07:25 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:07:25 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:07:34 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:07:34 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-04-29T16:07:34 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:07:34 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:07:40 | WARNING  | scraper.executor | Could not confirm product hydration. HTML may be incomplete.
-2026-04-29T16:07:40 | INFO     | scraper.executor | Listing HTML fetched (164276 chars)
-2026-04-29T16:07:40 | INFO     | scraper.executor | Card sample extracted (3000 chars) using 'div.group'
-2026-04-29T16:07:40 | INFO     | scraper.executor | --- CARD HTML SAMPLE ---
-<div class="group"><div style="position:relative;width:100%;padding-bottom:144.44444444444446%" data-radix-aspect-ratio-wrapper=""><div class="overflow-hidden relative" style="position:absolute;top:0;right:0;bottom:0;left:0"><a href="/product/chrisbella-the-midtown-merlot"><div class="flex gap-2 items-center absolute top-2 z-20 left-2"></div><div class=""><img alt="chrisbella-the-midtown-merlot" loading="lazy" width="400" height="600" decoding="async" data-nimg="1" class="md:w-full md:hover:scale-105 md:hover:rotate-1 transition-all ease-in-out cursor-pointer absolute top-0 left-0 w-full h-full object-cover" style="color:transparent" src="/_next/image?url=https%3A%2F%2Fkandyselection.lk%2Fuploads%2Fd13a7e7c751f84fcc8369212df2e7fdf.jpg&amp;w=828&amp;q=75" srcset="/_next/image?url=https%3A%2F%2Fkandyselection.lk%2Fuploads%2Fd13a7e7c751f84fcc8369212df2e7fdf.jpg&amp;w=640&amp;q=75 1x, /_next/image?url=https%3A%2F%2Fkandyselection.lk%2Fuploads%2Fd13a7e7c751f84fcc8369212df2e7fdf.jpg&amp;w=828&amp;q=75 2x"><img alt="" loading="lazy" width="400" height="600" decoding="async" data-nimg="1" class="md:w-full md:hover:scale-105 md:hover:rotate-1 transition-all ease-in-out opacity-0 group-hover:opacity-100 absolute top-0 left-0 w-full h-full object-cover delay-150 cursor-pointer" srcset="/_next/image?url=https%3A%2F%2Fkandyselection.lk%2Fuploads%2F3693f41fa8f19c19b077ebef99ca93a2.jpg&amp;w=640&amp;q=75 1x, /_next/image?url=https%3A%2F%2Fkandyselection.lk%2Fuploads%2F3693f41fa8f19c19b077ebef99ca93a2.jpg&amp;w=828&amp;q=75 2x" src="/_next/image?url=https%3A%2F%2Fkandyselection.lk%2Fuploads%2F3693f41fa8f19c19b077ebef99ca93a2.jpg&amp;w=828&amp;q=75" style="color: transparent;"></div></a><div class="w-full absolute bottom-0 text-xs flex items-center gap-1 md:bottom-[-50px] group-hover:md:bottom-0 transition-all ease-in-out"><div class="w-full"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-none w-full"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus w-4 h-4 mr-2"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>Quick Add</button></div></div></div></div><div class="py-2 "><a href="/product/chrisbella-the-midtown-merlot"><h3 class="">Chrisbella The Midtown Merlot</h3></a><a class="mt-2 block" href="/product/chrisbella-the-midtown-merlot"><div class="flex gap-2 mb-2 cursor-pointer"><div class="font-semibold text-sm">LKR&nbsp;11,295.00</div></div></a><div class="mb-2 text-xs text-muted-foreground"><div class="inline-fl
---- END CARD HTML ---
-2026-04-29T16:07:40 | INFO     | scraper.executor | Confirmed listing URL (page.url after card discovery): https://www.kandyselection.lk/shop
-2026-04-29T16:07:40 | INFO     | scraper.executor | Searching for first product link to get sample detail page…
-2026-04-29T16:07:40 | INFO     | scraper.executor | Found sample product link: https://www.kandyselection.lk/product/chrisbella-the-midtown-merlot. Navigating…
-2026-04-29T16:07:56 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:07:56 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-04-29T16:07:56 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:07:56 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:08:04 | INFO     | scraper.executor | Detail HTML fetched (132494 chars)
-2026-04-29T16:08:04 | INFO     | scraper.executor | Samples fetched and browser closed.
-2026-04-29T16:08:04 | INFO     | scraper.site_analyzer.agent | Analyzing site with AI: kandyselection.lk
-2026-04-29T16:08:04 | INFO     | scraper.site_analyzer.agent | Using model: gemini-2.5-flash-lite
-2026-04-29T16:08:04 | INFO     | scraper.site_analyzer.agent | Sending prompt to Gemini (29046 chars)…
-2026-04-29T16:08:06 | INFO     | scraper.site_analyzer.agent | Gemini response received.
-2026-04-29T16:08:06 | INFO     | scraper.site_analyzer.agent | Overriding AI listing_url 'https://kandyselection.lk/' with confirmed URL: https://www.kandyselection.lk/shop
-2026-04-29T16:08:06 | INFO     | scraper.site_analyzer.agent | Config generated and saved for kandyselection.lk
-2026-04-29T16:08:06 | INFO     | scraper.site_analyzer.agent | --- GENERATED CONFIG FOR kandyselection.lk ---
-{
-  "site": "kandyselection.lk",
-  "listing_url_pattern": "https://www.kandyselection.lk/shop",
-  "pagination_selector": null,
-  "product_card_selector": "div.group",
-  "fields": {
-    "name": "h3",
-    "price": "div.font-semibold",
-    "image_url": "img.md\\:w-full",
-    "product_url": "a[href*='product']"
-  }
-}
---- END CONFIG ---
-2026-04-29T16:08:06 | INFO     | scraper.executor | Starting scrape for kandyselection.lk with generated config.
-2026-04-29T16:08:07 | INFO     | scraper.executor | Launching browser for main scrape…
-2026-04-29T16:08:07 | INFO     | scraper.executor | Navigating to start URL: https://www.kandyselection.lk/shop
-2026-04-29T16:08:26 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:08:26 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-04-29T16:08:26 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:08:26 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:08:32 | INFO     | scraper.executor | Processing listing page 1…
-2026-04-29T16:08:34 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:08:34 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-04-29T16:08:34 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:08:34 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:08:57 | WARNING  | scraper.executor | Timeout waiting for product links on page 1. Trying anyway.
-2026-04-29T16:08:57 | INFO     | scraper.executor | Card selector 'div.group' found on page.
-2026-04-29T16:08:57 | INFO     | scraper.executor | Found 9 product cards on page 1
-2026-04-29T16:08:58 | INFO     | embeddings.clip_model | Loading CLIP model: openai/clip-vit-base-patch32
-2026-04-29T16:09:04 | INFO     | embeddings.clip_model | CLIP model loaded.
-2026-04-29T16:09:05 | INFO     | vector_db.client | Connecting to Qdrant at https://f09755ca-28d4-4a52-9145-ea3ee65b292b.eu-west-1-0.aws.cloud.qdrant.io
-2026-04-29T16:09:05 | INFO     | vector_db.client | Qdrant client connected.
-2026-04-29T16:09:23 | INFO     | scraper.executor | Finished page 1. Processed 9 new products.
-2026-04-29T16:09:23 | INFO     | scraper.executor | No pagination selector provided. Stopping.
-2026-04-29T16:09:23 | INFO     | scraper.executor | Scrape process complete. Total products added: 9
-2026-04-29T16:09:24 | INFO     | scraper.executor | Scrape complete for kandyselection.lk — 9 products processed
-2026-04-29T16:09:24 | INFO     | backend.routers.admin | Worker: Scrape job finished for kandyselection.lk
-2026-04-29T16:09:24 | INFO     | backend.routers.admin | Worker: Closing event loop...
-2026-04-29T16:09:34 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.01s
-2026-04-29T16:09:34 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:09:34 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-04-29T16:09:34 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-04-29T16:09:34 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:09:34 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:09:34 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:09:34 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:10:34 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:10:34 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-04-29T16:10:34 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.01s
-2026-04-29T16:10:34 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:10:34 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.01s
-2026-04-29T16:10:34 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.01s
-2026-04-29T16:10:34 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.01s
-2026-04-29T16:10:34 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:11:34 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:11:34 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-04-29T16:11:34 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:11:34 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:11:34 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.01s
-2026-04-29T16:11:34 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-04-29T16:11:34 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:11:34 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.01s
-2026-04-29T16:12:02 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:12:02 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.01s
-2026-04-29T16:12:02 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.01s
-2026-04-29T16:12:02 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:12:09 | INFO     | backend.main | GET /products/ | Status: 200 | Duration: 0.64s
-2026-04-29T16:12:09 | INFO     | backend.main | GET /products/ | Status: 200 | Duration: 0.18s
-2026-04-29T16:12:34 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:12:34 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.01s
-2026-04-29T16:12:34 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.01s
-2026-04-29T16:12:34 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.01s
-2026-04-29T16:13:20 | INFO     | backend.main | Shutting down FiFy backend.
-2026-04-29T16:13:34 | INFO     | backend.main | Starting FiFy backend (Loop: _WindowsSelectorEventLoop)…
-2026-04-29T16:13:34 | INFO     | backend.main | SQLite DB initialised.
-2026-04-29T16:13:34 | INFO     | vector_db.client | Connecting to Qdrant at https://f09755ca-28d4-4a52-9145-ea3ee65b292b.eu-west-1-0.aws.cloud.qdrant.io
-2026-04-29T16:13:34 | INFO     | vector_db.client | Qdrant client connected.
-2026-04-29T16:13:34 | INFO     | backend.main | GET /products/ | Status: 200 | Duration: 0.80s
-2026-04-29T16:13:35 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.01s
-2026-04-29T16:13:35 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.02s
-2026-04-29T16:13:35 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.02s
-2026-04-29T16:13:35 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.02s
-2026-04-29T16:14:12 | INFO     | backend.main | GET /products/ | Status: 200 | Duration: 0.47s
-2026-04-29T16:14:13 | INFO     | backend.main | GET /products/ | Status: 200 | Duration: 0.16s
-2026-04-29T16:14:14 | INFO     | backend.main | GET /products/ | Status: 200 | Duration: 0.16s
-2026-04-29T16:14:15 | INFO     | backend.main | GET /products/ | Status: 200 | Duration: 0.16s
-2026-04-29T16:14:16 | INFO     | backend.main | GET /products/ | Status: 200 | Duration: 0.16s
-2026-04-29T16:14:16 | INFO     | backend.main | GET /products/ | Status: 200 | Duration: 0.18s
-2026-04-29T16:14:17 | INFO     | backend.main | GET /products/ | Status: 200 | Duration: 0.15s
-2026-04-29T16:14:18 | INFO     | backend.main | GET /products/ | Status: 200 | Duration: 0.16s
-2026-04-29T16:14:18 | INFO     | backend.main | GET /products/ | Status: 200 | Duration: 0.16s
-2026-04-29T16:14:19 | INFO     | backend.main | GET /products/ | Status: 200 | Duration: 0.15s
-2026-04-29T16:14:20 | INFO     | backend.main | GET /products/ | Status: 200 | Duration: 0.16s
-2026-04-29T16:14:29 | INFO     | backend.main | GET /products/ | Status: 200 | Duration: 0.48s
-2026-04-29T16:14:34 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-04-29T16:14:34 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-04-29T16:14:34 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-04-29T16:14:34 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-04-29T16:14:53 | INFO     | backend.main | GET /products/ | Status: 200 | Duration: 0.54s
-2026-04-29T16:14:53 | INFO     | backend.main | GET /favicon.ico | Status: 404 | Duration: 0.00s
+2026-05-01T00:17:38 | INFO     | reset_system | Truncating log file: data\dead_letter.log
+2026-05-01T00:17:38 | INFO     | reset_system | System reset complete. You can now start the services for a fresh start.
+2026-05-01T00:18:03 | INFO     | backend.main | Starting FiFy backend (Loop: _WindowsSelectorEventLoop)…
+2026-05-01T00:18:03 | INFO     | backend.main | SQLite DB initialised.
+2026-05-01T00:18:04 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T00:18:04 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
+2026-05-01T00:18:04 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T00:18:04 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.01s
+2026-05-01T00:18:27 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T00:18:27 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
+2026-05-01T00:18:27 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
+2026-05-01T00:18:27 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T00:18:27 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
+2026-05-01T00:18:27 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
+2026-05-01T00:18:27 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
+2026-05-01T00:18:27 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
+2026-05-01T00:18:36 | INFO     | backend.main | OPTIONS /admin/sites/10 | Status: 200 | Duration: 0.00s
+2026-05-01T00:18:36 | INFO     | vector_db.client | Connecting to Qdrant at https://f09755ca-28d4-4a52-9145-ea3ee65b292b.eu-west-1-0.aws.cloud.qdrant.io
+2026-05-01T00:18:36 | INFO     | vector_db.client | Qdrant client connected.
+2026-05-01T00:18:38 | INFO     | backend.main | DELETE /admin/sites/10 | Status: 200 | Duration: 1.95s
+2026-05-01T00:18:38 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T00:18:38 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.01s
+2026-05-01T00:18:38 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T00:18:38 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.01s
+2026-05-01T00:18:47 | INFO     | scraper.spider | Starting spider for thilakawardhana.lk...
+2026-05-01T00:18:48 | INFO     | backend.main | POST /admin/sites/6/start | Status: 200 | Duration: 0.99s
+2026-05-01T00:18:57 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T00:18:57 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.01s
+2026-05-01T00:18:57 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
+2026-05-01T00:18:57 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T00:19:27 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
+2026-05-01T00:19:27 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
+2026-05-01T00:19:27 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
+2026-05-01T00:19:27 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
+2026-05-01T00:19:57 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T00:19:57 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.01s
+2026-05-01T00:19:57 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
+2026-05-01T00:19:57 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
+2026-05-01T00:20:27 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
+2026-05-01T00:20:27 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
+2026-05-01T00:20:27 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
+2026-05-01T00:20:27 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
+2026-05-01T00:20:53 | INFO     | backend.main | POST /admin/sites/6/stop | Status: 200 | Duration: 0.12s
+2026-05-01T00:20:57 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
+2026-05-01T00:20:57 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
+2026-05-01T00:20:57 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
+2026-05-01T00:20:57 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
