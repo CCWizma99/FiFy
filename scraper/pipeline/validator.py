@@ -22,7 +22,7 @@ class ValidationError(Exception):
     pass
 
 
-async def validate_product(product: dict, expected_domain: str) -> dict:
+async def validate_product(product: dict, expected_domain: str, check_image: bool = True) -> dict:
     """
     Validate a scraped product dict. Raises ValidationError if invalid.
     Returns the cleaned product dict on success.
@@ -45,16 +45,17 @@ async def validate_product(product: dict, expected_domain: str) -> dict:
     if expected_domain not in parsed.netloc:
         errors.append(f"product_url domain mismatch: {parsed.netloc!r}")
 
-    # 4. Image URL reachability
+    # 4. Image URL reachability (Optional)
     image_url = product.get("image_url", "")
     if image_url:
-        try:
-            async with httpx.AsyncClient(timeout=5.0) as client:
-                resp = await client.head(image_url, follow_redirects=True)
-            if resp.status_code != 200:
-                errors.append(f"image_url returned {resp.status_code}")
-        except Exception as e:
-            errors.append(f"image_url unreachable: {e}")
+        if check_image:
+            try:
+                async with httpx.AsyncClient(timeout=5.0) as client:
+                    resp = await client.head(image_url, follow_redirects=True)
+                if resp.status_code != 200:
+                    errors.append(f"image_url returned {resp.status_code}")
+            except Exception as e:
+                errors.append(f"image_url unreachable: {e}")
     else:
         errors.append("image_url is missing")
 

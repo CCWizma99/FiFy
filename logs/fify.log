@@ -1,47 +1,829 @@
-2026-05-01T00:17:38 | INFO     | reset_system | Truncating log file: data\dead_letter.log
-2026-05-01T00:17:38 | INFO     | reset_system | System reset complete. You can now start the services for a fresh start.
-2026-05-01T00:18:03 | INFO     | backend.main | Starting FiFy backend (Loop: _WindowsSelectorEventLoop)…
-2026-05-01T00:18:03 | INFO     | backend.main | SQLite DB initialised.
-2026-05-01T00:18:04 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.01s
-2026-05-01T00:18:04 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-05-01T00:18:04 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.01s
-2026-05-01T00:18:04 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.01s
-2026-05-01T00:18:27 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.01s
-2026-05-01T00:18:27 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-05-01T00:18:27 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-05-01T00:18:27 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.01s
-2026-05-01T00:18:27 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-05-01T00:18:27 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-05-01T00:18:27 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-05-01T00:18:27 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-05-01T00:18:36 | INFO     | backend.main | OPTIONS /admin/sites/10 | Status: 200 | Duration: 0.00s
-2026-05-01T00:18:36 | INFO     | vector_db.client | Connecting to Qdrant at https://f09755ca-28d4-4a52-9145-ea3ee65b292b.eu-west-1-0.aws.cloud.qdrant.io
-2026-05-01T00:18:36 | INFO     | vector_db.client | Qdrant client connected.
-2026-05-01T00:18:38 | INFO     | backend.main | DELETE /admin/sites/10 | Status: 200 | Duration: 1.95s
-2026-05-01T00:18:38 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.01s
-2026-05-01T00:18:38 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.01s
-2026-05-01T00:18:38 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.01s
-2026-05-01T00:18:38 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.01s
-2026-05-01T00:18:47 | INFO     | scraper.spider | Starting spider for thilakawardhana.lk...
-2026-05-01T00:18:48 | INFO     | backend.main | POST /admin/sites/6/start | Status: 200 | Duration: 0.99s
-2026-05-01T00:18:57 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.01s
-2026-05-01T00:18:57 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.01s
-2026-05-01T00:18:57 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-05-01T00:18:57 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.01s
-2026-05-01T00:19:27 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-05-01T00:19:27 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-05-01T00:19:27 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-05-01T00:19:27 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-05-01T00:19:57 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.01s
-2026-05-01T00:19:57 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.01s
-2026-05-01T00:19:57 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-05-01T00:19:57 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-05-01T00:20:27 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-05-01T00:20:27 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-05-01T00:20:27 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-05-01T00:20:27 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
-2026-05-01T00:20:53 | INFO     | backend.main | POST /admin/sites/6/stop | Status: 200 | Duration: 0.12s
-2026-05-01T00:20:57 | INFO     | backend.main | GET /admin/stats | Status: 200 | Duration: 0.00s
-2026-05-01T00:20:57 | INFO     | backend.main | GET /admin/scrape/status | Status: 200 | Duration: 0.00s
-2026-05-01T00:20:57 | INFO     | backend.main | GET /admin/dead-letters | Status: 200 | Duration: 0.00s
-2026-05-01T00:20:57 | INFO     | backend.main | GET /admin/sites | Status: 200 | Duration: 0.00s
+2026-05-01T18:03:49 | INFO     | backend.main | Starting FiFy backend (Loop: ProactorEventLoop)…
+2026-05-01T18:03:49 | INFO     | backend.main | SQLite DB initialised.
+2026-05-01T18:04:11 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:04:11 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:04:11 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:04:11 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:04:27 | INFO     | backend.main | PUT http://localhost:8000/admin/sites/6 | Status: 200 | Duration: 0.54s
+2026-05-01T18:04:27 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:04:27 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.02s
+2026-05-01T18:04:27 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.00s
+2026-05-01T18:04:27 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.03s
+2026-05-01T18:04:28 | INFO     | scraper.spider | Initializing spider for thilakawardhana.com...
+2026-05-01T18:04:28 | INFO     | backend.main | POST http://localhost:8000/admin/sites/6/start | Status: 200 | Duration: 0.63s
+2026-05-01T18:04:30 | INFO     | scraper.spider | Launching browser engine...
+2026-05-01T18:04:30 | INFO     | scraper.spider | No configuration found. Analyzing site structure...
+2026-05-01T18:04:30 | INFO     | scraper.executor | Fetching HTML samples from https://thilakawardhana.com…
+2026-05-01T18:04:32 | INFO     | scraper.executor | Launching browser (Chromium)…
+2026-05-01T18:04:32 | INFO     | scraper.executor | Navigating to: https://thilakawardhana.com
+2026-05-01T18:04:40 | INFO     | scraper.executor | Discovery: Home page detected. Navigating to potential category: https://thilakawardhana.com/collections/womens-wear
+2026-05-01T18:04:41 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.06s
+2026-05-01T18:04:41 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.03s
+2026-05-01T18:04:41 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.07s
+2026-05-01T18:04:41 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.03s
+2026-05-01T18:04:45 | INFO     | scraper.executor | Product text content confirmed in DOM — page fully hydrated.
+2026-05-01T18:04:47 | INFO     | scraper.executor | Listing HTML fetched (90734 chars)
+2026-05-01T18:04:47 | INFO     | scraper.executor | --- LISTING HTML SAMPLE (first 2000 chars) ---
+<!DOCTYPE html> <html class="js" lang="en" style="--header-height: 178px;"> <body class="template-collection size_varriant_style_2 product-card-layout-01 enable_button_disable_arrows quick_shop_option_3 show_effect_close disable_currencies sticky-toolbar-mobile chrome"> <div aria-hidden="true" data-shopify-privacy="exclude" tabindex="-1"><iframe aria-hidden="true" name="web-pixel-sandbox-CUSTOM-112197944-LAX-f4d92176wf885f6b7p0eb8715fm37bdd4ce" sandbox="allow-scripts allow-forms" tabindex="-1"></iframe></div><div class="body-content-wrapper"> <a class="skip-to-content-link button visually-hidden">Skip to content</a> <!-- BEGIN sections: header-group --> <div class="shopify-section shopify-section-group-header-group"> <announcement-bar-component aria-label="Announcement" class="announcement-bar d-block active-screen" role="region"> <div class="container layout--slider"> <div class="row has-arrows"><div class="announcement-bar__message text-center"><div class="message"> SAME DAY DELIVERY WITHIN COLOMBO &amp; KIRIBATHGODA SUBURBS</div></div></div></div> </announcement-bar-component> </div><div class="shopify-section shopify-section-group-header-group section-header-navigation section-header-nav-multi-site shopify-section-header-sticky" data-index="22"><link media="all" onload="this.media='all'" rel="stylesheet"/> <!-- <script src="//thilakawardhana.com/cdn/shop/t/2/assets/details-disclosure.js?v=93212506302784624691717659110" defer="defer"></script> --><sticky-header class="header-navigation-wrapper header-wrapper" data-sticky-type="on_scroll"> <header class="header header-06 header-nav-multi-site header--has-menu"> <div class="header-top--wrapper flex-align-center pr-30"><div class="header-top--left header__multi-page text-left clearfix" data-menu-tab=""><ul class="header__list list-unstyled disable-srollbar d-flex flex-align-center"><li class="item is-active p-relative item--border" data-load-page=""> <a class="link">Fashion</a> </li><li class="item p-relative item--
+--- END LISTING HTML ---
+2026-05-01T18:04:47 | INFO     | scraper.executor | Card sample extracted (36320 chars) using 'li.product'
+2026-05-01T18:04:47 | INFO     | scraper.executor | --- FULL CARD HTML SAMPLE (Sent to AI) ---
+<li class="product">
+                                        <div class="product-item" data-product-id="10676212793656" data-json-product="{&quot;id&quot;: 10676212793656,&quot;handle&quot;: &quot;tendenza-bubble-sleeve-polka-dotted-dress&quot;,&quot;media&quot;: null,&quot;variants&quot;: [{&quot;id&quot;:52299380326712,&quot;title&quot;:&quot;S&quot;,&quot;option1&quot;:&quot;S&quot;,&quot;option2&quot;:null,&quot;option3&quot;:null,&quot;sku&quot;:&quot;TW16168&quot;,&quot;requires_shipping&quot;:true,&quot;taxable&quot;:true,&quot;featured_image&quot;:null,&quot;available&quot;:true,&quot;name&quot;:&quot;Tendenza Bubble Sleeve Polka Dotted Dress - S&quot;,&quot;public_title&quot;:&quot;S&quot;,&quot;options&quot;:[&quot;S&quot;],&quot;price&quot;:149000,&quot;weight&quot;:350,&quot;compare_at_price&quot;:null,&quot;inventory_management&quot;:&quot;shopify&quot;,&quot;barcode&quot;:&quot;6260193196&quot;,&quot;requires_selling_plan&quot;:false,&quot;selling_plan_allocations&quot;:[],&quot;quantity_rule&quot;:{&quot;min&quot;:1,&quot;max&quot;:null,&quot;increment&quot;:1}},{&quot;id&quot;:52299380359480,&quot;title&quot;:&quot;M&quot;,&quot;option1&quot;:&quot;M&quot;,&quot;option2&quot;:null,&quot;option3&quot;:null,&quot;sku&quot;:&quot;TW16168&quot;,&quot;requires_shipping&quot;:true,&quot;taxable&quot;:true,&quot;featured_image&quot;:null,&quot;available&quot;:true,&quot;name&quot;:&quot;Tendenza Bubble Sleeve Polka Dotted Dress - M&quot;,&quot;public_title&quot;:&quot;M&quot;,&quot;options&quot;:[&quot;M&quot;],&quot;price&quot;:149000,&quot;weight&quot;:350,&quot;compare_at_price&quot;:null,&quot;inventory_management&quot;:&quot;shopify&quot;,&quot;barcode&quot;:&quot;6260193196&quot;,&quot;requires_selling_plan&quot;:false,&quot;selling_plan_allocations&quot;:[],&quot;quantity_rule&quot;:{&quot;min&quot;:1,&quot;max&quot;:null,&quot;increment&quot;:1}},{&quot;id&quot;:52299380392248,&quot;title&quot;:&quot;L&quot;,&quot;option1&quot;:&quot;L&quot;,&quot;option2&quot;:null,&quot;option3&quot;:null,&quot;sku&quot;:&quot;TW16168&quot;,&quot;requires_shipping&quot;:true,&quot;taxable&quot;:true,&quot;featured_image&quot;:null,&quot;available&quot;:true,&quot;name&quot;:&quot;Tendenza Bubble Sleeve Polka Dotted Dress - L&quot;,&quot;public_title&quot;:&quot;L&quot;,&quot;options&quot;:[&quot;L&quot;],&quot;price&quot;:149000,&quot;weight&quot;:350,&quot;compare_at_price&quot;:null,&quot;inventory_management&quot;:&quot;shopify&quot;,&quot;barcode&quot;:&quot;6260193196&quot;,&quot;requires_selling_plan&quot;:false,&quot;selling_plan_allocations&quot;:[],&quot;quantity_rule&quot;:{&quot;min&quot;:1,&quot;max&quot;:null,&quot;increment&quot;:1}},{&quot;id&quot;:52299380425016,&quot;title&quot;:&quot;XL&quot;,&quot;option1&quot;:&quot;XL&quot;,&quot;option2&quot;:null,&quot;option3&quot;:null,&quot;sku&quot;:&quot;TW16168&quot;,&quot;requires_shipping&quot;:true,&quot;taxable&quot;:true,&quot;featured_image&quot;:null,&quot;available&quot;:true,&quot;name&quot;:&quot;Tendenza Bubble Sleeve Polka Dotted Dress - XL&quot;,&quot;public_title&quot;:&quot;XL&quot;,&quot;options&quot;:[&quot;XL&quot;],&quot;price&quot;:149000,&quot;weight&quot;:350,&quot;compare_at_price&quot;:null,&quot;inventory_management&quot;:&quot;shopify&quot;,&quot;barcode&quot;:&quot;6260193196&quot;,&quot;requires_selling_plan&quot;:false,&quot;selling_plan_allocations&quot;:[],&quot;quantity_rule&quot;:{&quot;min&quot;:1,&quot;max&quot;:null,&quot;increment&quot;:1}},{&quot;id&quot;:52299380457784,&quot;title&quot;:&quot;XXL&quot;,&quot;option1&quot;:&quot;XXL&quot;,&quot;option2&quot;:null,&quot;option3&quot;:null,&quot;sku&quot;:&quot;TW16168&quot;,&quot;requires_shipping&quot;:true,&quot;taxable&quot;:true,&quot;featured_image&quot;:null,&quot;available&quot;:true,&quot;name&quot;:&quot;Tendenza Bubble Sleeve Polka Dotted Dress - XXL&quot;,&quot;public_title&quot;:&quot;XXL&quot;,&quot;options&quot;:[&quot;XXL&quot;],&quot;price&quot;:149000,&quot;weight&quot;:350,&quot;compare_at_price&quot;:null,&quot;inventory_management&quot;:&quot;shopify&quot;,&quot;barcode&quot;:&quot;6260193196&quot;,&quot;requires_selling_plan&quot;:false,&quot;selling_plan_allocations&quot;:[],&quot;quantity_rule&quot;:{&quot;min&quot;:1,&quot;max&quot;:null,&quot;increment&quot;:1}},{&quot;id&quot;:52299382030648,&quot;title&quot;:&quot;3XL&quot;,&quot;option1&quot;:&quot;3XL&quot;,&quot;option2&quot;:null,&quot;option3&quot;:null,&quot;sku&quot;:&quot;TW16168&quot;,&quot;requires_shipping&quot;:true,&quot;taxable&quot;:true,&quot;featured_image&quot;:null,&quot;available&quot;:true,&quot;name&quot;:&quot;Tendenza Bubble Sleeve Polka Dotted Dress - 3XL&quot;,&quot;public_title&quot;:&quot;3XL&quot;,&quot;options&quot;:[&quot;3XL&quot;],&quot;price&quot;:149000,&quot;weight&quot;:350,&quot;compare_at_price&quot;:null,&quot;inventory_management&quot;:&quot;shopify&quot;,&quot;barcode&quot;:&quot;6260193196&quot;,&quot;requires_selling_plan&quot;:false,&quot;selling_plan_allocations&quot;:[],&quot;quantity_rule&quot;:{&quot;min&quot;:1,&quot;max&quot;:null,&quot;increment&quot;:1}}]}">
+  <div class="card">
+    <div class="card-product">
+      <div class="card-product__wrapper">
+<div class="card-media card-media--adapt media--hover-effect media--loading-effect" style="padding-bottom: 150.03663003663004%;">
+          <img srcset="//thilakawardhana.com/cdn/shop/files/TW16168_165x.jpg?v=1777630348 165w,//thilakawardhana.com/cdn/shop/files/TW16168_170x.jpg?v=1777630348 170w,//thilakawardhana.com/cdn/shop/files/TW16168_185x.jpg?v=1777630348 185w,//thilakawardhana.com/cdn/shop/files/TW16168_198x.jpg?v=1777630348 198w,//thilakawardhana.com/cdn/shop/files/TW16168_205x.jpg?v=1777630348 205w,//thilakawardhana.com/cdn/shop/files/TW16168_210x.jpg?v=1777630348 210w,//thilakawardhana.com/cdn/shop/files/TW16168_220x.jpg?v=1777630348 220w,//thilakawardhana.com/cdn/shop/files/TW16168_245x.jpg?v=1777630348 245w,//thilakawardhana.com/cdn/shop/files/TW16168_270x.jpg?v=1777630348 270w,//thilakawardhana.com/cdn/shop/files/TW16168_290x.jpg?v=1777630348 290w,//thilakawardhana.com/cdn/shop/files/TW16168_320x.jpg?v=1777630348 320w,//thilakawardhana.com/cdn/shop/files/TW16168_355x.jpg?v=1777630348 355w,//thilakawardhana.com/cdn/shop/files/TW16168_360x.jpg?v=1777630348 360w,//thilakawardhana.com/cdn/shop/files/TW16168_370x.jpg?v=1777630348 370w,//thilakawardhana.com/cdn/shop/files/TW16168_420x.jpg?v=1777630348 420w,//thilakawardhana.com/cdn/shop/files/TW16168_430x.jpg?v=1777630348 430w,//thilakawardhana.com/cdn/shop/files/TW16168_460x.jpg?v=1777630348 460w,//thilakawardhana.com/cdn/shop/files/TW16168_470x.jpg?v=1777630348 470w,//thilakawardhana.com/cdn/shop/files/TW16168_510x.jpg?v=1777630348 510w,//thilakawardhana.com/cdn/shop/files/TW16168_523x.jpg?v=1777630348 523w,//thilakawardhana.com/cdn/shop/files/TW16168_533x.jpg?v=1777630348 533w,//thilakawardhana.com/cdn/shop/files/TW16168_534x.jpg?v=1777630348 534w,//thilakawardhana.com/cdn/shop/files/TW16168_570x.jpg?v=1777630348 570w,//thilakawardhana.com/cdn/shop/files/TW16168_640x.jpg?v=1777630348 640w,//thilakawardhana.com/cdn/shop/files/TW16168_665x.jpg?v=1777630348 665w,//thilakawardhana.com/cdn/shop/files/TW16168_670x.jpg?v=1777630348 670w,//thilakawardhana.com/cdn/shop/files/TW16168_720x.jpg?v=1777630348 720w,//thilakawardhana.com/cdn/shop/files/TW16168_775x.jpg?v=1777630348 775w,//thilakawardhana.com/cdn/shop/files/TW16168_785x.jpg?v=1777630348 785w,//thilakawardhana.com/cdn/shop/files/TW16168_870x.jpg?v=1777630348 870w,//thilakawardhana.com/cdn/shop/files/TW16168_930x.jpg?v=1777630348 930w,//thilakawardhana.com/cdn/shop/files/TW16168_935x.jpg?v=1777630348 935w,//thilakawardhana.com/cdn/shop/files/TW16168_940x.jpg?v=1777630348 940w,//thilakawardhana.com/cdn/shop/files/TW16168_1066x.jpg?v=1777630348 1066w,//thilakawardhana.com/cdn/shop/files/TW16168_1160x.jpg?v=1777630348 1160w,//thilakawardhana.com/cdn/shop/files/TW16168_1170x.jpg?v=1777630348 1170w,//thilakawardhana.com/cdn/shop/files/TW16168_1270x.jpg?v=1777630348 1270w" src="//thilakawardhana.com/cdn/shop/files/TW16168_533x.jpg?v=1777630348" sizes="(min-width: 1100px) 1365px, (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2)" alt="Tendenza Bubble Sleeve Polka Dotted Dress" size="1365" loading="lazy" class="motion-reduce"><img srcset="//thilakawardhana.com/cdn/shop/files/TW16168.1_165x.jpg?v=1777630348 165w,//thilakawardhana.com/cdn/shop/files/TW16168.1_170x.jpg?v=1777630348 170w,//thilakawardhana.com/cdn/shop/files/TW16168.1_185x.jpg?v=1777630348 185w,//thilakawardhana.com/cdn/shop/files/TW16168.1_198x.jpg?v=1777630348 198w,//thilakawardhana.com/cdn/shop/files/TW16168.1_205x.jpg?v=1777630348 205w,//thilakawardhana.com/cdn/shop/files/TW16168.1_210x.jpg?v=1777630348 210w,//thilakawardhana.com/cdn/shop/files/TW16168.1_220x.jpg?v=1777630348 220w,//thilakawardhana.com/cdn/shop/files/TW16168.1_245x.jpg?v=1777630348 245w,//thilakawardhana.com/cdn/shop/files/TW16168.1_270x.jpg?v=1777630348 270w,//thilakawardhana.com/cdn/shop/files/TW16168.1_290x.jpg?v=1777630348 290w,//thilakawardhana.com/cdn/shop/files/TW16168.1_320x.jpg?v=1777630348 320w,//thilakawardhana.com/cdn/shop/files/TW16168.1_355x.jpg?v=1777630348 355w,//thilakawardhana.com/cdn/shop/files/TW16168.1_360x.jpg?v=1777630348 360w,//thilakawardhana.com/cdn/shop/files/TW16168.1_370x.jpg?v=1777630348 370w,//thilakawardhana.com/cdn/shop/files/TW16168.1_420x.jpg?v=1777630348 420w,//thilakawardhana.com/cdn/shop/files/TW16168.1_430x.jpg?v=1777630348 430w,//thilakawardhana.com/cdn/shop/files/TW16168.1_460x.jpg?v=1777630348 460w,//thilakawardhana.com/cdn/shop/files/TW16168.1_470x.jpg?v=1777630348 470w,//thilakawardhana.com/cdn/shop/files/TW16168.1_510x.jpg?v=1777630348 510w,//thilakawardhana.com/cdn/shop/files/TW16168.1_523x.jpg?v=1777630348 523w,//thilakawardhana.com/cdn/shop/files/TW16168.1_533x.jpg?v=1777630348 533w,//thilakawardhana.com/cdn/shop/files/TW16168.1_534x.jpg?v=1777630348 534w,//thilakawardhana.com/cdn/shop/files/TW16168.1_570x.jpg?v=1777630348 570w,//thilakawardhana.com/cdn/shop/files/TW16168.1_640x.jpg?v=1777630348 640w,//thilakawardhana.com/cdn/shop/files/TW16168.1_665x.jpg?v=1777630348 665w,//thilakawardhana.com/cdn/shop/files/TW16168.1_670x.jpg?v=1777630348 670w,//thilakawardhana.com/cdn/shop/files/TW16168.1_720x.jpg?v=1777630348 720w,//thilakawardhana.com/cdn/shop/files/TW16168.1_775x.jpg?v=1777630348 775w,//thilakawardhana.com/cdn/shop/files/TW16168.1_785x.jpg?v=1777630348 785w,//thilakawardhana.com/cdn/shop/files/TW16168.1_870x.jpg?v=1777630348 870w,//thilakawardhana.com/cdn/shop/files/TW16168.1_930x.jpg?v=1777630348 930w,//thilakawardhana.com/cdn/shop/files/TW16168.1_935x.jpg?v=1777630348 935w,//thilakawardhana.com/cdn/shop/files/TW16168.1_940x.jpg?v=1777630348 940w,//thilakawardhana.com/cdn/shop/files/TW16168.1_1066x.jpg?v=1777630348 1066w,//thilakawardhana.com/cdn/shop/files/TW16168.1_1160x.jpg?v=1777630348 1160w,//thilakawardhana.com/cdn/shop/files/TW16168.1_1170x.jpg?v=1777630348 1170w,//thilakawardhana.com/cdn/shop/files/TW16168.1_1270x.jpg?v=1777630348 1270w" src="//thilakawardhana.com/cdn/shop/files/TW16168.1_533x.jpg?v=1777630348" sizes="(min-width: 1100px) 1366px, (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2)" alt="Tendenza Bubble Sleeve Polka Dotted Dress" size="1366" loading="lazy" class="motion-reduce">
+          <a class="card-link" href="/products/tendenza-bubble-sleeve-polka-dotted-dress" title="Tendenza Bubble Sleeve Polka Dotted Dress"></a>
+        </div><div class="card-product__group group-right"><div class="card-product__group-item card-wishlist">
+                <button type="button" title="Add to wishlist" class="wishlist-icon show-mb" data-wishlist="" data-wishlist-handle="tendenza-bubble-sleeve-polka-dotted-dress" data-product-id="10676212793656">
+                  <span class="text">Add to wishlist</span> <svg role="img" aria-hidden="true" viewBox="0 0 512 512" class="icon icon-wishlist w-h-"><g><g><path d="M474.644,74.27C449.391,45.616,414.358,29.836,376,29.836c-53.948,0-88.103,32.22-107.255,59.25 c-4.969,7.014-9.196,14.047-12.745,20.665c-3.549-6.618-7.775-13.651-12.745-20.665c-19.152-27.03-53.307-59.25-107.255-59.25 c-38.358,0-73.391,15.781-98.645,44.435C13.267,101.605,0,138.213,0,177.351c0,42.603,16.633,82.228,52.345,124.7 c31.917,37.96,77.834,77.088,131.005,122.397c19.813,16.884,40.302,34.344,62.115,53.429l0.655,0.574 c2.828,2.476,6.354,3.713,9.88,3.713s7.052-1.238,9.88-3.713l0.655-0.574c21.813-19.085,42.302-36.544,62.118-53.431 c53.168-45.306,99.085-84.434,131.002-122.395C495.367,259.578,512,219.954,512,177.351 C512,138.213,498.733,101.605,474.644,74.27z M309.193,401.614c-17.08,14.554-34.658,29.533-53.193,45.646 c-18.534-16.111-36.113-31.091-53.196-45.648C98.745,312.939,30,254.358,30,177.351c0-31.83,10.605-61.394,29.862-83.245 C79.34,72.007,106.379,59.836,136,59.836c41.129,0,67.716,25.338,82.776,46.594c13.509,19.064,20.558,38.282,22.962,45.659 c2.011,6.175,7.768,10.354,14.262,10.354c6.494,0,12.251-4.179,14.262-10.354c2.404-7.377,9.453-26.595,22.962-45.66 c15.06-21.255,41.647-46.593,82.776-46.593c29.621,0,56.66,12.171,76.137,34.27C471.395,115.957,482,145.521,482,177.351 C482,254.358,413.255,312.939,309.193,401.614z"></path></g></g></svg>
+                </button>
+              </div><div class="card-product__group-item card-quickview card-quickviewIcon show-mb">
+                <button type="button" title="Quick View" class="quickview-icon" data-product-id="10676212793656" data-open-quick-view-popup="" data-product-handle="tendenza-bubble-sleeve-polka-dotted-dress">
+                  <span class="text">Quick View</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 511.999 511.999" aria-hidden="true" focusable="false" role="presentation" class="icon icon-eyes"><path d=" M508.745,246.041c-4.574-6.257-113.557-153.206-252.748-153.206S7.818,239.784,3.249,246.035 c-4.332,5.936-4.332,13.987,0,19.923c4.569,6.257,113.557,153.206,252.748,153.206s248.174-146.95,252.748-153.201 C513.083,260.028,513.083,251.971,508.745,246.041z M255.997,385.406c-102.529,0-191.33-97.533-217.617-129.418 c26.253-31.913,114.868-129.395,217.617-129.395c102.524,0,191.319,97.516,217.617,129.418 C447.361,287.923,358.746,385.406,255.997,385.406z"></path><path d="M255.997,154.725c-55.842,0-101.275,45.433-101.275,101.275s45.433,101.275,101.275,101.275  s101.275-45.433,101.275-101.275S311.839,154.725,255.997,154.725z M255.997,323.516c-37.23,0-67.516-30.287-67.516-67.516 s30.287-67.516,67.516-67.516s67.516,30.287,67.516,67.516S293.227,323.516,255.997,323.516z"></path></svg>
+                </button>
+              </div></div><div class="wrapper-item-size card-product__group text-center">
+    <ul class="sizes-list"><li class="size-item"><a title="S" href="/products/tendenza-bubble-sleeve-polka-dotted-dress?variant=52299380326712">S</a></li><li class="size-item"><a title="M" href="/products/tendenza-bubble-sleeve-polka-dotted-dress?variant=52299380359480">M</a></li><li class="size-item"><a title="L" href="/products/tendenza-bubble-sleeve-polka-dotted-dress?variant=52299380392248">L</a></li><li class="size-item"><a title="XL" href="/products/tendenza-bubble-sleeve-polka-dotted-dress?variant=52299380425016">XL</a></li><li class="item-size-more hide-count-5"><a href="/products/tendenza-bubble-sleeve-polka-dotted-dress" title="More Size">+ 2</a></li><li class="item-size-more show-count-5" style="display: none;"><a href="/products/tendenza-bubble-sleeve-polka-dotted-dress" title="More Size">+ -3</a></li></ul>
+</div>
+<div class="card-action">
+            <form action="/cart/add" method="post" class="variants" id="form-10676212793656-template--22872434639160__product-grid" data-product-id="10676212793656" enctype="multipart/form-data"><a class="button button-ATC" href="/products/tendenza-bubble-sleeve-polka-dotted-dress" data-quickshop-popup="" data-product-handle="tendenza-bubble-sleeve-polka-dotted-dress">Quick Add
+</a></form><div class="variants-popup custom-scrollbar">
+                <script>window.quick_view_inven_array_10676212793656 = {'52299380326712': '5','52299380359480': '10','52299380392248': '10','52299380425016': '10','52299380457784': '8','52299382030648': '5',};</script><a href="#" class="variants-popup-close" data-cancel-quickshop-popup="" alt="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M 38.982422 6.9707031 A 2.0002 2.0002 0 0 0 37.585938 7.5859375 L 24 21.171875 L 10.414062 7.5859375 A 2.0002 2.0002 0 0 0 8.9785156 6.9804688 A 2.0002 2.0002 0 0 0 7.5859375 10.414062 L 21.171875 24 L 7.5859375 37.585938 A 2.0002 2.0002 0 1 0 10.414062 40.414062 L 24 26.828125 L 37.585938 40.414062 A 2.0002 2.0002 0 1 0 40.414062 37.585938 L 26.828125 24 L 40.414062 10.414062 A 2.0002 2.0002 0 0 0 38.982422 6.9707031 z"></path></svg>Close</a>
+<div class="variants-popup-content text-center" data-quickshop=""><form action="/cart/add" method="post" class="variants" id="swatch-form-10676212793656-template--22872434639160__product-grid-" data-id="product-actions-10676212793656" enctype="multipart/form-data"><div class="selector-wrapper selector-wrapper-1 swatch" data-option-index="0">
+                    <label class="form-label">Size: <span class="label-value-1">S</span></label><div class="swatch-element s available" data-value="S">
+                                <input class="single-option" type="radio" name="SingleOptionSelector-0-10676212793656-template--22872434639160__product-grid" data-index="option1" value="S" id="SingleOptionSelector0-S-10676212793656-template--22872434639160__product-grid">
+                                <label class="single-label" title="S" for="SingleOptionSelector0-S-10676212793656-template--22872434639160__product-grid">S</label><a class="single-action clearfix" href="#" data-open-notify-popup="" data-variant-id=""><span class="text">Notify me</span></a></div>
+                        
+<div class="swatch-element m available" data-value="M">
+                                <input class="single-option" type="radio" name="SingleOptionSelector-0-10676212793656-template--22872434639160__product-grid" data-index="option1" value="M" id="SingleOptionSelector0-M-10676212793656-template--22872434639160__product-grid">
+                                <label class="single-label" title="M" for="SingleOptionSelector0-M-10676212793656-template--22872434639160__product-grid">M</label><a class="single-action clearfix" href="#" data-open-notify-popup="" data-variant-id=""><span class="text">Notify me</span></a></div>
+                        
+<div class="swatch-element l available" data-value="L">
+                                <input class="single-option" type="radio" name="SingleOptionSelector-0-10676212793656-template--22872434639160__product-grid" data-index="option1" value="L" id="SingleOptionSelector0-L-10676212793656-template--22872434639160__product-grid">
+                                <label class="single-label" title="L" for="SingleOptionSelector0-L-10676212793656-template--22872434639160__product-grid">L</label><a class="single-action clearfix" href="#" data-open-notify-popup="" data-variant-id=""><span class="text">Notify me</span></a></div>
+                        
+<div class="swatch-element xl available" data-value="XL">
+                                <input class="single-option" type="radio" name="SingleOptionSelector-0-10676212793656-template--22872434639160__product-grid" data-index="option1" value="XL" id="SingleOptionSelector0-XL-10676212793656-template--22872434639160__product-grid">
+                                <label class="single-label" title="XL" for="SingleOptionSelector0-XL-10676212793656-template--22872434639160__product-grid">XL</label><a class="single-action clearfix" href="#" data-open-notify-popup="" data-variant-id=""><span class="text">Notify me</span></a></div>
+                        
+<div class="swatch-element xxl available" data-value="XXL">
+                                <input class="single-option" type="radio" name="SingleOptionSelector-0-10676212793656-template--22872434639160__product-grid" data-index="option1" value="XXL" id="SingleOptionSelector0-XXL-10676212793656-template--22872434639160__product-grid">
+                                <label class="single-label" title="XXL" for="SingleOptionSelector0-XXL-10676212793656-template--22872434639160__product-grid">XXL</label><a class="single-action clearfix" href="#" data-open-notify-popup="" data-variant-id=""><span class="text">Notify me</span></a></div>
+                        
+<div class="swatch-element 3xl available" data-value="3XL">
+                                <input class="single-option" type="radio" name="SingleOptionSelector-0-10676212793656-template--22872434639160__product-grid" data-index="option1" value="3XL" id="SingleOptionSelector0-3XL-10676212793656-template--22872434639160__product-grid">
+                                <label class="single-label" title="3XL" for="SingleOptionSelector0-3XL-10676212793656-template--22872434639160__product-grid">3XL</label><a class="single-action clearfix" href="#" data-open-notify-popup="" data-variant-id=""><span class="text">Notify me</span></a></div>
+                        
+</div><select name="id" id="ProductSelect-10676212793656-template--22872434639160__product-grid" class="selector-wrapper-hidden" style="display: none;"><option value="52299380326712" data-value="52299380326712">S</option><option value="52299380359480" data-value="52299380359480">M</option><option value="52299380392248" data-value="52299380392248">L</option><option value="52299380425016" data-value="52299380425016">XL</option><option value="52299380457784" data-value="52299380457784">XXL</option><option value="52299382030648" data-value="52299382030648">3XL</option>
+        </select>
+        <label class="form-label label-quantity-2">Quantity:</label>
+        <quickshop-update-quantity class="previewCartItem-qty quickshop-quantity">
+            <button type="button" name="minus" data-minus-quantity-quickshop="" class="minus btn-quantity"></button>
+            <input class="form-input quantity ProductDrop" name="quantity" id="quickshop-update-10676212793656-template--22872434639160__product-grid" data-qtt-id1="quantity10676212793656" value="1" type="number" data-product-card-quantity="" data-product-card-quantity-id="10676212793656">
+            <button type="button" name="plus" data-plus-quantity-quickshop="" class="plus btn-quantity"></button>
+        </quickshop-update-quantity>
+        <div class="product-card__button2">
+            <input type="hidden" name="quantity" value="1"><button data-btn-addtocart="" class="button button2 add-to-cart-btn" type="submit" data-form-id="#swatch-form-10676212793656-template--22872434639160__product-grid-">Add</button>
+        </div>
+    </form>
+</div>
+
+            </div>
+          </div></div>
+    </div>
+    <div class="card-information">
+      <div class="card-information__wrapper text-center">
+        <h3 class="card__heading">
+          <a class="card-title link-underline card-title-ellipsis" href="/products/tendenza-bubble-sleeve-polka-dotted-dress" data-product-title="Tendenza Bubble Sleeve Polka Dotted Dress" data-product-url="/products/tendenza-bubble-sleeve-polka-dotted-dress">Tendenza Bubble Sleeve Polka Dotted Dress</a>
+        </h3>
+
+        <div class="card-summary card-list__hidden">Dress Skater Printed Casual Wear Material : &nbsp;Woven Material Composition : 100% Polyester Model Height 5' 6" wearing size M Please bear in mind that the photo may be slightly different from the actual item in terms of colour due to lighting conditions or...</div>
+<div class="card-price">
+            <div class="
+    price ">
+  <dl><div class="price__regular"><dd class="price__last">
+        <span class="price-item price-item--regular">Rs 1,490.00</span>
+      </dd>
+    </div>
+    <div style="font-size: 10px; color: #8e8e8e; font-weight: 400;">
+      or pay in 3 x <b>Rs 496.66</b> with
+      <a style="display: inline-flex !important;" href="https://paykoko.com/customer-education" target="_blank">
+        <img style="
+            position: relative; height: 20px !important; width: auto
+            !important;margin-top: 0px;top: 3px !important;
+          " src="https://paykoko.com/img/logo1.7ff549c0.png" alt="Koko">
+      </a>
+      <a style="display: inline-flex !important;" href="https://paykoko.com/customer-education" target="_blank">
+        <img style="
+            position: relative; height: 12px !important; width: auto
+            !important;margin-top: 0px;top: 0px !important;
+          " src="https://koko-merchant.oss-ap-southeast-1.aliyuncs.com/bnpl-site-cms-dev/koko-images/info.png" alt="Koko">
+      </a>
+    </div>
+    
+    <div style="font-size: 10px; color: #8e8e8e; font-weight: 400;">
+      3 X <b>Rs 496.66
+      </b> or <b> 3% Cashback</b> with <a href="https://mintpay.lk/" target="_blank" style="text-decoration:none;">
+      <img style="display: inline-flex; position: relative; cursor: pointer; height: 20px; vertical-align: middle; width: auto;" src="https://static.mintpay.lk/static/base/logo/mintpay-pill.png" alt="Mintpay">
+      </a>
+      <a href="https://mintpay.lk/education/?price=149000&amp;cashback=300" target="_blank" style="text-decoration:none;">
+        <img style="display: inline-flex; position: relative; cursor: pointer; height: 12px; vertical-align: middle; width: auto;" src="https://static.mintpay.lk/static/base/logo/information.png" alt="Mintpay Education">
+      </a>
+    </div>
+    <div class="payzy-wrap" style="font-size: 10px; color: #8e8e8e; font-weight: 400;">
+  or up to&nbsp;4&nbsp;x <b class="payzy">Rs 372.50</b> with
+    <a style="display: inline-flex !important;" href="https://payzy.lk/" target="_blank">
+       <img style="position: relative; width: 45px !important; margin-top: 1px; top: 4px !important;" src="https://payzy.secureapps.center/logos/payzy.png" alt="Payzy">
+    </a>
+    <a style="display: inline-flex !important;" href="https://payzy.lk/installment?price=1,490.00" target="_blank">
+       <img style="position: relative; width: 12px !important; margin-top: 1px; top: 3px !important;" src="https://d2zh3hh1z5w0qw.cloudfront.net/public/stores/info_icon.png" alt="PayzyInfo">
+    </a>
+</div>
+    <div class="price__sale"><dd class="price__compare" data-compare="">
+        <s class="price-item price-item--regular"></s>
+      </dd><dd class="price__last" data-last="149000">
+        <span class="price-item price-item--sale">Rs 1,490.00</span>
+      </dd></div>
+    <small class="unit-price caption hidden">
+      <dt class="visually-hidden">Unit price</dt>
+      <dd class="price__last">
+        <span></span><span aria-hidden="true">/</span><span class="visually-hidden">&nbsp;per&nbsp;</span><span></span>
+      </dd>
+    </small>
+  </dl>
+</div>
+
+          </div></div>
+
+
+  
+    
+    
+
+
+  <ul class="product-size-list">
+    
+    
+      
+        
+        <li class="product-size-item">
+          <label class="product-form__label available" for="option-10676212793656-Size-1" data-variant-id="52299380326712">
+            <span class="text">S</span>
+          </label>
+        </li>
+      
+    
+      
+        
+        <li class="product-size-item">
+          <label class="product-form__label available" for="option-10676212793656-Size-2" data-variant-id="52299380359480">
+            <span class="text">M</span>
+          </label>
+        </li>
+      
+    
+      
+        
+        <li class="product-size-item">
+          <label class="product-form__label available" for="option-10676212793656-Size-3" data-variant-id="52299380392248">
+            <span class="text">L</span>
+          </label>
+        </li>
+      
+    
+      
+        
+        <li class="product-size-item">
+          <label class="product-form__label available" for="option-10676212793656-Size-4" data-variant-id="52299380425016">
+            <span class="text">XL</span>
+          </label>
+        </li>
+      
+    
+      
+        
+        <li class="product-size-item">
+          <label class="product-form__label available" for="option-10676212793656-Size-5" data-variant-id="52299380457784">
+            <span class="text">XXL</span>
+          </label>
+        </li>
+      
+    
+      
+        
+        <li class="product-size-item">
+          <label class="product-form__label available" for="option-10676212793656-Size-6" data-variant-id="52299382030648">
+            <span class="text">3XL</span>
+          </label>
+        </li>
+      
+    
+  </ul>
+
+<div class="card-action__group card-list__hidden">
+    <div class="card-action">
+        <form action="/cart/add" method="post" class="variants" id="form-10676212793656-template--22872434639160__product-gridlist" data-product-id="10676212793656" enctype="multipart/form-data"><a class="button button-ATC" href="/products/tendenza-bubble-sleeve-polka-dotted-dress" data-quickshop-popup="">Quick Add</a></form>
+    </div>
+</div>
+<div class="card-action__group variants-popup card-list__hidden">
+    <div class="card-action variants-popup-form"><div class="custom-scrollbar">
+                        
+                        <script>window.quick_view_inven_array_10676212793656 = {'52299380326712': '5','52299380359480': '10','52299380392248': '10','52299380425016': '10','52299380457784': '8','52299382030648': '5',};</script><a href="#" class="variants-popup-close" data-cancel-quickshop-popup="" alt="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M 38.982422 6.9707031 A 2.0002 2.0002 0 0 0 37.585938 7.5859375 L 24 21.171875 L 10.414062 7.5859375 A 2.0002 2.0002 0 0 0 8.9785156 6.9804688 A 2.0002 2.0002 0 0 0 7.5859375 10.414062 L 21.171875 24 L 7.5859375 37.585938 A 2.0002 2.0002 0 1 0 10.414062 40.414062 L 24 26.828125 L 37.585938 40.414062 A 2.0002 2.0002 0 1 0 40.414062 37.585938 L 26.828125 24 L 40.414062 10.414062 A 2.0002 2.0002 0 0 0 38.982422 6.9707031 z"></path></svg>Close</a>
+<div class="variants-popup-content text-center" data-quickshop=""><form action="/cart/add" method="post" class="variants" id="swatch-form-10676212793656-template--22872434639160__product-grid-category-list" data-id="product-actions-10676212793656list" enctype="multipart/form-data"><div class="selector-wrapper selector-wrapper-1 swatch" data-option-index="0">
+                    <label class="form-label">Size: <span class="label-value-1">S</span></label><div class="swatch-element s available" data-value="S">
+                                <input class="single-option" type="radio" name="SingleOptionSelector-0-10676212793656-template--22872434639160__product-grid-categorylist" data-index="option1" value="S" id="SingleOptionSelector0-S-10676212793656-template--22872434639160__product-grid-categorylist">
+                                <label class="single-label" title="S" for="SingleOptionSelector0-S-10676212793656-template--22872434639160__product-grid-categorylist">S</label><a class="single-action clearfix" href="#" data-open-notify-popup="" data-variant-id=""><span class="text">Notify me</span></a></div>
+                        
+<div class="swatch-element m available" data-value="M">
+                                <input class="single-option" type="radio" name="SingleOptionSelector-0-10676212793656-template--22872434639160__product-grid-categorylist" data-index="option1" value="M" id="SingleOptionSelector0-M-10676212793656-template--22872434639160__product-grid-categorylist">
+                                <label class="single-label" title="M" for="SingleOptionSelector0-M-10676212793656-template--22872434639160__product-grid-categorylist">M</label><a class="single-action clearfix" href="#" data-open-notify-popup="" data-variant-id=""><span class="text">Notify me</span></a></div>
+                        
+<div class="swatch-element l available" data-value="L">
+                                <input class="single-option" type="radio" name="SingleOptionSelector-0-10676212793656-template--22872434639160__product-grid-categorylist" data-index="option1" value="L" id="SingleOptionSelector0-L-10676212793656-template--22872434639160__product-grid-categorylist">
+                                <label class="single-label" title="L" for="SingleOptionSelector0-L-10676212793656-template--22872434639160__product-grid-categorylist">L</label><a class="single-action clearfix" href="#" data-open-notify-popup="" data-variant-id=""><span class="text">Notify me</span></a></div>
+                        
+<div class="swatch-element xl available" data-value="XL">
+                                <input class="single-option" type="radio" name="SingleOptionSelector-0-10676212793656-template--22872434639160__product-grid-categorylist" data-index="option1" value="XL" id="SingleOptionSelector0-XL-10676212793656-template--22872434639160__product-grid-categorylist">
+                                <label class="single-label" title="XL" for="SingleOptionSelector0-XL-10676212793656-template--22872434639160__product-grid-categorylist">XL</label><a class="single-action clearfix" href="#" data-open-notify-popup="" data-variant-id=""><span class="text">Notify me</span></a></div>
+                        
+<div class="swatch-element xxl available" data-value="XXL">
+                                <input class="single-option" type="radio" name="SingleOptionSelector-0-10676212793656-template--22872434639160__product-grid-categorylist" data-index="option1" value="XXL" id="SingleOptionSelector0-XXL-10676212793656-template--22872434639160__product-grid-categorylist">
+                                <label class="single-label" title="XXL" for="SingleOptionSelector0-XXL-10676212793656-template--22872434639160__product-grid-categorylist">XXL</label><a class="single-action clearfix" href="#" data-open-notify-popup="" data-variant-id=""><span class="text">Notify me</span></a></div>
+                        
+<div class="swatch-element 3xl available" data-value="3XL">
+                                <input class="single-option" type="radio" name="SingleOptionSelector-0-10676212793656-template--22872434639160__product-grid-categorylist" data-index="option1" value="3XL" id="SingleOptionSelector0-3XL-10676212793656-template--22872434639160__product-grid-categorylist">
+                                <label class="single-label" title="3XL" for="SingleOptionSelector0-3XL-10676212793656-template--22872434639160__product-grid-categorylist">3XL</label><a class="single-action clearfix" href="#" data-open-notify-popup="" data-variant-id=""><span class="text">Notify me</span></a></div>
+                        
+</div><select name="id" id="ProductSelect-10676212793656-template--22872434639160__product-grid-categorylist" class="selector-wrapper-hidden" style="display: none;"><option value="52299380326712" data-value="52299380326712">S</option><option value="52299380359480" data-value="52299380359480">M</option><option value="52299380392248" data-value="52299380392248">L</option><option value="52299380425016" data-value="52299380425016">XL</option><option value="52299380457784" data-value="52299380457784">XXL</option><option value="52299382030648" data-value="52299382030648">3XL</option>
+        </select>
+        <label class="form-label label-quantity-2">Quantity:</label>
+        <quickshop-update-quantity class="previewCartItem-qty quickshop-quantity">
+            <button type="button" name="minus" data-minus-quantity-quickshop="" class="minus btn-quantity"></button>
+            <input class="form-input quantity ProductDrop" name="quantity" id="quickshop-update-10676212793656-template--22872434639160__product-grid-category" data-qtt-id1="quantity10676212793656" value="1" type="number" data-product-card-quantity="" data-product-card-quantity-id="10676212793656">
+            <button type="button" name="plus" data-plus-quantity-quickshop="" class="plus btn-quantity"></button>
+        </quickshop-update-quantity>
+        <div class="product-card__button2">
+            <input type="hidden" name="quantity" value="1"><button data-btn-addtocart="" class="button button2 add-to-cart-btn" type="submit" data-form-id="#swatch-form-10676212793656-template--22872434639160__product-grid-category-list">Add</button>
+        </div>
+    </form>
+</div>
+
+                    </div></div>
+</div>
+</div>
+  </div>
+</div>
+
+                                    </li>
+--- END CARD HTML ---
+2026-05-01T18:04:47 | INFO     | scraper.executor | Confirmed listing URL (page.url after card discovery): https://thilakawardhana.com/collections/womens-wear
+2026-05-01T18:04:47 | INFO     | scraper.executor | Searching for first product link to get sample detail page…
+2026-05-01T18:04:47 | INFO     | scraper.executor | Found sample product link: https://thilakawardhana.com/products/tendenza-v-neck-flared-sleeve-midi-dress-2. Navigating…
+2026-05-01T18:04:52 | INFO     | scraper.executor | Detail HTML fetched (113414 chars)
+2026-05-01T18:04:52 | INFO     | scraper.executor | --- DETAIL HTML SAMPLE (first 2000 chars) ---
+<!DOCTYPE html> <html class="js" lang="en" style="--header-height: 178px;"> <body class="template-product size_varriant_style_2 product-card-layout-01 enable_button_disable_arrows quick_shop_option_3 show_effect_close disable_currencies sticky-toolbar-mobile chrome"> <div aria-hidden="true" data-shopify-privacy="exclude" tabindex="-1"><iframe aria-hidden="true" name="web-pixel-sandbox-CUSTOM-112197944-LAX-f4d92176wf885f6b7p0eb8715fm37bdd4ce" sandbox="allow-scripts allow-forms" tabindex="-1"></iframe></div><div class="body-content-wrapper"> <a class="skip-to-content-link button visually-hidden">Skip to content</a> <!-- BEGIN sections: header-group --> <div class="shopify-section shopify-section-group-header-group"> <announcement-bar-component aria-label="Announcement" class="announcement-bar d-block active-screen" role="region"> <div class="container layout--slider"> <div class="row has-arrows"><div class="announcement-bar__message text-center"><div class="message"> SAME DAY DELIVERY WITHIN COLOMBO &amp; KIRIBATHGODA SUBURBS</div></div></div></div> </announcement-bar-component> </div><div class="shopify-section shopify-section-group-header-group section-header-navigation section-header-nav-multi-site shopify-section-header-sticky" data-index="22"><link media="all" onload="this.media='all'" rel="stylesheet"/> <!-- <script src="//thilakawardhana.com/cdn/shop/t/2/assets/details-disclosure.js?v=93212506302784624691717659110" defer="defer"></script> --><sticky-header class="header-navigation-wrapper header-wrapper" data-sticky-type="on_scroll"> <header class="header header-06 header-nav-multi-site header--has-menu"> <div class="header-top--wrapper flex-align-center pr-30"><div class="header-top--left header__multi-page text-left clearfix" data-menu-tab=""><ul class="header__list list-unstyled disable-srollbar d-flex flex-align-center"><li class="item is-active p-relative item--border" data-load-page=""> <a class="link">Fashion</a> </li><li class="item p-relative item--bor
+--- END DETAIL HTML ---
+2026-05-01T18:04:53 | INFO     | scraper.executor | Samples fetched and browser closed.
+2026-05-01T18:04:53 | INFO     | scraper.site_analyzer.agent | Analyzing site with AI: thilakawardhana.com
+2026-05-01T18:04:53 | INFO     | scraper.site_analyzer.agent | Using model: gemini-2.5-flash-lite
+2026-05-01T18:04:53 | INFO     | scraper.site_analyzer.agent | AI Analysis Payload Preparation: Listing=90734 chars, Detail=113414 chars, Card=36320 chars
+2026-05-01T18:04:53 | INFO     | scraper.site_analyzer.agent | Sending prompt to Gemini (Total Prompt Size: 103458 chars)…
+2026-05-01T18:04:56 | INFO     | scraper.site_analyzer.agent | Gemini response received (391 chars).
+2026-05-01T18:04:56 | INFO     | scraper.site_analyzer.agent | Overriding AI listing_url '/collections/womens-wear' → confirmed: 'https://thilakawardhana.com/collections/womens-wear'
+2026-05-01T18:04:56 | INFO     | scraper.site_analyzer.agent | Config cached: scraper/configs/thilakawardhana_com.json
+2026-05-01T18:04:56 | INFO     | scraper.site_analyzer.agent | Final config for thilakawardhana.com:
+{
+  "site": "thilakawardhana.com",
+  "listing_url_pattern": "https://thilakawardhana.com/collections/womens-wear",
+  "pagination_selector": null,
+  "product_card_selector": "li.product",
+  "fields": {
+    "name": "h3.card__heading > a",
+    "price": "div.card-price > div.price > dl > div.price__sale > dd.price__last > span.price-item--sale",
+    "image_url": "img",
+    "product_url": "a.card-link"
+  }
+}
+2026-05-01T18:04:56 | INFO     | scraper.spider | Site structure successfully analyzed.
+2026-05-01T18:04:57 | INFO     | scraper.spider | Visiting: https://thilakawardhana.com/pages/mobile-phones (Depth: 1)
+2026-05-01T18:05:11 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:05:11 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:05:11 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.02s
+2026-05-01T18:05:12 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.46s
+2026-05-01T18:05:41 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:05:41 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:05:41 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.02s
+2026-05-01T18:05:41 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.03s
+2026-05-01T18:06:11 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:06:11 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.02s
+2026-05-01T18:06:11 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.02s
+2026-05-01T18:06:11 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.02s
+2026-05-01T18:06:41 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.03s
+2026-05-01T18:06:41 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:06:41 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.02s
+2026-05-01T18:06:41 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.03s
+2026-05-01T18:07:11 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:07:11 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.02s
+2026-05-01T18:07:11 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:07:11 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:07:41 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:07:41 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:07:41 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:07:42 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.53s
+2026-05-01T18:08:12 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.47s
+2026-05-01T18:08:12 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:08:12 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:08:12 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:08:50 | INFO     | scraper.spider | Visiting: https://thilakawardhana.com/pages/appliance (Depth: 1)
+2026-05-01T18:09:12 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:09:12 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.02s
+2026-05-01T18:09:12 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.03s
+2026-05-01T18:09:12 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.02s
+2026-05-01T18:10:13 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:10:13 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:10:13 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:10:13 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.02s
+2026-05-01T18:11:14 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:11:14 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:11:14 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:11:14 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:12:14 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:12:14 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:12:14 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:12:14 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:12:45 | INFO     | scraper.spider | Visiting: https://thilakawardhana.com/pages/gift-vouchers (Depth: 1)
+2026-05-01T18:12:45 | INFO     | scraper.spider | Failed to process https://thilakawardhana.com/pages/gift-vouchers: Page.goto: net::ERR_INTERNET_DISCONNECTED at https://thilakawardhana.com/pages/gift-vouchers
+Call log:
+  - navigating to "https://thilakawardhana.com/pages/gift-vouchers", waiting until "domcontentloaded"
+
+2026-05-01T18:12:47 | INFO     | scraper.spider | Visiting: https://thilakawardhana.com/account/login (Depth: 1)
+2026-05-01T18:12:47 | INFO     | scraper.spider | Failed to process https://thilakawardhana.com/account/login: Page.goto: net::ERR_INTERNET_DISCONNECTED at https://thilakawardhana.com/account/login
+Call log:
+  - navigating to "https://thilakawardhana.com/account/login", waiting until "domcontentloaded"
+
+2026-05-01T18:12:50 | INFO     | scraper.spider | Visiting: https://thilakawardhana.com/pages/wishlist (Depth: 1)
+2026-05-01T18:13:20 | INFO     | backend.main | POST http://localhost:8000/admin/sites/6/stop | Status: 200 | Duration: 0.01s
+2026-05-01T18:13:38 | WARNING  | backend.services.crawl_manager | Spider for site 6 already active.
+2026-05-01T18:13:38 | INFO     | backend.main | POST http://localhost:8000/admin/sites/6/start | Status: 200 | Duration: 0.00s
+2026-05-01T18:13:41 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:13:41 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:13:41 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:13:41 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:13:57 | INFO     | scraper.spider | Failed to process https://thilakawardhana.com/pages/wishlist: ElementHandle.get_attribute: Target page, context or browser has been closed
+Call log:
+  - waiting for locator(":scope")
+
+2026-05-01T18:13:57 | INFO     | backend.main | Shutting down FiFy backend.
+2026-05-01T18:14:44 | INFO     | backend.main | Starting FiFy backend (Loop: ProactorEventLoop)…
+2026-05-01T18:14:44 | INFO     | backend.main | SQLite DB initialised.
+2026-05-01T18:15:12 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.00s
+2026-05-01T18:15:12 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:15:12 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.02s
+2026-05-01T18:15:12 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.02s
+2026-05-01T18:16:13 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.00s
+2026-05-01T18:16:13 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.00s
+2026-05-01T18:16:13 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:16:13 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:17:02 | INFO     | backend.main | Shutting down FiFy backend.
+2026-05-01T18:17:28 | INFO     | backend.main | Starting FiFy backend (Loop: ProactorEventLoop)…
+2026-05-01T18:17:28 | INFO     | backend.main | SQLite DB initialised.
+2026-05-01T18:17:45 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:17:45 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:17:45 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:17:45 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:17:53 | INFO     | scraper.spider | Initializing spider for thilakawardhana.com...
+2026-05-01T18:17:53 | INFO     | backend.main | POST http://localhost:8000/admin/sites/6/start | Status: 200 | Duration: 0.49s
+2026-05-01T18:17:56 | INFO     | scraper.spider | Launching browser engine...
+2026-05-01T18:17:57 | INFO     | scraper.spider | Visiting: https://thilakawardhana.com/cart (Depth: 1)
+2026-05-01T18:18:16 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:18:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:18:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:18:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:18:46 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:18:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:18:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:18:47 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.45s
+2026-05-01T18:19:16 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:19:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:19:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.02s
+2026-05-01T18:19:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.02s
+2026-05-01T18:19:45 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:19:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:19:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:19:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:19:51 | INFO     | scraper.spider | Page processed in 113.59s: https://thilakawardhana.com/cart
+2026-05-01T18:19:53 | INFO     | scraper.spider | Visiting: https://thilakawardhana.com/collections/new-arrivals (Depth: 1)
+2026-05-01T18:20:15 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:20:15 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:20:15 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:20:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.67s
+2026-05-01T18:20:46 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:20:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:20:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:20:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.02s
+2026-05-01T18:21:15 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:21:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.02s
+2026-05-01T18:21:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:21:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.02s
+2026-05-01T18:21:46 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:21:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:21:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.02s
+2026-05-01T18:21:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.02s
+2026-05-01T18:22:16 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:22:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:22:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:22:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.02s
+2026-05-01T18:22:45 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:22:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:22:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.00s
+2026-05-01T18:22:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.46s
+2026-05-01T18:23:16 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:23:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.02s
+2026-05-01T18:23:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:23:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.00s
+2026-05-01T18:23:46 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:23:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.02s
+2026-05-01T18:23:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:23:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:24:18 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:24:19 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.03s
+2026-05-01T18:24:19 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:24:19 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:24:46 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:24:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:24:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.02s
+2026-05-01T18:24:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.02s
+2026-05-01T18:25:16 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:25:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.00s
+2026-05-01T18:25:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.00s
+2026-05-01T18:25:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.00s
+2026-05-01T18:25:46 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:25:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.13s
+2026-05-01T18:25:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.15s
+2026-05-01T18:25:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.21s
+2026-05-01T18:26:16 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:26:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:26:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:26:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:26:30 | INFO     | scraper.spider | Discovered 727 relevant links on https://thilakawardhana.com/collections/new-arrivals (18 new enqueued)
+2026-05-01T18:26:30 | INFO     | scraper.spider | Found 20 product cards on https://thilakawardhana.com/collections/new-arrivals
+2026-05-01T18:26:30 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Bubble Sleeve Polka Dotted Dress', price_raw: 'Rs 1,490.00', image: '//thilakawardhana.com/cdn/shop/files/TW16168_533x.jpg?v=1777630348', url: '/products/tendenza-bubble-sleeve-polka-dotted-dress'
+2026-05-01T18:26:33 | INFO     | embeddings.clip_model | Loading CLIP model: openai/clip-vit-base-patch32
+2026-05-01T18:26:41 | INFO     | embeddings.clip_model | CLIP model loaded.
+2026-05-01T18:26:46 | INFO     | vector_db.client | Connecting to Qdrant at https://f09755ca-28d4-4a52-9145-ea3ee65b292b.eu-west-1-0.aws.cloud.qdrant.io
+2026-05-01T18:26:47 | INFO     | vector_db.client | Qdrant client connected.
+2026-05-01T18:26:47 | WARNING  | scraper.spider | Product validation failed: Tendenza Bubble Sleeve Polka Dotted Dress - [Errno 11001] getaddrinfo failed
+2026-05-01T18:26:47 | INFO     | scraper.executor | Field Extraction -> name: 'T Tots Cami Top With Shorts', price_raw: 'Rs 1,095.00', image: '//thilakawardhana.com/cdn/shop/files/TK10341_533x.jpg?v=1777630194', url: '/products/t-tots-cami-top-with-shorts'
+2026-05-01T18:26:49 | WARNING  | scraper.spider | Product validation failed: T Tots Cami Top With Shorts - [Errno 11001] getaddrinfo failed
+2026-05-01T18:26:49 | INFO     | scraper.executor | Field Extraction -> name: 'Akasi Printed Maxi Skirt - Free Size', price_raw: 'Rs 1,390.00', image: '//thilakawardhana.com/cdn/shop/files/TW16167_533x.png?v=1777570119', url: '/products/akasi-printed-maxi-skirt-free-size'
+2026-05-01T18:26:50 | WARNING  | scraper.spider | Product validation failed: Akasi Printed Maxi Skirt - Free Size - [Errno 11001] getaddrinfo failed
+2026-05-01T18:26:50 | INFO     | scraper.executor | Field Extraction -> name: 'Clique Los Angeles T Shirt', price_raw: 'Rs 990.00', image: '//thilakawardhana.com/cdn/shop/files/TW16166_533x.jpg?v=1777569784', url: '/products/clique-los-angeles-t-shirt'
+2026-05-01T18:26:53 | INFO     | scraper.spider | Indexed product: Clique Los Angeles T Shirt
+2026-05-01T18:26:54 | INFO     | scraper.executor | Field Extraction -> name: 'Aura Pintuck Detailed Midi Dress', price_raw: 'Rs 1,695.00', image: '//thilakawardhana.com/cdn/shop/files/TW16165_533x.jpg?v=1777569591', url: '/products/aura-pintuck-detailed-midi-dress'
+2026-05-01T18:26:56 | INFO     | scraper.spider | Indexed product: Aura Pintuck Detailed Midi Dress
+2026-05-01T18:26:57 | INFO     | scraper.executor | Field Extraction -> name: 'High Waist Dark Washed Jean', price_raw: 'Rs 3,295.00', image: '//thilakawardhana.com/cdn/shop/files/TW16164_533x.jpg?v=1777552314', url: '/products/high-waist-dark-washed-jean-1'
+2026-05-01T18:26:59 | INFO     | scraper.spider | Indexed product: High Waist Dark Washed Jean
+2026-05-01T18:27:00 | INFO     | scraper.executor | Field Extraction -> name: 'Printed Mini Skirt', price_raw: 'Rs 1,195.00', image: '//thilakawardhana.com/cdn/shop/files/TW16163_533x.jpg?v=1777547437', url: '/products/printed-mini-skirt-2'
+2026-05-01T18:27:03 | INFO     | scraper.spider | Indexed product: Printed Mini Skirt
+2026-05-01T18:27:04 | INFO     | scraper.executor | Field Extraction -> name: 'Heavenly Lace Flow Dress', price_raw: 'Rs 6,195.00', image: '//thilakawardhana.com/cdn/shop/files/TW16162_533x.jpg?v=1777546353', url: '/products/heavenly-lace-flow-dress'
+2026-05-01T18:27:07 | INFO     | scraper.spider | Indexed product: Heavenly Lace Flow Dress
+2026-05-01T18:27:08 | INFO     | scraper.executor | Field Extraction -> name: 'T Tots Baby Frilled Bodysuit', price_raw: 'Rs 1,095.00', image: '//thilakawardhana.com/cdn/shop/files/TK10340_533x.jpg?v=1777543425', url: '/products/t-tots-baby-frilled-bodysuit'
+2026-05-01T18:27:10 | INFO     | scraper.spider | Indexed product: T Tots Baby Frilled Bodysuit
+2026-05-01T18:27:11 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Cosmic Bloom Co-Ord Set', price_raw: 'Rs 2,090.00', image: '//thilakawardhana.com/cdn/shop/files/TW16161_533x.jpg?v=1777543110', url: '/products/tendenza-cosmic-bloom-co-ord-set-3'
+2026-05-01T18:27:13 | INFO     | scraper.spider | Indexed product: Tendenza Cosmic Bloom Co-Ord Set
+2026-05-01T18:27:13 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Pintuck Detailed Puff Sleeve Dress', price_raw: 'Rs 2,690.00', image: '//thilakawardhana.com/cdn/shop/files/TW16160_533x.jpg?v=1777538512', url: '/products/tendenza-pintuck-detailed-puff-sleeve-dress-2'
+2026-05-01T18:27:14 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.00s
+2026-05-01T18:27:14 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.00s
+2026-05-01T18:27:14 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.00s
+2026-05-01T18:27:14 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.00s
+2026-05-01T18:27:16 | INFO     | scraper.spider | Indexed product: Tendenza Pintuck Detailed Puff Sleeve Dress
+2026-05-01T18:27:16 | INFO     | scraper.executor | Field Extraction -> name: 'T Tots Comfy Jersy 2pcs Set', price_raw: 'Rs 1,095.00', image: '//thilakawardhana.com/cdn/shop/files/TK10339_533x.jpg?v=1777536405', url: '/products/t-tots-comfy-jersy-2pcs-set-3'
+2026-05-01T18:27:19 | INFO     | scraper.spider | Indexed product: T Tots Comfy Jersy 2pcs Set
+2026-05-01T18:27:20 | INFO     | scraper.executor | Field Extraction -> name: 'T Tots Comfy Jersy 2pcs Set', price_raw: 'Rs 1,095.00', image: '//thilakawardhana.com/cdn/shop/files/TK10335_0047399b-3981-4fb4-926f-3826f3a477bb_533x.jpg?v=1777536320', url: '/products/t-tots-comfy-jersy-2pcs-set-2'
+2026-05-01T18:27:23 | INFO     | scraper.spider | Indexed product: T Tots Comfy Jersy 2pcs Set
+2026-05-01T18:27:24 | INFO     | scraper.executor | Field Extraction -> name: 'T Tots Comfy Jersy 2pcs Set', price_raw: 'Rs 1,095.00', image: '//thilakawardhana.com/cdn/shop/files/TK10338_533x.png?v=1777536262', url: '/products/t-tots-comfy-jersy-2pcs-set-1'
+2026-05-01T18:27:29 | INFO     | scraper.spider | Indexed product: T Tots Comfy Jersy 2pcs Set
+2026-05-01T18:27:30 | INFO     | scraper.executor | Field Extraction -> name: 'T Tots Comfy Night 2pcs Set', price_raw: 'Rs 1,095.00', image: '//thilakawardhana.com/cdn/shop/files/TK10337_533x.png?v=1777536159', url: '/products/t-tots-comfy-night-2pcs-set-3'
+2026-05-01T18:27:34 | INFO     | scraper.spider | Indexed product: T Tots Comfy Night 2pcs Set
+2026-05-01T18:27:35 | INFO     | scraper.executor | Field Extraction -> name: 'T Tots Comfy Jersy 2pcs Set', price_raw: 'Rs 1,095.00', image: '//thilakawardhana.com/cdn/shop/files/TK10336_533x.png?v=1777536051', url: '/products/t-tots-comfy-jersy-2pcs-set'
+2026-05-01T18:27:38 | INFO     | scraper.spider | Indexed product: T Tots Comfy Jersy 2pcs Set
+2026-05-01T18:27:39 | INFO     | scraper.executor | Field Extraction -> name: 'T Tots Comfy Night 2pcs Set', price_raw: 'Rs 1,095.00', image: '//thilakawardhana.com/cdn/shop/files/TK10334_533x.jpg?v=1777535646', url: '/products/t-tots-comfy-night-2pcs-set-2'
+2026-05-01T18:27:42 | INFO     | scraper.spider | Indexed product: T Tots Comfy Night 2pcs Set
+2026-05-01T18:27:43 | INFO     | scraper.executor | Field Extraction -> name: 'Front Open Comfy Shirt', price_raw: 'Rs 1,095.00', image: '//thilakawardhana.com/cdn/shop/files/TK10334_533x.png?v=1777525884', url: '/products/front-open-comfy-shirt-1'
+2026-05-01T18:27:46 | INFO     | scraper.spider | Indexed product: Front Open Comfy Shirt
+2026-05-01T18:27:46 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.03s
+2026-05-01T18:27:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.04s
+2026-05-01T18:27:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.04s
+2026-05-01T18:27:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.03s
+2026-05-01T18:27:47 | INFO     | scraper.executor | Field Extraction -> name: 'Front Open Comfy Shirt', price_raw: 'Rs 1,095.00', image: '//thilakawardhana.com/cdn/shop/files/TK10333_533x.jpg?v=1777525673', url: '/products/front-open-comfy-shirt'
+2026-05-01T18:27:50 | INFO     | scraper.spider | Indexed product: Front Open Comfy Shirt
+2026-05-01T18:27:51 | INFO     | scraper.executor | Field Extraction -> name: 'T Tots 2pcs Suit', price_raw: 'Rs 1,095.00', image: '//thilakawardhana.com/cdn/shop/files/TK10332_533x.jpg?v=1777522233', url: '/products/t-tots-2pcs-suit'
+2026-05-01T18:27:54 | INFO     | scraper.spider | Indexed product: T Tots 2pcs Suit
+2026-05-01T18:27:55 | INFO     | scraper.spider | Page processed in 481.28s: https://thilakawardhana.com/collections/new-arrivals
+2026-05-01T18:27:57 | INFO     | scraper.spider | Visiting: https://thilakawardhana.com/collections/womens-wear (Depth: 1)
+2026-05-01T18:28:15 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:28:15 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:28:15 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:28:15 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:28:45 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:28:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:28:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:28:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:29:15 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:29:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.02s
+2026-05-01T18:29:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:29:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:29:46 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:29:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.04s
+2026-05-01T18:29:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.06s
+2026-05-01T18:29:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.12s
+2026-05-01T18:30:16 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:30:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:30:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:30:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:31:00 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:31:00 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:31:00 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:31:01 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 1.31s
+2026-05-01T18:31:16 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:31:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:31:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:31:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.02s
+2026-05-01T18:31:46 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:31:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.02s
+2026-05-01T18:31:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:31:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:32:16 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:32:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:32:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:32:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:33:14 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:33:14 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:33:14 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:33:15 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.52s
+2026-05-01T18:34:14 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:34:14 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:34:14 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:34:14 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:34:46 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:34:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:34:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:34:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:35:16 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:35:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:35:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:35:17 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.47s
+2026-05-01T18:35:22 | INFO     | scraper.spider | Discovered 830 relevant links on https://thilakawardhana.com/collections/womens-wear (25 new enqueued)
+2026-05-01T18:35:22 | INFO     | scraper.spider | Found 20 product cards on https://thilakawardhana.com/collections/womens-wear
+2026-05-01T18:35:23 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Bubble Sleeve Polka Dotted Dress', price_raw: 'Rs 1,490.00', image: '//thilakawardhana.com/cdn/shop/files/TW16168_533x.jpg?v=1777630348', url: '/products/tendenza-bubble-sleeve-polka-dotted-dress'
+2026-05-01T18:35:28 | INFO     | scraper.spider | Indexed product: Tendenza Bubble Sleeve Polka Dotted Dress
+2026-05-01T18:35:28 | INFO     | scraper.executor | Field Extraction -> name: 'Akasi Printed Maxi Skirt - Free Size', price_raw: 'Rs 1,390.00', image: '//thilakawardhana.com/cdn/shop/files/TW16167_533x.png?v=1777570119', url: '/products/akasi-printed-maxi-skirt-free-size'
+2026-05-01T18:35:31 | INFO     | scraper.spider | Indexed product: Akasi Printed Maxi Skirt - Free Size
+2026-05-01T18:35:32 | INFO     | scraper.executor | Field Extraction -> name: 'Clique Los Angeles T Shirt', price_raw: 'Rs 990.00', image: '//thilakawardhana.com/cdn/shop/files/TW16166_533x.jpg?v=1777569784', url: '/products/clique-los-angeles-t-shirt'
+2026-05-01T18:35:32 | INFO     | scraper.executor | Field Extraction -> name: 'Aura Pintuck Detailed Midi Dress', price_raw: 'Rs 1,695.00', image: '//thilakawardhana.com/cdn/shop/files/TW16165_533x.jpg?v=1777569591', url: '/products/aura-pintuck-detailed-midi-dress'
+2026-05-01T18:35:32 | INFO     | scraper.executor | Field Extraction -> name: 'High Waist Dark Washed Jean', price_raw: 'Rs 3,295.00', image: '//thilakawardhana.com/cdn/shop/files/TW16164_533x.jpg?v=1777552314', url: '/products/high-waist-dark-washed-jean-1'
+2026-05-01T18:35:32 | INFO     | scraper.executor | Field Extraction -> name: 'Printed Mini Skirt', price_raw: 'Rs 1,195.00', image: '//thilakawardhana.com/cdn/shop/files/TW16163_533x.jpg?v=1777547437', url: '/products/printed-mini-skirt-2'
+2026-05-01T18:35:33 | INFO     | scraper.executor | Field Extraction -> name: 'Heavenly Lace Flow Dress', price_raw: 'Rs 6,195.00', image: '//thilakawardhana.com/cdn/shop/files/TW16162_533x.jpg?v=1777546353', url: '/products/heavenly-lace-flow-dress'
+2026-05-01T18:35:33 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Cosmic Bloom Co-Ord Set', price_raw: 'Rs 2,090.00', image: '//thilakawardhana.com/cdn/shop/files/TW16161_533x.jpg?v=1777543110', url: '/products/tendenza-cosmic-bloom-co-ord-set-3'
+2026-05-01T18:35:33 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Pintuck Detailed Puff Sleeve Dress', price_raw: 'Rs 2,690.00', image: '//thilakawardhana.com/cdn/shop/files/TW16160_533x.jpg?v=1777538512', url: '/products/tendenza-pintuck-detailed-puff-sleeve-dress-2'
+2026-05-01T18:35:33 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Cloudline Button Top', price_raw: 'Rs 1,190.00', image: '//thilakawardhana.com/cdn/shop/files/TW16159_533x.jpg?v=1777292214', url: '/products/tendenza-cloudline-button-top'
+2026-05-01T18:35:35 | INFO     | scraper.spider | Indexed product: Tendenza Cloudline Button Top
+2026-05-01T18:35:36 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Sleeveless Printed Top', price_raw: 'Rs 995.00', image: '//thilakawardhana.com/cdn/shop/files/TW16158_533x.jpg?v=1777292115', url: '/products/tendenza-sleeveless-printed-top-1'
+2026-05-01T18:35:39 | INFO     | scraper.spider | Indexed product: Tendenza Sleeveless Printed Top
+2026-05-01T18:35:39 | INFO     | scraper.executor | Field Extraction -> name: 'Aura Floral Mini Dress', price_raw: 'Rs 1,190.00', image: '//thilakawardhana.com/cdn/shop/files/TW16157_533x.jpg?v=1777291261', url: '/products/aura-floral-mini-dress'
+2026-05-01T18:35:42 | INFO     | scraper.spider | Indexed product: Aura Floral Mini Dress
+2026-05-01T18:35:43 | INFO     | scraper.executor | Field Extraction -> name: 'Printed Mini Skirt', price_raw: 'Rs 1,195.00', image: '//thilakawardhana.com/cdn/shop/files/TW16156_533x.jpg?v=1777290715', url: '/products/printed-mini-skirt-1'
+2026-05-01T18:35:45 | INFO     | scraper.spider | Indexed product: Printed Mini Skirt
+2026-05-01T18:35:46 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza High Waist Pant', price_raw: 'Rs 2,390.00', image: '//thilakawardhana.com/cdn/shop/files/TW16155_533x.jpg?v=1777290493', url: '/products/tendenza-high-waist-pant'
+2026-05-01T18:35:49 | INFO     | scraper.spider | Indexed product: Tendenza High Waist Pant
+2026-05-01T18:35:50 | INFO     | scraper.executor | Field Extraction -> name: 'Printed Mini Skirt', price_raw: 'Rs 1,195.00', image: '//thilakawardhana.com/cdn/shop/files/TW16154_533x.jpg?v=1777264732', url: '/products/printed-mini-skirt'
+2026-05-01T18:35:54 | INFO     | scraper.spider | Indexed product: Printed Mini Skirt
+2026-05-01T18:35:54 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Striped Shirt Dress', price_raw: 'Rs 2,095.00', image: '//thilakawardhana.com/cdn/shop/files/TW16153_533x.jpg?v=1777264591', url: '/products/tendenza-striped-shirt-dress-2'
+2026-05-01T18:35:57 | INFO     | scraper.spider | Indexed product: Tendenza Striped Shirt Dress
+2026-05-01T18:35:58 | INFO     | scraper.executor | Field Extraction -> name: 'Bella Chic Graphic Printed T Shirt', price_raw: 'Rs 1,190.00', image: '//thilakawardhana.com/cdn/shop/files/TW16152_533x.png?v=1777094206', url: '/products/bella-chic-graphic-printed-t-shirt-7'
+2026-05-01T18:36:01 | INFO     | scraper.spider | Indexed product: Bella Chic Graphic Printed T Shirt
+2026-05-01T18:36:01 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Printed Overlapped Maxi Dress', price_raw: 'Rs 2,490.00', image: '//thilakawardhana.com/cdn/shop/files/TW16150.1_533x.jpg?v=1777027949', url: '/products/tendenza-printed-overlapped-maxi-dress-1'
+2026-05-01T18:36:06 | INFO     | scraper.spider | Indexed product: Tendenza Printed Overlapped Maxi Dress
+2026-05-01T18:36:07 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza High Waist Tailored Pant', price_raw: 'Rs 1,890.00', image: '//thilakawardhana.com/cdn/shop/files/TW16149_533x.jpg?v=1777027828', url: '/products/tendenza-high-waist-tailored-pant'
+2026-05-01T18:36:10 | INFO     | scraper.spider | Indexed product: Tendenza High Waist Tailored Pant
+2026-05-01T18:36:10 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Cosmic Bloom Co-Ord Set', price_raw: 'Rs 2,090.00', image: '//thilakawardhana.com/cdn/shop/files/TW16148..1_533x.jpg?v=1777027628', url: '/products/tendenza-cosmic-bloom-co-ord-set-2'
+2026-05-01T18:36:13 | INFO     | scraper.spider | Indexed product: Tendenza Cosmic Bloom Co-Ord Set
+2026-05-01T18:36:14 | INFO     | scraper.spider | Page processed in 496.98s: https://thilakawardhana.com/collections/womens-wear
+2026-05-01T18:36:14 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:36:14 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:36:14 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:36:14 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:36:17 | INFO     | scraper.spider | Visiting: https://thilakawardhana.com/collections/dresses (Depth: 1)
+2026-05-01T18:36:46 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:36:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:36:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:36:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:36:55 | INFO     | backend.main | POST http://localhost:8000/admin/sites/6/pause | Status: 200 | Duration: 0.00s
+2026-05-01T18:36:57 | INFO     | backend.main | POST http://localhost:8000/admin/sites/6/resume | Status: 200 | Duration: 0.00s
+2026-05-01T18:37:16 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:37:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:37:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:37:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:37:46 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:37:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:37:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:37:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:38:16 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:38:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:38:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:38:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.02s
+2026-05-01T18:38:45 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:38:45 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:38:45 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.07s
+2026-05-01T18:38:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.73s
+2026-05-01T18:39:16 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:39:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.02s
+2026-05-01T18:39:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:39:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:39:45 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:39:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:39:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:39:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:40:15 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:40:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.02s
+2026-05-01T18:40:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:40:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:40:45 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:40:45 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:40:45 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.00s
+2026-05-01T18:40:45 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.00s
+2026-05-01T18:41:15 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:41:15 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.02s
+2026-05-01T18:41:15 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.02s
+2026-05-01T18:41:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:41:45 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:41:45 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.02s
+2026-05-01T18:41:45 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.02s
+2026-05-01T18:41:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.51s
+2026-05-01T18:42:16 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:42:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:42:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.02s
+2026-05-01T18:42:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.02s
+2026-05-01T18:42:46 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:42:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:42:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:42:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:43:16 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:43:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:43:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:43:17 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.46s
+2026-05-01T18:44:14 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:44:14 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:44:14 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.02s
+2026-05-01T18:44:14 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.02s
+2026-05-01T18:44:26 | INFO     | scraper.spider | Discovered 920 relevant links on https://thilakawardhana.com/collections/dresses (52 new enqueued)
+2026-05-01T18:44:26 | INFO     | scraper.spider | Found 20 product cards on https://thilakawardhana.com/collections/dresses
+2026-05-01T18:44:26 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Bubble Sleeve Polka Dotted Dress', price_raw: 'Rs 1,490.00', image: '//thilakawardhana.com/cdn/shop/files/TW16168_533x.jpg?v=1777630348', url: '/products/tendenza-bubble-sleeve-polka-dotted-dress'
+2026-05-01T18:44:26 | INFO     | scraper.executor | Field Extraction -> name: 'Aura Pintuck Detailed Midi Dress', price_raw: 'Rs 1,695.00', image: '//thilakawardhana.com/cdn/shop/files/TW16165_533x.jpg?v=1777569591', url: '/products/aura-pintuck-detailed-midi-dress'
+2026-05-01T18:44:26 | INFO     | scraper.executor | Field Extraction -> name: 'Heavenly Lace Flow Dress', price_raw: 'Rs 6,195.00', image: '//thilakawardhana.com/cdn/shop/files/TW16162_533x.jpg?v=1777546353', url: '/products/heavenly-lace-flow-dress'
+2026-05-01T18:44:27 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Cosmic Bloom Co-Ord Set', price_raw: 'Rs 2,090.00', image: '//thilakawardhana.com/cdn/shop/files/TW16161_533x.jpg?v=1777543110', url: '/products/tendenza-cosmic-bloom-co-ord-set-3'
+2026-05-01T18:44:27 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Pintuck Detailed Puff Sleeve Dress', price_raw: 'Rs 2,690.00', image: '//thilakawardhana.com/cdn/shop/files/TW16160_533x.jpg?v=1777538512', url: '/products/tendenza-pintuck-detailed-puff-sleeve-dress-2'
+2026-05-01T18:44:27 | INFO     | scraper.executor | Field Extraction -> name: 'Aura Floral Mini Dress', price_raw: 'Rs 1,190.00', image: '//thilakawardhana.com/cdn/shop/files/TW16157_533x.jpg?v=1777291261', url: '/products/aura-floral-mini-dress'
+2026-05-01T18:44:27 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Striped Shirt Dress', price_raw: 'Rs 2,095.00', image: '//thilakawardhana.com/cdn/shop/files/TW16153_533x.jpg?v=1777264591', url: '/products/tendenza-striped-shirt-dress-2'
+2026-05-01T18:44:27 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Printed Overlapped Maxi Dress', price_raw: 'Rs 2,490.00', image: '//thilakawardhana.com/cdn/shop/files/TW16150.1_533x.jpg?v=1777027949', url: '/products/tendenza-printed-overlapped-maxi-dress-1'
+2026-05-01T18:44:27 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Cosmic Bloom Co-Ord Set', price_raw: 'Rs 2,090.00', image: '//thilakawardhana.com/cdn/shop/files/TW16148..1_533x.jpg?v=1777027628', url: '/products/tendenza-cosmic-bloom-co-ord-set-2'
+2026-05-01T18:44:27 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Waist Belted Elegant Maxi Dress', price_raw: 'Rs 2,390.00', image: '//thilakawardhana.com/cdn/shop/files/TW16147_533x.jpg?v=1777027125', url: '/products/tendenza-waist-belted-elegant-maxi-dress-5'
+2026-05-01T18:44:32 | INFO     | scraper.spider | Indexed product: Tendenza Waist Belted Elegant Maxi Dress
+2026-05-01T18:44:33 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Boho Elephant Print Puff Sleeve Dress', price_raw: 'Rs 1,690.00', image: '//thilakawardhana.com/cdn/shop/files/TW16146_533x.jpg?v=1777024938', url: '/products/tendenza-boho-elephant-print-puff-sleeve-dress-2'
+2026-05-01T18:44:39 | INFO     | scraper.spider | Indexed product: Tendenza Boho Elephant Print Puff Sleeve Dress
+2026-05-01T18:44:39 | INFO     | scraper.executor | Field Extraction -> name: 'Aura Ocean Breeze Mini Dress', price_raw: 'Rs 1,190.00', image: '//thilakawardhana.com/cdn/shop/files/TW16145_533x.jpg?v=1777024770', url: '/products/aura-ocean-breeze-mini-dress'
+2026-05-01T18:44:42 | INFO     | scraper.spider | Indexed product: Aura Ocean Breeze Mini Dress
+2026-05-01T18:44:43 | INFO     | scraper.executor | Field Extraction -> name: 'Aura Sunset Mosaic Dress', price_raw: 'Rs 2,190.00', image: '//thilakawardhana.com/cdn/shop/files/TW16144_533x.jpg?v=1777023970', url: '/products/aura-sunset-mosaic-dress'
+2026-05-01T18:44:47 | INFO     | scraper.spider | Indexed product: Aura Sunset Mosaic Dress
+2026-05-01T18:44:47 | INFO     | scraper.executor | Field Extraction -> name: 'Bella Stripe Printed T Shirt Dress', price_raw: 'Rs 1,690.00', image: '//thilakawardhana.com/cdn/shop/files/TW16143_533x.jpg?v=1777016227', url: '/products/bella-stripe-printed-t-shirt-dress'
+2026-05-01T18:44:50 | INFO     | scraper.spider | Indexed product: Bella Stripe Printed T Shirt Dress
+2026-05-01T18:44:51 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Turtle Neck Bodycon Dress', price_raw: 'Rs 1,990.00', image: '//thilakawardhana.com/cdn/shop/files/TW16140_533x.jpg?v=1777005624', url: '/products/tendenza-turtle-neck-bodycon-dress'
+2026-05-01T18:44:55 | INFO     | scraper.spider | Indexed product: Tendenza Turtle Neck Bodycon Dress
+2026-05-01T18:44:56 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Mandarin Collar Bodycon Dress', price_raw: 'Rs 1,690.00', image: '//thilakawardhana.com/cdn/shop/files/TW16138_533x.jpg?v=1776944721', url: '/products/tendenza-mandarin-collar-bodycon-dress-2'
+2026-05-01T18:45:01 | INFO     | scraper.spider | Indexed product: Tendenza Mandarin Collar Bodycon Dress
+2026-05-01T18:45:02 | INFO     | scraper.executor | Field Extraction -> name: 'Aura Strappy Printed Midi Dress', price_raw: 'Rs 2,290.00', image: '//thilakawardhana.com/cdn/shop/files/TW16137_533x.jpg?v=1776944611', url: '/products/aura-strappy-printed-midi-dress-2'
+2026-05-01T18:45:06 | INFO     | scraper.spider | Indexed product: Aura Strappy Printed Midi Dress
+2026-05-01T18:45:06 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Striped Shirt Dress', price_raw: 'Rs 2,095.00', image: '//thilakawardhana.com/cdn/shop/files/TW16134_533x.jpg?v=1776935232', url: '/products/tendenza-striped-shirt-dress-1'
+2026-05-01T18:45:11 | INFO     | scraper.spider | Indexed product: Tendenza Striped Shirt Dress
+2026-05-01T18:45:12 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Side Waist Tie Midi Dress', price_raw: 'Rs 1,790.00', image: '//thilakawardhana.com/cdn/shop/files/TW16133_533x.jpg?v=1776932876', url: '/products/tendenza-side-waist-tie-midi-dress'
+2026-05-01T18:45:17 | INFO     | scraper.spider | Indexed product: Tendenza Side Waist Tie Midi Dress
+2026-05-01T18:45:18 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:45:18 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.02s
+2026-05-01T18:45:18 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:45:18 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.02s
+2026-05-01T18:45:18 | INFO     | scraper.executor | Field Extraction -> name: 'Tendenza Noelle Print Stretch Dress', price_raw: 'Rs 1,890.00', image: '//thilakawardhana.com/cdn/shop/files/TW16131_533x.jpg?v=1776923953', url: '/products/tendenza-noelle-print-stretch-dress-1'
+2026-05-01T18:45:22 | INFO     | scraper.spider | Indexed product: Tendenza Noelle Print Stretch Dress
+2026-05-01T18:45:23 | INFO     | scraper.spider | Page processed in 546.56s: https://thilakawardhana.com/collections/dresses
+2026-05-01T18:45:27 | INFO     | scraper.spider | Visiting: https://thilakawardhana.com/collections/tops (Depth: 1)
+2026-05-01T18:46:14 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:46:14 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:46:14 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:46:14 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:46:45 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:46:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.02s
+2026-05-01T18:46:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.02s
+2026-05-01T18:46:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.02s
+2026-05-01T18:47:16 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:47:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:47:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.02s
+2026-05-01T18:47:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.02s
+2026-05-01T18:47:45 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:47:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:47:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:47:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:48:15 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:48:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:48:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:48:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:48:46 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:48:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:48:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:48:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.48s
+2026-05-01T18:49:16 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:49:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:49:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.02s
+2026-05-01T18:49:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.02s
+2026-05-01T18:49:17 | INFO     | backend.main | POST http://localhost:8000/admin/sites/6/stop | Status: 200 | Duration: 0.00s
+2026-05-01T18:49:26 | INFO     | scraper.batch_categorizer | Starting batch categorization (limit: 300)...
+2026-05-01T18:49:28 | INFO     | scraper.batch_categorizer | Found 39 products to categorize.
+2026-05-01T18:49:28 | INFO     | scraper.batch_categorizer | Processing batch of 30 products...
+2026-05-01T18:49:39 | INFO     | scraper.batch_categorizer | AI returned categorization for 30 items.
+2026-05-01T18:49:46 | INFO     | scraper.batch_categorizer | Batch update complete.
+2026-05-01T18:49:46 | INFO     | scraper.batch_categorizer | Processing batch of 9 products...
+2026-05-01T18:49:48 | ERROR    | scraper.batch_categorizer | Batch processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash-lite
+Please retry in 12.333096431s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerDayPerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.5-flash-lite"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 20
+}
+, retry_delay {
+  seconds: 12
+}
+]
+2026-05-01T18:49:48 | INFO     | backend.main | POST http://localhost:8000/admin/categorize/run?limit=300 | Status: 200 | Duration: 21.29s
+2026-05-01T18:49:48 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.03s
+2026-05-01T18:49:48 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:49:48 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:49:48 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:50:17 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:50:17 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:50:17 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.03s
+2026-05-01T18:50:17 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.03s
+2026-05-01T18:50:46 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.03s
+2026-05-01T18:50:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.10s
+2026-05-01T18:50:47 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.05s
+2026-05-01T18:50:47 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.04s
+2026-05-01T18:51:18 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:51:18 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:51:18 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:51:19 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.51s
+2026-05-01T18:51:20 | INFO     | scraper.batch_categorizer | Starting batch categorization (limit: 300)...
+2026-05-01T18:51:21 | INFO     | scraper.batch_categorizer | Found 9 products to categorize.
+2026-05-01T18:51:21 | INFO     | scraper.batch_categorizer | Processing batch of 9 products...
+2026-05-01T18:51:22 | ERROR    | scraper.batch_categorizer | Batch processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash-lite
+Please retry in 37.558329781s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerDayPerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.5-flash-lite"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 20
+}
+, retry_delay {
+  seconds: 37
+}
+]
+2026-05-01T18:51:22 | INFO     | backend.main | POST http://localhost:8000/admin/categorize/run?limit=300 | Status: 200 | Duration: 2.30s
+2026-05-01T18:51:46 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.01s
+2026-05-01T18:51:46 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:51:46 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.02s
+2026-05-01T18:51:46 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s
+2026-05-01T18:52:16 | INFO     | backend.main | GET http://localhost:8000/admin/stats | Status: 200 | Duration: 0.02s
+2026-05-01T18:52:16 | INFO     | backend.main | GET http://localhost:8000/admin/scrape/status?limit=10 | Status: 200 | Duration: 0.01s
+2026-05-01T18:52:16 | INFO     | backend.main | GET http://localhost:8000/admin/dead-letters?limit=20 | Status: 200 | Duration: 0.01s
+2026-05-01T18:52:16 | INFO     | backend.main | GET http://localhost:8000/admin/sites | Status: 200 | Duration: 0.01s

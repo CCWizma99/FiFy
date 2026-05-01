@@ -304,44 +304,47 @@ async def _scrape_with_config(
 
 
 async def _extract_product(card, config: dict, site_domain: str, base_url: str) -> dict | None:
-    """Extract raw product fields from a Playwright element using config selectors."""
+    """Extract raw product fields efficiently by getting HTML once and using BeautifulSoup."""
     fields = config.get("fields", {})
     try:
-        name_el  = await card.query_selector(fields.get("name", ""))
-        price_el = await card.query_selector(fields.get("price", ""))
-        img_el   = await card.query_selector(fields.get("image_url", ""))
-        url_el   = await card.query_selector(fields.get("product_url", ""))
+        # Get full card HTML to avoid multiple browser roundtrips
+        card_html = await card.evaluate("el => el.outerHTML")
+        soup = BeautifulSoup(card_html, "lxml")
+        
+        def get_text(selector):
+            if not selector: return ""
+            el = soup.select_one(selector)
+            return el.get_text(strip=True) if el else ""
 
-        if not name_el:  logger.debug(f"Selector for 'name' ({fields.get('name')}) failed for this card.")
-        if not price_el: logger.debug(f"Selector for 'price' ({fields.get('price')}) failed for this card.")
-        if not img_el:   logger.debug(f"Selector for 'image_url' ({fields.get('image_url')}) failed for this card.")
-        if not url_el:   logger.debug(f"Selector for 'product_url' ({fields.get('product_url')}) failed for this card.")
+        def get_attr(selector, attr):
+            if not selector: return ""
+            el = soup.select_one(selector)
+            return el.get(attr, "") if el else ""
 
-        # Use textContent (raw DOM) instead of inner_text() (CSS-aware).
-        # inner_text() returns '' for elements with color:transparent — a common
-        # Next.js SSR pattern where text nodes exist but are styled invisible until hydration.
-        name      = (await name_el.evaluate("el => el.textContent")).strip()  if name_el  else ""
-        price_raw = (await price_el.evaluate("el => el.textContent")).strip() if price_el else ""
+        name      = get_text(fields.get("name", ""))
+        price_raw = get_text(fields.get("price", ""))
+        
+        # Images often have data-src or similar
+        img_selector = fields.get("image_url", "")
+        image = ""
+        if img_selector:
+            img_el = soup.select_one(img_selector)
+            if img_el:
+                image = img_el.get("src") or img_el.get("data-src") or img_el.get("srcset", "").split(" ")[0] or ""
 
-        # Attributes are unaffected by CSS so these can stay as-is
-        image   = (await img_el.get_attribute("src") or await img_el.get_attribute("data-src") or "") if img_el else ""
-        url_raw = (await url_el.get_attribute("href") or "") if url_el else ""
+        url_raw = get_attr(fields.get("product_url", ""), "href")
 
-        logger.info(f"Field Extraction -> name: {repr(name)}, price_raw: {repr(price_raw)}, image: {repr(image)}, url: {repr(url_raw)}")
+        if not name: return None
 
-        # Resolve relative URLs to absolute
+        # Resolve relative URLs
         image   = urljoin(base_url, image)   if image   else ""
         url_raw = urljoin(base_url, url_raw) if url_raw else ""
 
-        # Clean price: strip nbsp, take first numeric match.
-        # textContent on a Pattern B price div returns the full node including instalment
-        # text — the regex deliberately takes the FIRST (largest) number, which is the retail price.
+        # Clean price
         import re
         price_no_nbsp = price_raw.replace("\xa0", " ").replace(",", "").strip()
         price_match   = re.search(r"(\d+[\d.]*)", price_no_nbsp)
         price_cleaned = price_match.group(1) if price_match else ""
-
-        logger.debug(f"Price Cleaning: raw={repr(price_raw)} -> cleaned={repr(price_cleaned)}")
 
         return {
             "product_name": name,

@@ -1,64 +1,29 @@
-"""
-vector_db/searcher.py
-Cosine similarity search against a named vector in Qdrant.
-Supports payload filters for category, gender, price range.
-"""
 from qdrant_client.models import Filter, FieldCondition, MatchValue, Range
-
 from vector_db.client import get_client
 from backend.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-
-def search_by_vector(
-    collection: str,
-    vector: list[float],
-    vector_name: str,
-    filters: dict,
-    limit: int = 20,
-) -> list[dict]:
-    """
-    Run a named-vector similarity search.
-    Returns a list of dicts: {id, score, payload}.
-    """
+def search_by_vector(collection, vector, vector_name, filters, limit=20):
     client = get_client()
-    qdrant_filter = build_filter(filters)
-
-    results = client.search(
+    q_filter = build_filter(filters)
+    res = client.query_points(
         collection_name=collection,
-        query_vector=(vector_name, vector),
-        query_filter=qdrant_filter,
+        query=vector,
+        using=vector_name,
+        query_filter=q_filter,
         limit=limit,
         with_payload=True,
-        with_vectors=False,
     )
+    return [{"id": str(r.id), "score": r.score, "payload": r.payload} for r in res.points]
 
-    return [
-        {"id": str(r.id), "score": r.score, "payload": r.payload}
-        for r in results
-    ]
-
-
-def build_filter(filters: dict) -> Filter | None:
-    if not filters:
-        return None
-
-    conditions = []
-
+def build_filter(filters):
+    if not filters: return None
+    cond = []
     if filters.get("category"):
-        conditions.append(FieldCondition(key="category", match=MatchValue(value=filters["category"])))
+        cond.append(FieldCondition(key="category", match=MatchValue(value=filters["category"])))
     if filters.get("gender"):
-        conditions.append(FieldCondition(key="gender", match=MatchValue(value=filters["gender"])))
+        cond.append(FieldCondition(key="gender", match=MatchValue(value=filters["gender"])))
     if filters.get("min_price") is not None or filters.get("max_price") is not None:
-        conditions.append(
-            FieldCondition(
-                key="price",
-                range=Range(
-                    gte=filters.get("min_price"),
-                    lte=filters.get("max_price"),
-                ),
-            )
-        )
-
-    return Filter(must=conditions) if conditions else None
+        cond.append(FieldCondition(key="price", range=Range(gte=filters.get("min_price"), lte=filters.get("max_price"))))
+    return Filter(must=cond) if cond else None

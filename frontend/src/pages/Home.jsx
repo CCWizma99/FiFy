@@ -16,11 +16,11 @@ export default function Home() {
     async function loadTrending() {
       try {
         setLoading(true);
-        // Map UI labels to backend filter values
         const genderMap = {
-          "Women's fashion": "women",
-          "Men's fashion": "men",
-          "Neutral fashion": null
+          "Women's fashion": "Women",
+          "Men's fashion": "Men",
+          "Kids' fashion": "Neutral",
+          "All fashion": null
         };
         
         const filters = {
@@ -44,7 +44,7 @@ export default function Home() {
     setProducts(products.map(p => p.id === id ? { ...p, liked: !p.liked } : p));
   };
 
-  const categories = ['All', 'Tops', 'Dresses', 'Skirts', 'Jackets & coats', 'Trousers', 'Shoes', 'Bags', 'Accessories'];
+  const categories = ["All", "Tops", "Bottoms", "Dresses", "Outerwear", "Footwear", "Innerwear", "Bags", "Accessories", "Activewear", "Other"];
 
   return (
     <div className="flex flex-col animate-fade-in">
@@ -98,7 +98,7 @@ export default function Home() {
         {/* Shop Items Tabs */}
         <div className="text-[15px] font-medium text-text mb-3.5 font-sans">Shop for items you like</div>
         <div className="flex overflow-x-auto gap-2 mb-5 hide-scrollbar whitespace-nowrap pb-1">
-          {["Neutral fashion", "Women's fashion", "Men's fashion"].map(t => (
+          {["All fashion", "Women's fashion", "Men's fashion", "Kids' fashion"].map(t => (
             <button 
               key={t}
               onClick={() => setActiveTab(t)}

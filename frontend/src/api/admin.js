@@ -41,15 +41,26 @@ export async function getSites() {
   return resp.json();
 }
 
-export async function addSite(site) {
+export async function addSite(siteData) {
   const resp = await fetch(`${API_BASE}/sites`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(site),
+    body: JSON.stringify(siteData)
   });
-  if (!resp.ok) throw new Error("Failed to add new site");
+  if (!resp.ok) throw new Error("Failed to add site");
   return resp.json();
 }
+
+export async function updateSite(siteId, siteData) {
+  const resp = await fetch(`${API_BASE}/sites/${siteId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(siteData)
+  });
+  if (!resp.ok) throw new Error("Failed to update site");
+  return resp.json();
+}
+
 export async function startCrawl(siteId) {
   const resp = await fetch(`${API_BASE}/sites/${siteId}/start`, { method: "POST" });
   if (!resp.ok) throw new Error("Failed to start crawl");
@@ -83,5 +94,11 @@ export async function deleteSite(siteId) {
 export async function resetAllData() {
   const resp = await fetch(`${API_BASE}/reset`, { method: "POST" });
   if (!resp.ok) throw new Error("Failed to reset data");
+  return resp.json();
+}
+
+export async function runCategorization(limit = 300) {
+  const resp = await fetch(`${API_BASE}/categorize/run?limit=${limit}`, { method: "POST" });
+  if (!resp.ok) throw new Error("Failed to run categorization");
   return resp.json();
 }

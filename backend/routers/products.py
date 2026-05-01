@@ -9,19 +9,29 @@ from backend.services.qdrant_service import get_product_by_id, list_products
 router = APIRouter()
 
 
-@router.get("/")
+@router.get("")
 async def get_all_products(
-    limit: int = 10,
+    limit: int = 20,
     category: str | None = None,
-    gender: str | None = None
+    gender: str | None = None,
+    q: str | None = None
 ):
     """Return a list of available products."""
+    from backend.utils.logger import get_logger
+    _log = get_logger(__name__)
+    _log.info("get_all_products called | q=%s | limit=%s | category=%s | gender=%s", q, limit, category, gender)
     filters = {}
     if category and category.lower() != "all":
         filters["category"] = category
-    if gender:
+    if gender and gender.lower() != "all":
         filters["gender"] = gender
         
+    if q:
+        from backend.services.search_service import search_by_text
+        # We use semantic search for the admin too, as it's the most powerful search we have.
+        search_res = await search_by_text(q, filters)
+        return search_res.results
+
     return await list_products(limit, filters)
 
 

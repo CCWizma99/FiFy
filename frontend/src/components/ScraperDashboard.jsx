@@ -15,10 +15,14 @@ import {
   Plus,
   Globe,
   ExternalLink,
-  Trash2
+  Trash2,
+  Settings2,
+  Sparkles,
+  Package
 } from "lucide-react";
-import { getScraperStats, getScraperJobs, getDeadLetters, triggerScrape, getSites, addSite, startCrawl, deleteSite, resetAllData } from "../api/admin";
+import { getScraperStats, getScraperJobs, getDeadLetters, triggerScrape, getSites, addSite, updateSite, startCrawl, deleteSite, resetAllData, runCategorization } from "../api/admin";
 import CrawlerConsole from "./admin/CrawlerConsole";
+import ProductsTab from "./admin/ProductsTab";
 
 export default function ScraperDashboard() {
   const [stats, setStats] = useState(null);
@@ -27,7 +31,7 @@ export default function ScraperDashboard() {
   const [deadLetters, setDeadLetters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [activeTab, setActiveTab] = useState("overview"); // "overview" | "history" | "failures"
+  const [activeTab, setActiveTab] = useState("overview"); // "overview" | "products" | "history" | "failures"
   
   const [showAddForm, setShowAddForm] = useState(false);
   const [newSite, setNewSite] = useState({ domain: "", root_url: "" });
@@ -82,6 +86,15 @@ export default function ScraperDashboard() {
     }
   };
 
+  const handleEditSite = async (siteId, siteData) => {
+    try {
+      await updateSite(siteId, siteData);
+      fetchData(true);
+    } catch (error) {
+      alert(`Failed to update site: ${error.message}`);
+    }
+  };
+
   const handleStartIndexing = async (site) => {
     try {
       await startCrawl(site.id);
@@ -111,6 +124,18 @@ export default function ScraperDashboard() {
     }
   };
 
+  const handleAIByBatch = async () => {
+    try {
+      setRefreshing(true);
+      await runCategorization(300);
+      alert("AI Categorization job started in the background. Results will appear as they are processed.");
+    } catch (error) {
+      alert(`Failed to start AI job: ${error.message}`);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-32 animate-pulse bg-light">
@@ -134,6 +159,7 @@ export default function ScraperDashboard() {
         <div className="flex items-center gap-1 bg-white border border-bordercolor p-1 rounded-full shadow-sm">
           {[
             { id: "overview", label: "Overview", icon: BarChart3 },
+            { id: "products", label: "Products", icon: Package },
             { id: "history",  label: "History",  icon: History },
             { id: "failures", label: "Failures", icon: AlertCircle },
           ].map((tab) => (
@@ -214,13 +240,22 @@ export default function ScraperDashboard() {
                   <Activity className="w-6 h-6 text-accent" />
                   Target Sites
                 </h2>
-                <button 
-                  onClick={() => setShowAddForm(!showAddForm)}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent text-white hover:bg-navy transition-all text-xs font-bold shadow-lg shadow-accent/20"
-                >
-                  <Plus className="w-4 h-4" />
-                  Register New Site
-                </button>
+                <div className="flex gap-3">
+                  <button 
+                    onClick={handleAIByBatch}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-accent text-accent hover:bg-accent hover:text-white transition-all text-xs font-bold shadow-lg shadow-accent/5"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    AI Categorize (Batch)
+                  </button>
+                  <button 
+                    onClick={() => setShowAddForm(!showAddForm)}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent text-white hover:bg-navy transition-all text-xs font-bold shadow-lg shadow-accent/20"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Register New Site
+                  </button>
+                </div>
               </div>
 
               <AnimatePresence>
@@ -278,11 +313,11 @@ export default function ScraperDashboard() {
               <div className="grid grid-cols-1 gap-6">
                 {sites.map((site) => (
                   <SiteCard 
-                    key={site.domain} 
+                    key={site.id} 
                     site={site} 
-                    lastJob={jobs.find(j => j.site === site.domain)} 
                     onTrigger={handleStartIndexing}
                     onDelete={() => handleDeleteSite(site.id)}
+                    onEdit={(data) => handleEditSite(site.id, data)}
                   />
                 ))}
               </div>
@@ -427,6 +462,16 @@ export default function ScraperDashboard() {
             )}
           </motion.div>
         )}
+        {activeTab === "products" && (
+          <motion.div 
+            key="products"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+          >
+            <ProductsTab />
+          </motion.div>
+        )}
       </AnimatePresence>
 
       <AnimatePresence>
@@ -441,80 +486,105 @@ export default function ScraperDashboard() {
   );
 }
 
-function SiteCard({ site, lastJob, onTrigger, onDelete }) {
-  const [category, setCategory] = useState("");
-  const [gender, setGender] = useState("");
+function SiteCard({ site, onTrigger, onDelete, onEdit }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState({ domain: site.domain, root_url: site.root_url });
 
   return (
-    <div className="bg-white p-6 md:p-8 rounded-[32px] border border-bordercolor shadow-sm hover:shadow-xl hover:shadow-navy/5 transition-all group flex flex-col md:flex-row md:items-center justify-between gap-8">
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-4">
-          <div className="p-3 rounded-2xl bg-light text-muted group-hover:text-accent group-hover:bg-accent/5 transition-all shadow-sm">
-            <Globe className="w-5 h-5" />
+    <div className="bg-white border border-bordercolor rounded-3xl p-8 hover:shadow-2xl hover:shadow-navy/5 transition-all group relative overflow-hidden">
+      {isEditing ? (
+        <div className="space-y-4">
+          <div>
+            <label className="block text-[10px] uppercase font-bold text-muted mb-1">Domain</label>
+            <input 
+              className="w-full bg-light border border-bordercolor rounded-xl px-4 py-2 text-sm outline-none focus:border-accent"
+              value={editData.domain}
+              onChange={e => setEditData({...editData, domain: e.target.value})}
+            />
           </div>
           <div>
-            <p className="font-serif text-xl font-semibold text-navy truncate">{site.domain}</p>
-            <p className="text-[10px] text-muted mt-1 uppercase tracking-widest font-sans font-bold flex items-center gap-2">
-              <Clock className="w-3 h-3" />
-              {lastJob ? `Last Active: ${new Date(lastJob.started_at).toLocaleString()}` : 'Never processed'}
-            </p>
+            <label className="block text-[10px] uppercase font-bold text-muted mb-1">Root URL</label>
+            <input 
+              className="w-full bg-light border border-bordercolor rounded-xl px-4 py-2 text-sm outline-none focus:border-accent"
+              value={editData.root_url}
+              onChange={e => setEditData({...editData, root_url: e.target.value})}
+            />
+          </div>
+          <div className="flex gap-2 pt-2">
+            <button 
+              onClick={() => {
+                onEdit(editData);
+                setIsEditing(false);
+              }}
+              className="flex-1 bg-navy text-white text-xs font-bold py-2 rounded-xl hover:bg-accent transition-colors"
+            >
+              Save
+            </button>
+            <button 
+              onClick={() => setIsEditing(false)}
+              className="flex-1 bg-light text-muted text-xs font-bold py-2 rounded-xl hover:bg-bordercolor transition-colors"
+            >
+              Cancel
+            </button>
           </div>
         </div>
-      </div>
-
-      <div className="flex flex-col sm:flex-row items-center gap-4 bg-light/50 p-2 rounded-[24px] border border-bordercolor/50">
-        <div className="flex flex-col gap-1 px-3">
-          <label className="text-[9px] uppercase tracking-tighter text-muted font-black">Tag Category</label>
-          <input 
-            type="text" 
-            placeholder="e.g. Shoes"
-            className="bg-transparent border-none outline-none text-xs text-navy font-bold placeholder:text-muted/50 w-24"
-            value={category}
-            onChange={e => setCategory(e.target.value)}
-          />
-        </div>
-        <div className="w-px h-8 bg-bordercolor/50 hidden sm:block" />
-        <div className="flex flex-col gap-1 px-3">
-          <label className="text-[9px] uppercase tracking-tighter text-muted font-black">Tag Gender</label>
-          <select 
-            className="bg-transparent border-none outline-none text-xs text-navy font-bold cursor-pointer"
-            value={gender}
-            onChange={e => setGender(e.target.value)}
-          >
-            <option value="">Unisex/Auto</option>
-            <option value="women">Women</option>
-            <option value="men">Men</option>
-          </select>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-3">
-        <a 
-          href={site.root_url} 
-          target="_blank" 
-          rel="noreferrer"
-          className="w-12 h-12 rounded-full border border-bordercolor flex items-center justify-center text-muted hover:text-navy hover:bg-white hover:shadow-md transition-all group/link"
-          title="Open listing URL"
-        >
-          <ExternalLink className="w-4 h-4 transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" />
-        </a>
-        <button 
-          onClick={onDelete}
-          className="w-12 h-12 rounded-full border border-red-100 flex items-center justify-center text-red-300 hover:text-red-500 hover:bg-red-50 transition-all"
-          title="Delete Site"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
-        <button 
-          onClick={() => onTrigger(site)}
-          className="flex items-center gap-3 pl-6 pr-4 py-3 rounded-full bg-navy text-white hover:bg-accent transition-all shadow-xl shadow-navy/10 group/btn"
-        >
-          <span className="text-xs font-black uppercase tracking-widest">Start Indexing</span>
-          <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center transition-transform group-hover/btn:scale-110">
-            <Play className="w-3 h-3 fill-current ml-0.5" />
+      ) : (
+        <>
+          <div className="flex items-start justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-light flex items-center justify-center text-navy group-hover:bg-navy group-hover:text-white transition-all duration-500 shadow-inner">
+                <Globe className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-bold text-navy text-lg leading-tight">{site.domain}</h3>
+                <p className="text-xs text-muted font-medium mt-1">
+                  {site.total_products || 0} products indexed
+                </p>
+              </div>
+            </div>
+            <div className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+              site.status === "crawling" ? "bg-green-50 text-green-600 border border-green-100 animate-pulse" : "bg-light text-muted border border-bordercolor"
+            }`}>
+              {site.status || "idle"}
+            </div>
           </div>
-        </button>
-      </div>
+
+          <div className="flex items-center gap-3">
+            <a 
+              href={site.root_url} 
+              target="_blank" 
+              rel="noreferrer"
+              className="w-12 h-12 rounded-full border border-bordercolor flex items-center justify-center text-muted hover:text-navy hover:bg-white hover:shadow-md transition-all group/link"
+              title="Visit Site"
+            >
+              <ExternalLink className="w-4 h-4 transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" />
+            </a>
+            <button 
+              onClick={() => setIsEditing(true)}
+              className="w-12 h-12 rounded-full border border-bordercolor flex items-center justify-center text-muted hover:text-navy hover:bg-white hover:shadow-md transition-all"
+              title="Edit Site"
+            >
+              <Settings2 className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={onDelete}
+              className="w-12 h-12 rounded-full border border-red-100 flex items-center justify-center text-red-300 hover:text-red-500 hover:bg-red-50 transition-all"
+              title="Delete Site"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={() => onTrigger(site)}
+              className="flex items-center gap-3 pl-6 pr-4 py-3 rounded-full bg-navy text-white hover:bg-accent transition-all shadow-xl shadow-navy/10 group/btn"
+            >
+              <span className="text-xs font-bold uppercase tracking-widest">Index Now</span>
+              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover/btn:rotate-45 transition-transform duration-500">
+                <Plus className="w-4 h-4" />
+              </div>
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

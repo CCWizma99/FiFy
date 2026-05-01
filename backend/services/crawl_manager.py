@@ -14,7 +14,6 @@ class CrawlManager:
             cls._instance = super(CrawlManager, cls).__new__(cls)
             cls._instance.active_spiders: Dict[int, Spider] = {}
             cls._instance.log_queues: Dict[int, Set[asyncio.Queue]] = {}
-            cls._instance.loop = asyncio.get_event_loop()
         return cls._instance
 
     async def start_crawl(self, site_id: int):

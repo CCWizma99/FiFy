@@ -12,6 +12,7 @@ export default function Results() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [queryPreview, setQueryPreview] = useState(null);
+  const [activeCategory, setActiveCategory] = useState('All');
 
   const performSearch = useCallback(async () => {
     if (!type) {
@@ -24,15 +25,20 @@ export default function Results() {
 
     try {
       let data;
+      const filters = {};
+      if (activeCategory !== 'All') filters.category = activeCategory;
+
       if (type === 'text') {
-        data = await searchByText(query);
+        data = await searchByText(query, filters);
       } else if (type === 'image') {
         // Create preview for query image
-        const reader = new FileReader();
-        reader.onloadend = () => setQueryPreview(reader.result);
-        reader.readAsDataURL(file);
+        if (!queryPreview) {
+          const reader = new FileReader();
+          reader.onloadend = () => setQueryPreview(reader.result);
+          reader.readAsDataURL(file);
+        }
         
-        data = await searchByImage(file);
+        data = await searchByImage(file, filters);
       }
       setProducts(data.results || []);
     } catch (err) {
@@ -41,7 +47,7 @@ export default function Results() {
     } finally {
       setLoading(false);
     }
-  }, [query, file, type]);
+  }, [query, file, type, activeCategory, queryPreview]);
 
   useEffect(() => {
     if (!location.state) {
@@ -105,11 +111,14 @@ export default function Results() {
         </button>
       </header>
 
-      {/* Filter Chips */}
       <div className="flex overflow-x-auto gap-3 px-5 md:px-12 py-6 hide-scrollbar">
-        {['Category', 'Site', 'Price Range', 'Color'].map(filter => (
-          <button key={filter} className="flex-none px-5 py-2 bg-white border border-bordercolor rounded-full text-[11px] font-bold uppercase tracking-widest text-muted hover:border-accent hover:text-navy transition-all shadow-sm">
-            {filter} <span className="ml-2 opacity-30">▼</span>
+        {['All', 'Tops', 'Bottoms', 'Dresses', 'Outerwear', 'Footwear', 'Innerwear', 'Bags', 'Accessories', 'Activewear', 'Other'].map(cat => (
+          <button 
+            key={cat} 
+            onClick={() => setActiveCategory(cat)}
+            className={`flex-none px-6 py-2 border rounded-full text-[11px] font-bold uppercase tracking-widest transition-all shadow-sm ${activeCategory === cat ? 'bg-navy text-white border-navy' : 'bg-white border-bordercolor text-muted hover:border-accent hover:text-navy'}`}
+          >
+            {cat}
           </button>
         ))}
       </div>

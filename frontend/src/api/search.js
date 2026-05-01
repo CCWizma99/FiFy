@@ -54,12 +54,13 @@ export async function getProductById(id) {
 /**
  * Fetch a list of products for the home page.
  */
-export async function getAllProducts(limit = 8, filters = {}) {
+export async function getAllProducts(limit = 20, filters = {}, query = "") {
   const params = new URLSearchParams({ limit });
   if (filters.category) params.append("category", filters.category);
   if (filters.gender) params.append("gender", filters.gender);
+  if (query) params.append("q", query);
 
-  const res = await fetch(`${API_BASE}/products/?${params.toString()}`);
+  const res = await fetch(`${API_BASE}/products?${params.toString()}`);
   if (!res.ok) throw new Error("Failed to fetch products");
   return res.json();
 }

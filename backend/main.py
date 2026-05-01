@@ -24,7 +24,14 @@ logger = get_logger(__name__)
 async def lifespan(app: FastAPI):
     # ── Startup ──────────────────────────────────────────
     loop = asyncio.get_running_loop()
-    logger.info(f"Starting FiFy backend (Loop: {type(loop).__name__})…")
+    loop_name = type(loop).__name__
+    logger.info(f"Starting FiFy backend (Loop: {loop_name})…")
+    
+    if sys.platform == 'win32' and 'Selector' in loop_name:
+        logger.warning("!!! WARNING: Running on Windows with SelectorEventLoop !!!")
+        logger.warning("Playwright scraper WILL NOT WORK in this mode.")
+        logger.warning("Please ensure reload=False in uvicorn.run().")
+        
     init_db()
     logger.info("SQLite DB initialised.")
     yield
@@ -53,7 +60,7 @@ async def log_requests(request: Request, call_next):
     start_time = time.time()
     response = await call_next(request)
     duration = time.time() - start_time
-    logger.info(f"{request.method} {request.url.path} | Status: {response.status_code} | Duration: {duration:.2f}s")
+    logger.info(f"{request.method} {request.url} | Status: {response.status_code} | Duration: {duration:.2f}s")
     return response
 
 # Global Exception Handler
