@@ -37,10 +37,9 @@ NAME
 - Never use <img>, <a>, or layout-only elements.
 
 IMAGE_URL
-- The selector is ALWAYS `img`, nothing else.
-- Do NOT include any class names, attributes, or qualifiers on the img selector.
-- The scraper always takes the FIRST img it finds inside the card — you do not need
-  to disambiguate between product image and hover image via the selector.
+- Identify the element that primarily displays the product image.
+- While often an `img` tag, it may be a `div` or `span` (using background-image) or a `picture` tag.
+- Choose a selector that targets this specific element. If it is a generic tag like `img`, ensure it is the FIRST one in the card.
 
 PRODUCT_URL
 - The selector is ALMOST ALWAYS `a`, nothing else.
@@ -109,13 +108,12 @@ Do not include keys not listed below. All string values must be valid CSS select
   "fields": {
     "name": "<css selector>",
     "price": "<css selector or null>",
-    "image_url": "img",
-    "product_url": "a"
+    "image_url": "<css selector>",
+    "product_url": "<css selector>"
   }
 }
 
-Note that image_url and product_url are pre-filled above as a strong hint — only deviate
-from `img` and `a` if you have a concrete structural reason documented in your analysis.
+Note that product_url is pre-filled below as a strong hint — only deviate from `a` if you have a concrete structural reason. For image_url, be as precise as possible based on the actual tag used.
 """
 
 
@@ -158,9 +156,11 @@ Step 2 — PRODUCT URL → default answer is `a`
   in the card clearly does NOT lead to the product (e.g. it links to a brand page).
   Do NOT use pseudo-classes. Do NOT use `:has()`. Plain `a` is almost always right.
 
-Step 3 — IMAGE → default answer is `img`
-  The selector is always `img`. The scraper takes the first one.
-  Do not qualify it with classes, attributes, or pseudo-classes under any circumstance.
+Step 3 — IMAGE
+  Identify the element representing the main product image.
+  If it's an `img` tag and it's the first one, use `img`.
+  If it's a `div` or a specific class-heavy image, return the precise selector (e.g. `div.product-primary-image`).
+  Do NOT assume it is always a simple `img`.
 
 Step 4 — NAME
   Find the element containing the product name as human-readable text.

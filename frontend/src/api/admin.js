@@ -91,6 +91,12 @@ export async function deleteSite(siteId) {
   return resp.json();
 }
 
+export async function resetSite(siteId) {
+  const resp = await fetch(`${API_BASE}/sites/${siteId}/reset`, { method: "POST" });
+  if (!resp.ok) throw new Error("Failed to reset site");
+  return resp.json();
+}
+
 export async function resetAllData() {
   const resp = await fetch(`${API_BASE}/reset`, { method: "POST" });
   if (!resp.ok) throw new Error("Failed to reset data");
@@ -100,5 +106,11 @@ export async function resetAllData() {
 export async function runCategorization(limit = 300) {
   const resp = await fetch(`${API_BASE}/categorize/run?limit=${limit}`, { method: "POST" });
   if (!resp.ok) throw new Error("Failed to run categorization");
+  return resp.json();
+}
+
+export async function clearQuotaError() {
+  const resp = await fetch(`${API_BASE}/categorize/clear-quota`, { method: "POST" });
+  if (!resp.ok) throw new Error("Failed to clear quota error");
   return resp.json();
 }

@@ -110,6 +110,84 @@ async def delete_site(site_id: int):
 
     return {"status": "deleted"}
 
+@router.post("/sites/{site_id}/reset")
+async def reset_site(site_id: int):
+    from vector_db.client import get_client
+    from qdrant_client.models import Filter, FieldCondition, MatchValue
+    from backend.config import settings
+    import os
+    from pathlib import Path
+
+    with get_connection() as conn:
+        site = conn.execute("SELECT domain FROM sites WHERE id = ?", (site_id,)).fetchone()
+        if not site:
+            raise HTTPException(status_code=404, detail="Site not found")
+        
+        domain = site["domain"]
+
+        # 1. Stop active spider
+        crawl_manager.stop_crawl(site_id)
+
+        # 2. Delete from Qdrant
+        try:
+            client = get_client()
+            client.delete(
+                collection_name=settings.qdrant_collection,
+                points_selector=Filter(
+                    must=[FieldCondition(key="source_site", match=MatchValue(value=domain))]
+                )
+            )
+        except Exception as e:
+            print(f"Warning: Failed to delete from Qdrant during reset: {e}")
+
+        # 3. Clear DB memory (queue, hashes, stats, jobs)
+        conn.execute("DELETE FROM crawl_queue WHERE site_id = ?", (site_id,))
+        # Precise cleanup using the new site_domain column
+        conn.execute("DELETE FROM url_hashes WHERE site_domain = ?", (domain,))
+        conn.execute("DELETE FROM indexing_stats WHERE site_id = ?", (site_id,))
+        conn.execute("DELETE FROM scrape_jobs WHERE site = ?", (domain,))
+        
+        # 4. Clear Dead Letter Log for this site
+        dead_letter_path = Path("data/dead_letter.log")
+        if dead_letter_path.exists():
+            try:
+                with open(dead_letter_path, "r", encoding="utf-8") as f:
+                    lines = f.readlines()
+                with open(dead_letter_path, "w", encoding="utf-8") as f:
+                    for line in lines:
+                        try:
+                            data = json.loads(line)
+                            if data.get("source_site") != domain:
+                                f.write(line)
+                        except:
+                            f.write(line)
+            except Exception as e:
+                print(f"Warning: Failed to clear dead letter log: {e}")
+        
+        # 5. Reset site counters
+        conn.execute("""
+            UPDATE sites SET 
+                total_products = 0, 
+                status = 'idle', 
+                last_crawl_at = NULL 
+            WHERE id = ?
+        """, (site_id,))
+        conn.commit()
+
+        # 5. Delete AI configuration file
+        config_path = Path("scraper/configs") / f"{domain.replace('.', '_')}.json"
+        if not config_path.exists():
+            # Fallback for standard domain names
+            config_path = Path("scraper/configs") / f"{domain}.json"
+            
+        if config_path.exists():
+            try:
+                os.remove(config_path)
+            except Exception as e:
+                print(f"Warning: Failed to delete config file: {e}")
+
+    return {"status": "site_reset_complete", "site": domain}
+
 @router.get("/stats")
 async def get_stats():
     with get_connection() as conn:
@@ -117,12 +195,14 @@ async def get_stats():
         active_products = conn.execute("SELECT COUNT(*) FROM url_hashes WHERE is_active = 1").fetchone()[0]
         total_jobs = conn.execute("SELECT COUNT(*) FROM scrape_jobs").fetchone()[0]
         success_rate = 100 # Placeholder
+        from backend.services.system_status import system_status
         return {
             "total_products": total_products,
             "active_products": active_products,
             "total_jobs": total_jobs,
             "success_rate": success_rate,
-            "failed_products_count": 0
+            "failed_products_count": 0,
+            "quota_status": system_status.get_quota_status()
         }
 
 @router.get("/stats/categories")
@@ -189,6 +269,12 @@ async def reset_all_data():
         conn.commit()
 
     return {"status": "reset_complete"}
+    
+@router.post("/categorize/clear-quota")
+async def clear_quota_error():
+    from backend.services.system_status import system_status
+    system_status.clear_quota_error()
+    return {"status": "cleared"}
 
 @router.post("/categorize/run")
 async def trigger_categorization(limit: int = 300):

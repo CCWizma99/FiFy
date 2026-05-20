@@ -64,12 +64,23 @@ def init_db() -> None:
         # 4. URL Deduplication Registry
         conn.execute("""
             CREATE TABLE IF NOT EXISTS url_hashes (
-                url         TEXT PRIMARY KEY,
-                hash        TEXT NOT NULL,
-                last_seen   TEXT NOT NULL,
-                is_active   INTEGER NOT NULL DEFAULT 1
+                url             TEXT PRIMARY KEY,
+                site_domain     TEXT,
+                hash            TEXT NOT NULL,
+                content_hash    TEXT,
+                last_seen       TEXT NOT NULL,
+                is_active       INTEGER NOT NULL DEFAULT 1
             )
         """)
+        # Ensure we have the new columns if the table already existed
+        try:
+            conn.execute("ALTER TABLE url_hashes ADD COLUMN site_domain TEXT")
+        except: pass
+        try:
+            conn.execute("ALTER TABLE url_hashes ADD COLUMN content_hash TEXT")
+        except: pass
+        
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_content_hash ON url_hashes(site_domain, content_hash)")
 
         # 5. Indexing Stats (for Charts)
         conn.execute("""

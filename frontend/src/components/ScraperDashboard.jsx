@@ -20,7 +20,7 @@ import {
   Sparkles,
   Package
 } from "lucide-react";
-import { getScraperStats, getScraperJobs, getDeadLetters, triggerScrape, getSites, addSite, updateSite, startCrawl, deleteSite, resetAllData, runCategorization } from "../api/admin";
+import { getScraperStats, getScraperJobs, getDeadLetters, triggerScrape, getSites, addSite, updateSite, startCrawl, deleteSite, resetSite, resetAllData, runCategorization } from "../api/admin";
 import CrawlerConsole from "./admin/CrawlerConsole";
 import ProductsTab from "./admin/ProductsTab";
 
@@ -111,6 +111,16 @@ export default function ScraperDashboard() {
       fetchData(true);
     } catch (error) {
       alert(`Failed to delete site: ${error.message}`);
+    }
+  };
+
+  const handleResetSite = async (siteId) => {
+    if (!confirm("This will wipe all indexed products and 'memory' for this site. The AI will also re-analyze the site structure on next run. Proceed?")) return;
+    try {
+      await resetSite(siteId);
+      fetchData(true);
+    } catch (error) {
+      alert(`Failed to reset site: ${error.message}`);
     }
   };
 
@@ -317,6 +327,7 @@ export default function ScraperDashboard() {
                     site={site} 
                     onTrigger={handleStartIndexing}
                     onDelete={() => handleDeleteSite(site.id)}
+                    onReset={() => handleResetSite(site.id)}
                     onEdit={(data) => handleEditSite(site.id, data)}
                   />
                 ))}
@@ -482,11 +493,76 @@ export default function ScraperDashboard() {
           />
         )}
       </AnimatePresence>
+
+      <QuotaModal 
+        status={stats?.quota_status} 
+        onClear={async () => {
+          await clearQuotaError();
+          fetchData(true);
+        }} 
+      />
     </div>
   );
 }
 
-function SiteCard({ site, onTrigger, onDelete, onEdit }) {
+function QuotaModal({ status, onClear }) {
+  if (!status || !status.is_blocked) return null;
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-navy/60 backdrop-blur-md"
+    >
+      <motion.div 
+        initial={{ scale: 0.9, y: 20 }}
+        animate={{ scale: 1, y: 0 }}
+        className="bg-white rounded-[40px] shadow-2xl max-w-lg w-full overflow-hidden border border-red-100"
+      >
+        <div className="bg-red-50 p-10 flex flex-col items-center text-center">
+          <div className="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center text-red-600 mb-6 shadow-inner">
+            <AlertCircle className="w-10 h-10" />
+          </div>
+          <h2 className="text-3xl font-serif font-bold text-navy mb-4">API Quota Exhausted</h2>
+          <p className="text-red-600/80 text-sm leading-relaxed font-sans font-medium px-4">
+            {status.error || "You've exceeded your Gemini API free tier limit (20 requests/day)."}
+          </p>
+        </div>
+        
+        <div className="p-10 space-y-8">
+          <div className="space-y-2">
+            <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-muted">
+              <span>Cooling Down</span>
+              <span className="text-accent">Available at: {new Date(status.retry_after).toLocaleTimeString()}</span>
+            </div>
+            <div className="h-1.5 w-full bg-light rounded-full overflow-hidden">
+              <motion.div 
+                initial={{ width: "100%" }}
+                animate={{ width: "0%" }}
+                transition={{ duration: 60, ease: "linear" }}
+                className="h-full bg-accent"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <button 
+              onClick={onClear}
+              className="w-full py-4 rounded-full bg-navy text-white text-xs font-black uppercase tracking-widest hover:bg-accent transition-all shadow-xl shadow-navy/20"
+            >
+              Acknowledge & Clear
+            </button>
+            <p className="text-[10px] text-center text-muted italic">
+              Clearing manually won't bypass Google's limit, but it resets the UI.
+            </p>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function SiteCard({ site, onTrigger, onDelete, onReset, onEdit }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({ domain: site.domain, root_url: site.root_url });
 
@@ -572,6 +648,13 @@ function SiteCard({ site, onTrigger, onDelete, onEdit }) {
               title="Delete Site"
             >
               <Trash2 className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={onReset}
+              className="w-12 h-12 rounded-full border border-orange-100 flex items-center justify-center text-orange-300 hover:text-orange-500 hover:bg-orange-50 transition-all"
+              title="Reset Site Data (Wipe products & memory)"
+            >
+              <RefreshCcw className="w-4 h-4" />
             </button>
             <button 
               onClick={() => onTrigger(site)}

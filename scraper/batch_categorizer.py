@@ -150,7 +150,19 @@ async def _process_batch(points: List):
         
         logger.info(f"Batch update complete.")
     except Exception as e:
-        logger.error(f"Batch processing failed: {e}")
+        error_msg = str(e)
+        logger.error(f"Batch processing failed: {error_msg}")
+        if "429" in error_msg or "quota" in error_msg.lower():
+            from backend.services.system_status import system_status
+            # Extract retry seconds if possible, default to 60
+            retry_secs = 60
+            if "retry in" in error_msg:
+                try:
+                    import re
+                    match = re.search(r"retry in ([\d\.]+)", error_msg)
+                    if match: retry_secs = int(float(match.group(1)))
+                except: pass
+            system_status.report_quota_error(error_msg, retry_secs)
 
 if __name__ == "__main__":
     asyncio.run(run_batch_categorization())
