@@ -19,6 +19,7 @@ def get_connection() -> sqlite3.Connection:
 def init_db() -> None:
     """Create tables if they don't exist."""
     with get_connection() as conn:
+        # 1. Scrape Job Tracking (Legacy/Single runs)
         conn.execute("""
             CREATE TABLE IF NOT EXISTS scrape_jobs (
                 id          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,32 +31,82 @@ def init_db() -> None:
                 error_message    TEXT
             )
         """)
+
+        # 2. Site Management
         conn.execute("""
-            CREATE TABLE IF NOT EXISTS url_hashes (
-                url         TEXT PRIMARY KEY,
-                hash        TEXT NOT NULL,
-                last_seen   TEXT NOT NULL,
-                is_active   INTEGER NOT NULL DEFAULT 1
+            CREATE TABLE IF NOT EXISTS sites (
+                id              INTEGER PRIMARY KEY AUTOINCREMENT,
+                domain          TEXT UNIQUE NOT NULL,
+                root_url        TEXT NOT NULL,
+                is_active       INTEGER NOT NULL DEFAULT 1,
+                status          TEXT DEFAULT 'idle',
+                last_crawl_at   TEXT,
+                total_products  INTEGER DEFAULT 0
             )
         """)
+
+        # 3. Autonomous Crawl Queue
         conn.execute("""
-            CREATE TABLE IF NOT EXISTS target_sites (
-                domain      TEXT PRIMARY KEY,
-                listing_url TEXT NOT NULL,
-                is_active   INTEGER NOT NULL DEFAULT 1
+            CREATE TABLE IF NOT EXISTS crawl_queue (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                site_id     INTEGER NOT NULL,
+                url         TEXT NOT NULL,
+                status      TEXT NOT NULL DEFAULT 'pending',
+                page_type   TEXT DEFAULT 'unknown',
+                depth       INTEGER DEFAULT 0,
+                attempts    INTEGER DEFAULT 0,
+                error       TEXT,
+                FOREIGN KEY (site_id) REFERENCES sites(id),
+                UNIQUE(site_id, url)
+            )
+        """)
+
+        # 4. URL Deduplication Registry
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS url_hashes (
+                url             TEXT PRIMARY KEY,
+                site_domain     TEXT,
+                hash            TEXT NOT NULL,
+                content_hash    TEXT,
+                last_seen       TEXT NOT NULL,
+                is_active       INTEGER NOT NULL DEFAULT 1
+            )
+        """)
+        # Ensure we have the new columns if the table already existed
+        try:
+            conn.execute("ALTER TABLE url_hashes ADD COLUMN site_domain TEXT")
+        except: pass
+        try:
+            conn.execute("ALTER TABLE url_hashes ADD COLUMN content_hash TEXT")
+        except: pass
+        
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_content_hash ON url_hashes(site_domain, content_hash)")
+
+        # 5. Indexing Stats (for Charts)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS indexing_stats (
+                date            TEXT NOT NULL,
+                site_id         INTEGER NOT NULL,
+                product_count   INTEGER DEFAULT 0,
+                error_count     INTEGER DEFAULT 0,
+                PRIMARY KEY (date, site_id),
+                FOREIGN KEY (site_id) REFERENCES sites(id)
             )
         """)
         
-        # Initialise with defaults
-        default_sites = [
-            ("asos.com", "https://www.asos.com/women/dresses/cat/?cid=8799"),
-            ("zara.com", "https://www.zara.com/us/en/woman-dresses-l1066.html"),
-            ("hm.com", "https://www2.hm.com/en_us/women/products/dresses.html"),
-            ("uniqlo.com", "https://www.uniqlo.com/us/en/women/dresses"),
-            ("zalando.com", "https://www.zalando.co.uk/womens-clothing-dresses/"),
-        ]
-        conn.executemany(
-            "INSERT OR IGNORE INTO target_sites (domain, listing_url) VALUES (?, ?)",
-            default_sites
-        )
+        # Seed with initial sites if empty
+        cursor = conn.execute("SELECT COUNT(*) FROM sites")
+        if cursor.fetchone()[0] == 0:
+            default_sites = [
+                ("thilakawardhana.lk", "https://thilakawardhana.lk"),
+                ("nolimit.lk", "https://www.nolimit.lk"),
+                ("kandyselection.lk", "https://kandyselection.lk"),
+                ("springandsummer.lk", "https://springandsummer.lk"),
+                ("lady.lk", "https://lady.lk"),
+            ]
+            conn.executemany(
+                "INSERT OR IGNORE INTO sites (domain, root_url) VALUES (?, ?)",
+                default_sites
+            )
+        
         conn.commit()

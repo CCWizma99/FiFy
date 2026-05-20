@@ -42,7 +42,8 @@ async def get_product_by_id(product_id: str) -> Optional[dict]:
     )
     if not results:
         return None
-    return results[0].payload
+    point = results[0]
+    return {**point.payload, "id": str(point.id)}
 
 
 async def list_products(limit: int = 10, filters: dict = None) -> list[dict]:
@@ -58,4 +59,4 @@ async def list_products(limit: int = 10, filters: dict = None) -> list[dict]:
         with_payload=True,
         with_vectors=False,
     )
-    return [p.payload for p in points]
+    return [{**p.payload, "id": str(p.id)} for p in points]

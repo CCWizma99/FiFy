@@ -30,7 +30,11 @@ async def upsert_product(product: dict) -> str:
     text_input = f"{product.get('product_name', '')} {product.get('category', '')}".strip()
     text_vector = embed_text(text_input)
 
-    product_id = str(uuid.uuid4())
+    # Generate a deterministic ID based on content to prevent duplicates in Qdrant
+    # Name + Price + Image URL is our unique fingerprint
+    fingerprint = f"{product.get('product_name', '')}|{product.get('price', '')}|{product.get('image_url', '')}".lower()
+    product_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, f"fify.product.{fingerprint}"))
+
     payload = {k: v for k, v in product.items() if k not in ("price",)}
     payload["price"] = float(product.get("price", 0))
 
@@ -51,7 +55,7 @@ async def upsert_product(product: dict) -> str:
 
 async def _get_image_vector(image_url: str) -> list[float]:
     async with httpx.AsyncClient(timeout=10.0) as client:
-        resp = await client.get(image_url)
+        resp = await client.get(image_url, follow_redirects=True)
         resp.raise_for_status()
     image = Image.open(io.BytesIO(resp.content)).convert("RGB")
     return embed_image(image)

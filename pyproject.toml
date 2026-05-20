@@ -26,7 +26,7 @@ dependencies = [
     # ── CLIP / Embeddings ────────────────────────────────
     "torch>=2.11.0",
     "transformers>=5.7.0",
-    "pillow>=12.2.0",
+    "pillow>=12.2.0",            # import PIL
     "safetensors>=0.7.0",
     "huggingface-hub>=1.12.0",
     "tokenizers>=0.22.2",
@@ -34,9 +34,10 @@ dependencies = [
     # ── Scraper ──────────────────────────────────────────
     "playwright>=1.58.0",
     "httpx>=0.28.1",
+    "beautifulsoup4>=4.12.3",    # import bs4
 
     # ── LLM Agent ────────────────────────────────────────
-    "anthropic>=0.97.0",
+    "google-generativeai>=0.5.2", # import google.generativeai
 
     # ── Scheduling ───────────────────────────────────────
     "apscheduler>=3.11.2",

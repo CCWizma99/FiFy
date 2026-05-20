@@ -1,7 +1,7 @@
 """
 tests/test_scraper.py
 Tests for the Site Analyzer Agent and scraper config handling.
-Uses mocked Claude responses to avoid real API calls.
+Uses mocked Gemini responses to avoid real API calls.
 """
 import json
 import pytest

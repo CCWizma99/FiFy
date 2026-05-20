@@ -56,8 +56,8 @@ d:\FiFy\
 │   ├── scheduler.py                 # APScheduler setup — cron jobs per site
 │   ├── executor.py                  # Playwright-based scraper runner
 │   ├── site_analyzer/
-│   │   ├── agent.py                 # Site Analyzer LLM agent (Claude API)
-│   │   └── prompt_templates.py      # Prompts sent to Claude for selector extraction
+│   │   ├── agent.py                 # Site Analyzer LLM agent (Gemini API)
+│   │   └── prompt_templates.py      # Prompts sent to Gemini for selector extraction
 │   ├── pipeline/
 │   │   ├── validator.py             # Data validation layer (price, URL, image check)
 │   │   └── dead_letter.py           # Dead letter queue logging + retry logic
