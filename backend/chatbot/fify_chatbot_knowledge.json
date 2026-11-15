@@ -1,0 +1,20 @@
+{
+  "scope": "FiFy help and fashion-search workflow. This is an FAQ-prompt assistant, not RAG or live catalog retrieval.",
+  "faqs": [
+    {"question": "What is FiFy?", "answer": "FiFy helps people discover fashion using a photo or a text description. Results depend on the catalog that has actually been indexed."},
+    {"question": "How do I search with a photo?", "answer": "On Home, choose Upload photo and select an image. FiFy opens Results and searches for visual matches. Category buttons narrow the search."},
+    {"question": "How do I search with words?", "answer": "Type a description into the Home search field and press Enter. Inspiration chips also launch a text search. Product detail has Find Similar Items, which searches for that product's name."},
+    {"question": "How do I browse a product?", "answer": "Select a result to open its product detail page. Buy on the retailer opens the retailer's website; FiFy itself does not sell or process purchases."},
+    {"question": "Can I save products?", "answer": "Use the heart button on Home, Results, or product detail. Saved items appear on the Saved items page. They stay in this browser, or just this session if browser storage is unavailable."},
+    {"question": "Do I need an account?", "answer": "No account is required for favorites. FiFy currently has no account or sign-in service, so favorites do not sync between devices."},
+    {"question": "How do I share a product?", "answer": "Use Share on product detail. FiFy uses native sharing when available and otherwise tries to copy the page URL. If that fails, copy the URL from your address bar."},
+    {"question": "How does Home sorting work?", "answer": "Featured keeps the fetched order. Price ascending, Price descending, and Name sort only the loaded selection, not the entire catalog."},
+    {"question": "What does style selection do?", "answer": "Inspirations opens a style-selection page. Choose a style and press Start Finding to search for it."},
+    {"question": "Can you check stock or prices?", "answer": "This assistant cannot look up live inventory or prices. Catalog information may be incomplete or outdated. Verify current prices and stock with the retailer."},
+    {"question": "Where is my order?", "answer": "FiFy has no order-tracking or payment-processing service. Contact the retailer using its own official support channel. Do not provide payment or private order details here."},
+    {"question": "What are the shipping and return policies?", "answer": "Policies belong to each retailer. This assistant cannot verify them. Check the retailer's official shipping and returns pages."},
+    {"question": "Is there a subscription or price history?", "answer": "FiFy currently has no subscription service or price-history service."},
+    {"question": "Where can I get help?", "answer": "Use the Contact page or the FiFy GitHub issue tracker at https://github.com/CCWizma99/FiFy/issues. About, Privacy, and Terms are linked in the Home footer."},
+    {"question": "Why are there no results?", "answer": "The catalog may be empty, or no indexed items match the query and filters. Try a broader description or category. This assistant cannot populate or search the catalog itself."}
+  ]
+}

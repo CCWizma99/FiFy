@@ -18,6 +18,12 @@ class Settings(BaseSettings):
     google_api_key: str = ""
     gemini_model_name: str = "gemini-2.5-flash"
 
+    # Public FAQ assistant (separate from scraper configuration)
+    gemini_model: str = "gemini-2.5-flash"
+    chatbot_rate_limit: int = 8
+    chatbot_daily_limit: int = 100
+    chatbot_usage_db: str = "data/chatbot_usage.sqlite3"
+
     # CLIP
     clip_model_name: str = "openai/clip-vit-base-patch32"
 

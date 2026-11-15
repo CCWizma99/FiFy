@@ -1,3 +1,4 @@
+from backend.chatbot.middleware import ChatBodyLimitMiddleware
 import asyncio
 import sys
 
@@ -13,6 +14,7 @@ from fastapi.responses import JSONResponse
 import traceback
 import time
 
+from backend.chatbot.router import router as chatbot_router
 from backend.database import init_db
 from backend.routers import admin, products, search
 from backend.utils.logger import get_logger
@@ -73,6 +75,8 @@ async def global_exception_handler(request: Request, exc: Exception):
         content={"detail": "Internal Server Error", "error": str(exc)}
     )
 
+app.add_middleware(ChatBodyLimitMiddleware)
+app.include_router(chatbot_router)
 app.include_router(search.router, prefix="/search", tags=["Search"])
 app.include_router(products.router, prefix="/products", tags=["Products"])
 app.include_router(admin.router, prefix="/admin", tags=["Admin"])
