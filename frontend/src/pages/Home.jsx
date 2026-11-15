@@ -1,48 +1,24 @@
-import { useState, useEffect } from 'react';
-import { Search, Upload, Heart } from 'lucide-react';
+import useRequest from '../hooks/useRequest';
+import FavoriteButton from '../components/FavoriteButton';
+import ProductImage from '../components/ProductImage';
+import { sortProducts } from '../utils';
+import { useState, useCallback } from 'react';
+import { Search, Upload } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { getAllProducts, getProxyImageUrl } from '../api/search';
+import { getAllProducts } from '../api/search';
 
 export default function Home() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("Women's fashion");
   const [activeCat, setActiveCat] = useState('All');
-  const [activeFilter, setActiveFilter] = useState('Best match');
+  const [activeFilter, setActiveFilter] = useState('Featured');
   
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadTrending() {
-      try {
-        setLoading(true);
-        const genderMap = {
-          "Women's fashion": "Women",
-          "Men's fashion": "Men",
-          "Kids' fashion": "Neutral",
-          "All fashion": null
-        };
-        
-        const filters = {
-          category: activeCat === 'All' ? null : activeCat,
-          gender: genderMap[activeTab] || null
-        };
-
-        const data = await getAllProducts(8, filters);
-        setProducts(data.map(p => ({ ...p, liked: false })));
-      } catch (err) {
-        console.error("Failed to load trending products:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadTrending();
-  }, [activeTab, activeCat]);
-
-  const toggleHeart = (e, id) => {
-    e.stopPropagation();
-    setProducts(products.map(p => p.id === id ? { ...p, liked: !p.liked } : p));
-  };
+  const load = useCallback(signal => getAllProducts(8, {
+    category: activeCat === 'All' ? null : activeCat,
+    gender: {"Women's fashion": 'Women', "Men's fashion": 'Men', "Kids' fashion": 'Neutral'}[activeTab] || null,
+  }, "", signal), [activeCat, activeTab]);
+  const { data, loading, error, retry } = useRequest(`${activeTab}/${activeCat}`, load);
+  const products = sortProducts(data || [], activeFilter);
 
   const categories = ["All", "Tops", "Bottoms", "Dresses", "Outerwear", "Footwear", "Innerwear", "Bags", "Accessories", "Activewear", "Other"];
 
@@ -101,7 +77,7 @@ export default function Home() {
           {["All fashion", "Women's fashion", "Men's fashion", "Kids' fashion"].map(t => (
             <button 
               key={t}
-              onClick={() => setActiveTab(t)}
+              aria-pressed={activeTab === t} onClick={() => setActiveTab(t)}
               className={`px-4 py-1.5 rounded-[18px] border text-[12px] font-sans transition-colors cursor-pointer ${activeTab === t ? 'bg-navy-2 text-white border-navy-2' : 'bg-card text-muted border-bordercolor hover:border-accent hover:text-accent'}`}
             >
               {t}
@@ -112,14 +88,14 @@ export default function Home() {
         {/* Categories Row */}
         <div className="flex gap-3.5 overflow-x-auto pb-2 mb-9 hide-scrollbar">
           {categories.map((c) => (
-            <div key={c} onClick={() => setActiveCat(c)} className="shrink-0 flex flex-col items-center gap-1.5 cursor-pointer group">
+            <button aria-pressed={activeCat === c} key={c} onClick={() => setActiveCat(c)} className="shrink-0 flex flex-col items-center gap-1.5 cursor-pointer group">
               <div className={`w-[68px] h-[76px] rounded-[14px] flex items-center justify-center transition-colors ${activeCat === c ? 'border-2 border-navy-2 bg-[#fcfaf5]' : 'border-[1.5px] border-bordercolor bg-light group-hover:border-accent group-hover:bg-[#fcfaf5]'}`}>
                 <svg width="28" height="28" viewBox="0 0 40 40" fill="#222222" opacity={activeCat === c ? "0.5" : "0.25"}>
                   <path d="M10 10 L16 6 L24 6 L30 10 L26 16 L14 16 Z M14 16 L26 16 L26 36 L14 36 Z"/>
                 </svg>
               </div>
               <div className="text-[11px] text-muted text-center font-sans">{c}</div>
-            </div>
+            </button>
           ))}
         </div>
 
@@ -127,7 +103,7 @@ export default function Home() {
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-3.5 gap-4">
           <div className="text-[15px] font-medium text-text font-sans m-0">Trending products</div>
           <div className="flex flex-wrap gap-[7px]">
-            {['All', 'Under $30', 'Best match', 'New in', 'On sale'].map(f => (
+            {['Featured', 'Price ascending', 'Price descending', 'Name'].map(f => (
               <button 
                 key={f}
                 onClick={() => setActiveFilter(f)}
@@ -139,6 +115,8 @@ export default function Home() {
           </div>
         </div>
 
+        <p className="text-sm text-muted">Sorting covers the loaded selection, not the whole catalog.</p>
+        {error && <div role="alert">{error.message} <button onClick={retry}>Retry</button></div>}
         {/* Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-[18px] mt-4 mb-12 min-h-[400px]">
           {loading ? (
@@ -159,18 +137,8 @@ export default function Home() {
                 <div className="absolute top-[10px] left-[10px] bg-navy text-white text-[9.5px] px-[9px] py-[3px] rounded-lg z-10 font-medium font-sans uppercase tracking-wider">Editor's Pick</div>
               )}
               <div className="w-full h-[220px] bg-light flex items-center justify-center relative overflow-hidden">
-                <img 
-                  src={getProxyImageUrl(p.image_url)} 
-                  alt={p.product_name}
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                  onError={(e) => { e.target.src = 'https://via.placeholder.com/300x400?text=No+Image'; }}
-                />
-                <button 
-                  onClick={(e) => toggleHeart(e, p.id)}
-                  className="absolute top-[9px] right-[9px] w-7 h-7 rounded-full bg-white/95 flex items-center justify-center border border-bordercolor transition-colors hover:border-[#e06080] cursor-pointer"
-                >
-                  <Heart size={12} strokeWidth={2} fill={p.liked ? '#e06080' : 'none'} color={p.liked ? '#e06080' : '#bbb'} />
-                </button>
+                <ProductImage product={p} className="w-full h-full object-cover" />
+                <div className="absolute top-2 right-2"><FavoriteButton product={p} /></div>
               </div>
               <div className="p-3 pb-3.5">
                 <div className="text-[9.5px] text-muted mb-[3px] uppercase tracking-[0.6px] font-sans font-bold">{p.brand || p.source_site}</div>
@@ -186,20 +154,11 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Promo */}
-        <div className="bg-navy rounded-[20px] p-6 sm:p-10 text-center mb-12 relative overflow-hidden">
-          <div className="absolute top-[-60px] right-[-60px] w-[240px] h-[240px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(212,175,55,0.2) 0%, transparent 70%)' }}></div>
-          <div className="text-[11px] text-white/45 mb-2 tracking-[1px] font-sans">US$3.99 / month</div>
-          <h3 className="font-serif text-[30px] font-medium text-white mb-2">Exclusive coupons & discounts.</h3>
-          <p className="text-[13px] text-white/55 mb-6 font-light font-sans">Personalised style recommendations based on your favourite influencers</p>
-          <button className="bg-white text-navy px-8 py-3 rounded-[24px] text-[13px] font-medium transition-colors hover:bg-light border-none cursor-pointer font-sans">Sign up now</button>
-        </div>
-
         {/* Trending Searches */}
         <div className="text-[15px] font-medium text-text font-sans">Trending searches</div>
         <div className="flex flex-wrap gap-2 mt-3 mb-10">
           {['Shoulder pad', 'Cut out top', 'Three piece swimsuit', 'Knit sets', 'Crop top', 'Sequin dress', 'Charm bracelet', 'Floral print dress', 'Cut out dress', 'Crochet knit', 'Wide leg pants', 'Sequin skirt', 'Wrap around top', 'Sequin top', 'Tie dye print', 'Sheer top', 'Puff sleeves', 'Bubblegum pink', 'Hoop earrings', 'Satin slip dress', 'Linen blazer', 'Cargo trousers'].map(t => (
-            <button key={t} className="px-[15px] py-1.5 rounded-[17px] border border-bordercolor bg-card text-[12px] text-muted font-sans transition-colors hover:border-navy-2 hover:text-navy-2 hover:bg-light cursor-pointer">
+            <button key={t} onClick={() => navigate("/results", { state: { type: "text", query: t } })} className="px-[15px] py-1.5 rounded-[17px] border border-bordercolor bg-card text-[12px] text-muted font-sans transition-colors hover:border-navy-2 hover:text-navy-2 hover:bg-light cursor-pointer">
               {t}
             </button>
           ))}
@@ -207,15 +166,8 @@ export default function Home() {
 
         <div className="border-t border-bordercolor pt-7 mb-8">
           <div className="text-[13px] text-muted mb-1.5 font-sans">Tell us what you think about Fify</div>
-          <div className="text-[12px] text-[#aaa] mb-[18px] font-sans">Please click <a href="#" className="text-accent no-underline hover:underline">here</a> to drop us a message</div>
-          <div className="text-[13px] text-muted mb-2.5 font-sans">Follow us on social media</div>
-          <div className="flex gap-2.5 mt-2.5">
-            {['f', 't', 'in', 'ig'].map((label, i) => (
-              <button key={i} className="w-[30px] h-[30px] rounded-full border border-bordercolor bg-card flex items-center justify-center text-muted transition-colors hover:border-navy-2 hover:text-navy-2 cursor-pointer text-[11px] font-sans">
-                {label}
-              </button>
-            ))}
-          </div>
+          <div className="text-[12px] text-[#aaa] mb-[18px] font-sans">Please click <a href="/contact" className="text-accent no-underline hover:underline">here</a> to drop us a message</div>
+
         </div>
       </main>
 
@@ -224,7 +176,7 @@ export default function Home() {
         <div className="font-serif text-[22px] font-semibold text-navy">fi<span className="text-accent">f</span>y</div>
         <div className="flex flex-wrap justify-center gap-4 sm:gap-5">
           {['About', 'Privacy', 'Terms', 'Contact'].map(l => (
-            <a key={l} href="#" className="text-[12px] text-muted hover:text-navy-2 no-underline">{l}</a>
+            <a key={l} href={`/${l.toLowerCase()}`} className="text-[12px] text-muted hover:text-navy-2 no-underline">{l}</a>
           ))}
         </div>
         <div className="text-[11px] text-[#c0c8d8]">© 2026 Fify. All rights reserved.</div>

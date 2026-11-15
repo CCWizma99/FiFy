@@ -1,53 +1,52 @@
-"""
-tests/test_scraper.py
-Tests for the Site Analyzer Agent and scraper config handling.
-Uses mocked Gemini responses to avoid real API calls.
-"""
+"""Local profile persistence tests. No model or network calls."""
 import json
 import pytest
-from unittest.mock import patch, MagicMock
-from pathlib import Path
-
-from scraper.site_analyzer.agent import analyze_site, load_config
-
-MOCK_CONFIG = {
-    "site": "test.com",
-    "listing_url_pattern": "https://test.com/dresses",
-    "pagination_selector": "button.load-more",
-    "product_card_selector": "div.product-tile",
-    "fields": {
-        "name": "h2.product-name",
-        "price": "span.price",
-        "image_url": "img.product-img",
-        "product_url": "a.product-link",
-    },
-}
+from scraper.site_analyzer import agent
 
 
-def test_load_config_returns_none_for_unknown_site(tmp_path, monkeypatch):
-    monkeypatch.setattr("scraper.site_analyzer.agent.CONFIGS_DIR", tmp_path)
-    result = load_config("nonexistent.com")
-    assert result is None
+@pytest.fixture
+def configs(tmp_path, monkeypatch):
+    monkeypatch.setattr(agent, 'CONFIGS_DIR', tmp_path)
+    return tmp_path
 
 
-def test_analyze_site_saves_config(tmp_path, monkeypatch):
-    monkeypatch.setattr("scraper.site_analyzer.agent.CONFIGS_DIR", tmp_path)
-
-    mock_response = MagicMock()
-    mock_response.content = [MagicMock(text=json.dumps(MOCK_CONFIG))]
-
-    with patch("anthropic.Anthropic") as mock_anthropic:
-        mock_anthropic.return_value.messages.create.return_value = mock_response
-        result = analyze_site("test.com", "<html>listing</html>", "<html>detail</html>")
-
-    assert result["site"] == "test.com"
-    saved_path = tmp_path / "test_com.json"
-    assert saved_path.exists()
+def layout(selector='.card'):
+    return {'product_card_selector': selector, 'fields': {'name': '.title'},
+            'listing_url_pattern': 'https://example.test/items'}
 
 
-def test_load_config_reads_saved_config(tmp_path, monkeypatch):
-    monkeypatch.setattr("scraper.site_analyzer.agent.CONFIGS_DIR", tmp_path)
-    (tmp_path / "test_com.json").write_text(json.dumps(MOCK_CONFIG))
-    result = load_config("test.com")
-    assert result is not None
-    assert result["site"] == "test.com"
+def test_missing_profile(configs):
+    assert agent.load_config('example.test') is None
+
+
+def test_persist_and_reload(configs):
+    agent.save_variant('example.test', layout())
+    profile = agent.load_config('example.test')
+    assert profile['site_domain'] == 'example.test'
+    assert profile['variants'][0]['fields'] == {'name': '.title'}
+    assert json.loads((configs / 'example_test.json').read_text()) == profile
+
+
+def test_identical_layout_deduplicated(configs):
+    agent.save_variant('example.test', layout(), 'https://example.test/a')
+    agent.save_variant('example.test', layout(), 'https://example.test/b')
+    assert len(agent.load_config('example.test')['variants']) == 1
+
+
+def test_distinct_layouts_retained(configs):
+    agent.save_variant('example.test', layout())
+    agent.save_variant('example.test', layout('.tile'))
+    changed = layout()
+    changed['fields'] = {'name': '.different-title'}
+    agent.save_variant('example.test', changed)
+    assert [v['id'] for v in agent.load_config('example.test')['variants']] == ['v1', 'v2', 'v3']
+
+
+def test_legacy_migration_is_persisted_and_idempotent(configs):
+    path = configs / 'example_test.json'
+    path.write_text(json.dumps(layout()))
+    migrated = agent.load_config('example.test')
+    assert migrated['variants'][0]['id'] == 'legacy_primary'
+    assert migrated['variants'][0]['sample_url'] == layout()['listing_url_pattern']
+    assert json.loads(path.read_text()) == migrated
+    assert agent.load_config('example.test') == migrated

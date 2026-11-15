@@ -1,5 +1,6 @@
+import { websocketUrl } from "../../api/config";
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { 
   Terminal, 
   X, 
@@ -21,7 +22,7 @@ export default function CrawlerConsole({ site, onClose }) {
 
   useEffect(() => {
     // Connect to WebSocket
-    ws.current = new WebSocket(`ws://localhost:8000/admin/ws/logs/${site.id}`);
+    ws.current = new WebSocket(websocketUrl(`/admin/ws/logs/${site.id}`));
 
     ws.current.onmessage = (event) => {
       const data = JSON.parse(event.data);

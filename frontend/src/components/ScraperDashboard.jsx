@@ -6,12 +6,9 @@ import {
   AlertCircle, 
   RefreshCcw, 
   CheckCircle2, 
-  XCircle, 
   Clock, 
   Database,
-  Play,
   History,
-  LayoutDashboard,
   Plus,
   Globe,
   ExternalLink,
@@ -20,7 +17,7 @@ import {
   Sparkles,
   Package
 } from "lucide-react";
-import { getScraperStats, getScraperJobs, getDeadLetters, triggerScrape, getSites, addSite, updateSite, startCrawl, deleteSite, resetSite, resetAllData, runCategorization } from "../api/admin";
+import { getScraperStats, getScraperJobs, getDeadLetters, clearQuotaError, getSites, addSite, updateSite, startCrawl, deleteSite, resetSite, resetAllData, runCategorization } from "../api/admin";
 import CrawlerConsole from "./admin/CrawlerConsole";
 import ProductsTab from "./admin/ProductsTab";
 
@@ -60,19 +57,10 @@ export default function ScraperDashboard() {
   }, []);
 
   useEffect(() => {
-    fetchData();
+    const initial = setTimeout(() => fetchData(), 0);
     const interval = setInterval(() => fetchData(), 30000);
-    return () => clearInterval(interval);
+    return () => { clearTimeout(initial); clearInterval(interval); };
   }, [fetchData]);
-
-  const handleTrigger = async (site, category = null, gender = null) => {
-    try {
-      await triggerScrape(site, category, gender);
-      fetchData(true);
-    } catch (error) {
-      alert(`Failed to trigger: ${error.message}`);
-    }
-  };
 
   const handleAddSite = async (e) => {
     e.preventDefault();

@@ -1,70 +1,49 @@
-import { useState, useEffect, useCallback } from "react";
+import useRequest from "../../hooks/useRequest";
+import ProductImage from "../ProductImage";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Search, 
-  Package, 
-  ExternalLink, 
-  Copy, 
-  Check, 
+import {
+  Search,
+  Package,
+  ExternalLink,
+  Copy,
+  Check,
   Image as ImageIcon,
   Tag,
   DollarSign,
   Globe,
   Info,
   ChevronRight,
-  MoreVertical
 } from "lucide-react";
-import { getAllProducts, getProxyImageUrl } from "../../api/search";
+import { getAllProducts } from "../../api/search";
 
 export default function ProductsTab() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selection, setSelection] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
+  const load = useCallback(signal => getAllProducts(50, {}, query, signal), [query]);
+  const { data, loading, error, retry } = useRequest(query, load, 500);
+  const products = Array.isArray(data) ? data : data?.results || [];
+  const selectedProduct = selection?.data === data ? products.find(product => product.id === selection.id) || null : null;
 
-  const fetchProducts = useCallback(async (searchQuery = "") => {
-    console.log("fetchProducts called with query:", searchQuery);
-    setLoading(true);
-    try {
-      const data = await getAllProducts(50, {}, searchQuery);
-      console.log("fetchProducts received data:", data);
-      // Backend returns different structure for search vs list
-      // search returns { results: [...] } or just [...] depending on implementation
-      // Our implementation in products.py returns search_res.results for q, or list_products for no q.
-      // Both should be arrays now.
-      setProducts(Array.isArray(data) ? data : data.results || []);
-    } catch (error) {
-      console.error("Failed to fetch products:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchProducts(query);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [query, fetchProducts]);
-
-  const copyToClipboard = (text, id) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
+  const copyToClipboard = async (text, id) => {
+    try { await navigator.clipboard.writeText(text); setCopiedId(id); }
+    catch { setCopiedId('failed'); }
   };
 
   return (
     <div className="space-y-8">
+      {error && <div role="alert">{error.message} <button onClick={retry}>Retry</button></div>}
+      {copiedId === "failed" && <p role="alert">Could not copy ID.</p>}
       {/* Search Bar */}
       <div className="relative group">
         <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted group-focus-within:text-accent transition-colors" />
-        <input 
+        <input
           type="text"
           placeholder="Search products semantically (e.g. 'blue silk dress')..."
           className="w-full bg-white border border-bordercolor rounded-3xl pl-14 pr-6 py-5 text-sm focus:border-accent outline-none transition-all shadow-sm group-focus-within:shadow-md"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => { setQuery(e.target.value); setSelection(null); }}
         />
         {loading && (
           <div className="absolute right-5 top-1/2 -translate-y-1/2">
@@ -86,19 +65,19 @@ export default function ProductsTab() {
           <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-4">
             <div className="grid grid-cols-1 gap-4">
             {products.map((product) => (
-              <motion.div 
+              <motion.div
                 layout
                 key={product.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                onClick={() => setSelectedProduct(product)}
+                onClick={() => setSelection({ id: product.id, data })}
                 className={`flex items-center gap-4 p-4 rounded-2xl bg-white border transition-all cursor-pointer group ${
                   selectedProduct?.id === product.id ? "border-accent ring-1 ring-accent/20" : "border-bordercolor hover:border-accent/30 hover:shadow-md"
                 }`}
               >
                 <div className="w-16 h-16 rounded-xl overflow-hidden bg-light flex-shrink-0 border border-bordercolor">
-                  <img 
-                    src={getProxyImageUrl(product.image_url)} 
+                  <ProductImage
+                    product={product}
                     alt={product.product_name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
@@ -129,7 +108,7 @@ export default function ProductsTab() {
           <div className="h-full overflow-y-auto pr-2 custom-scrollbar">
           <AnimatePresence mode="wait">
             {selectedProduct ? (
-              <motion.div 
+              <motion.div
                 key={selectedProduct.id}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -137,15 +116,15 @@ export default function ProductsTab() {
                 className="bg-white rounded-[32px] border border-bordercolor shadow-xl overflow-hidden mb-4"
               >
                 <div className="aspect-square relative group">
-                  <img 
-                    src={getProxyImageUrl(selectedProduct.image_url)} 
+                  <ProductImage
+                    product={selectedProduct}
                     alt={selectedProduct.product_name}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                    <a 
-                      href={selectedProduct.product_url} 
-                      target="_blank" 
+                    <a
+                      href={selectedProduct.product_url}
+                      target="_blank"
                       rel="noreferrer"
                       className="flex items-center gap-2 text-white text-xs font-bold uppercase tracking-widest hover:underline"
                     >
@@ -158,7 +137,7 @@ export default function ProductsTab() {
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[10px] font-black text-accent uppercase tracking-[0.2em]">{selectedProduct.source_site}</span>
-                      <button 
+                      <button
                         onClick={() => copyToClipboard(selectedProduct.id, 'id')}
                         className="text-muted hover:text-navy transition-colors flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider"
                       >
@@ -185,9 +164,9 @@ export default function ProductsTab() {
                     </div>
                   </div>
 
-                  <a 
-                    href={selectedProduct.product_url} 
-                    target="_blank" 
+                  <a
+                    href={selectedProduct.product_url}
+                    target="_blank"
                     rel="noreferrer"
                     className="w-full py-4 rounded-full bg-navy text-white text-xs font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-accent transition-all shadow-lg shadow-navy/20"
                   >

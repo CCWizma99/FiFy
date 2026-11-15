@@ -1,82 +1,50 @@
+import useRequest from '../hooks/useRequest';
+import FavoriteButton from '../components/FavoriteButton';
+import ProductImage from '../components/ProductImage';
 import { useState, useEffect, useCallback } from 'react';
-import { ArrowLeft, SlidersHorizontal, Heart, Loader2, AlertCircle } from 'lucide-react';
+import { ArrowLeft, AlertCircle } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { searchByText, searchByImage, getProxyImageUrl } from '../api/search';
+import { searchByText, searchByImage } from '../api/search';
 
 export default function Results() {
   const navigate = useNavigate();
   const location = useLocation();
   const { query, file, type } = location.state || {};
 
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [queryPreview, setQueryPreview] = useState(null);
   const [activeCategory, setActiveCategory] = useState('All');
-
-  const performSearch = useCallback(async () => {
-    if (!type) {
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      let data;
-      const filters = {};
-      if (activeCategory !== 'All') filters.category = activeCategory;
-
-      if (type === 'text') {
-        data = await searchByText(query, filters);
-      } else if (type === 'image') {
-        // Create preview for query image
-        if (!queryPreview) {
-          const reader = new FileReader();
-          reader.onloadend = () => setQueryPreview(reader.result);
-          reader.readAsDataURL(file);
-        }
-        
-        data = await searchByImage(file, filters);
-      }
-      setProducts(data.results || []);
-    } catch (err) {
-      console.error('Search failed:', err);
-      setError(err.message || 'Something went wrong while searching.');
-    } finally {
-      setLoading(false);
-    }
-  }, [query, file, type, activeCategory, queryPreview]);
-
+  const valid = (type === 'text' && typeof query === 'string' && query.trim()) || (type === 'image' && file instanceof Blob);
   useEffect(() => {
-    if (!location.state) {
-      navigate('/');
-      return;
-    }
-    performSearch();
-  }, [location.state, navigate, performSearch]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-light flex flex-col items-center justify-center p-6">
-        <Loader2 className="w-10 h-10 text-accent animate-spin mb-4" strokeWidth={1.5} />
-        <p className="text-navy font-serif italic text-lg tracking-wide">Scouring the fashion world for you...</p>
-      </div>
-    );
-  }
+    if (!valid) navigate('/', { replace: true });
+  }, [valid, navigate]);
+  useEffect(() => {
+    if (type !== 'image' || !(file instanceof Blob)) return;
+    const reader = new FileReader();
+    let active = true;
+    reader.onload = () => { if (active) setQueryPreview({ file, src: reader.result }); };
+    reader.readAsDataURL(file);
+    return () => { active = false; reader.onload = null; if (reader.readyState === 1) reader.abort(); };
+  }, [file, type]);
+  const load = useCallback(signal => {
+    if (!valid) return Promise.resolve({ results: [] });
+    const filters = activeCategory === 'All' ? {} : { category: activeCategory };
+    return type === 'text' ? searchByText(query, filters, signal) : searchByImage(file, filters, signal);
+  }, [valid, query, file, type, activeCategory]);
+  const { data, error, loading, retry } = useRequest(`${location.key}/${activeCategory}`, load);
+  const products = data?.results || [];
+  if (!valid) return null;
 
   if (error) {
     return (
       <div className="min-h-screen bg-light flex flex-col items-center justify-center p-6 text-center">
         <AlertCircle className="w-12 h-12 text-red-400 mb-4" />
         <h2 className="text-2xl font-serif font-semibold text-navy mb-2">Search Interrupted</h2>
-        <p className="text-muted max-w-xs mb-8">{error}</p>
+        <p className="text-muted max-w-xs mb-8" role="alert">{error.message}</p>
         <button 
-          onClick={() => navigate('/')}
+          onClick={retry}
           className="px-8 py-3 bg-navy text-white rounded-full text-sm font-bold shadow-lg hover:bg-accent transition-all"
         >
-          Try Another Search
+          Retry
         </button>
       </div>
     );
@@ -92,8 +60,8 @@ export default function Results() {
           </button>
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl overflow-hidden bg-light border border-bordercolor flex items-center justify-center text-muted">
-              {type === 'image' && queryPreview ? (
-                <img src={queryPreview} alt="Query" className="w-full h-full object-cover" />
+              {type === 'image' && queryPreview?.file === file ? (
+                <img src={queryPreview.src} alt="Query" className="w-full h-full object-cover" />
               ) : (
                 <div className="p-2 text-center text-[10px] font-black uppercase tracking-tighter leading-none">Text Query</div>
               )}
@@ -106,15 +74,13 @@ export default function Results() {
             </div>
           </div>
         </div>
-        <button className="p-2.5 -mr-2 text-navy hover:bg-light rounded-full transition-colors border border-bordercolor md:border-none">
-          <SlidersHorizontal size={18} />
-        </button>
+
       </header>
 
       <div className="flex overflow-x-auto gap-3 px-5 md:px-12 py-6 hide-scrollbar">
         {['All', 'Tops', 'Bottoms', 'Dresses', 'Outerwear', 'Footwear', 'Innerwear', 'Bags', 'Accessories', 'Activewear', 'Other'].map(cat => (
           <button 
-            key={cat} 
+            key={cat} aria-pressed={activeCategory === cat}
             onClick={() => setActiveCategory(cat)}
             className={`flex-none px-6 py-2 border rounded-full text-[11px] font-bold uppercase tracking-widest transition-all shadow-sm ${activeCategory === cat ? 'bg-navy text-white border-navy' : 'bg-white border-bordercolor text-muted hover:border-accent hover:text-navy'}`}
           >
@@ -125,7 +91,7 @@ export default function Results() {
 
       {/* Grid */}
       <main className="px-5 md:px-12 columns-2 lg:columns-4 gap-6 space-y-6 max-w-7xl mx-auto">
-        {products.length === 0 ? (
+        {loading ? <p role="status">Searching...</p> : products.length === 0 ? (
           <div className="col-span-full py-32 text-center">
             <p className="text-muted font-serif italic text-xl">No matches found in our current collection.</p>
           </div>
@@ -141,12 +107,8 @@ export default function Results() {
                   Best Match
                 </div>
               )}
-              <div className="absolute top-3 right-3 z-10 bg-white/90 backdrop-blur-sm p-2 rounded-full text-navy hover:text-accent transition-colors shadow-sm">
-                <Heart size={14} />
-              </div>
-              <div className="aspect-[3/4] bg-light overflow-hidden">
-                <img src={getProxyImageUrl(p.image_url)} alt={p.product_name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
-              </div>
+              <div className="absolute top-3 right-3 z-10"><FavoriteButton product={p} /></div>
+              <div className="aspect-[3/4] bg-light overflow-hidden"><ProductImage product={p} className="w-full h-full object-cover" /></div>
               <div className="p-4">
                 <div className="flex items-center justify-between mb-1.5">
                   <p className="text-[10px] font-black text-muted tracking-[0.1em] uppercase">{p.brand || p.source_site}</p>

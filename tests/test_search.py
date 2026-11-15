@@ -48,3 +48,15 @@ async def test_image_search_wrong_type_rejected():
             files={"file": ("test.gif", b"GIF89a...", "image/gif")},
         )
     assert resp.status_code == 415
+
+
+@pytest.mark.asyncio
+async def test_text_search_uses_mocked_service(monkeypatch):
+    from unittest.mock import AsyncMock
+    service = AsyncMock(return_value={'query_type': 'text', 'results': [], 'total': 0})
+    monkeypatch.setattr('backend.routers.search.search_by_text', service)
+    async with AsyncClient(transport=ASGITransport(app=app), base_url='http://test') as client:
+        response = await client.post('/search/text', data={'query': ' blue dress ', 'category': 'Dresses'})
+    assert response.status_code == 200
+    assert response.json() == {'query_type': 'text', 'results': [], 'total': 0}
+    service.assert_awaited_once_with('blue dress', {'category': 'Dresses'})

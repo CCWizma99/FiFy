@@ -7,8 +7,16 @@ import pytest
 from PIL import Image
 import numpy as np
 
-from embeddings.image_embedder import embed_image
-from embeddings.text_embedder import embed_text
+pytestmark = pytest.mark.model_download
+
+# Lazy imports ensure default collection does not initialize the model stack.
+def embed_image(image):
+    from embeddings.image_embedder import embed_image as implementation
+    return implementation(image)
+
+def embed_text(text):
+    from embeddings.text_embedder import embed_text as implementation
+    return implementation(text)
 
 
 def _make_dummy_image() -> Image.Image:
