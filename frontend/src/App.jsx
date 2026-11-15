@@ -1,3 +1,4 @@
+import Chatbot from './components/Chatbot';
 import Saved from './pages/Saved';
 import Information from './pages/Information';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -13,6 +14,7 @@ export default function App() {
     <Router>
       <div className="min-h-screen bg-lighter font-sans text-text flex flex-col">
         <TopNav />
+        <Chatbot />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/results" element={<Results />} />

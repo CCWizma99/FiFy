@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FiFy · One-script integration demo</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f6f5f1;color:#172942;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}nav{padding:26px 6%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #dfe0de;font-size:12px}strong.logo{font-family:Georgia,serif;font-size:30px;letter-spacing:-2px}.tag{border:1px solid #d4d9db;padding:9px 14px;border-radius:30px;color:#5b697b}main{max-width:790px;padding:70px 6% 40px}.eyebrow{font-size:11px;letter-spacing:2px;color:#786130;font-weight:700}h1{font-family:Georgia,serif;font-size:58px;line-height:1.08;font-weight:400;letter-spacing:-2px;margin:22px 0}h1 em{color:#907436;font-weight:400}p{color:#657083;font-size:16px;line-height:1.8;max-width:540px}.code{background:#172942;color:#dce3ee;padding:25px;border-radius:18px;font-size:13px;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere;margin:30px 0 20px;border:1px solid #ffffff25;box-shadow:0 20px 45px #17294212}.code span{color:#e5c47a}.features{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:#5d697a}.features span{background:#fff;padding:10px 12px;border:1px solid #e1e3e6;border-radius:8px}.note{font-size:11px;max-width:520px;margin-top:30px}footer{padding:25px 6%;font-size:11px;letter-spacing:1px;color:#718096}@media(max-width:600px){main{padding:40px 6%}h1{font-size:42px}nav{gap:12px}.tag{font-size:10px}}
+</style></head><body>
+<nav><strong class="logo">fi<span style="color:#a88a45">f</span>y</strong><span class="tag">INDEPENDENT HTML · LIVE DEMO</span></nav>
+<main><div class="eyebrow">BUILT ONCE. EMBED ANYWHERE.</div><h1>Your website.<br><em>A helpful conversation.</em></h1><p>This page runs without React or the FiFy frontend. One script connects the same live AI assistant to a completely separate website.</p>
+<div class="code" aria-label="Widget integration code">&lt;script
+  src=<span>"/widget.js"</span>
+  data-bot-id=<span>"fify-demo"</span>
+  defer&gt;&lt;/script&gt;</div>
+<div class="features"><span>✓ Isolated styles</span><span>✓ Mobile responsive</span><span>✓ Server-side credentials</span></div><p class="note">Try the assistant in the corner. Answers use Gemini and the approved FiFy FAQ. This is a demo—please don’t share sensitive information.</p></main><footer>FIFY / REUSABLE WEBSITE ASSISTANT</footer>
+<script src="./widget.js" data-bot-id="fify-demo" defer></script>
+</body></html>

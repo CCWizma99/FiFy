@@ -40,6 +40,8 @@ dependencies = [
     "protobuf>=5.26.1,<6",
     "google-generativeai>=0.8.6,<0.9", # import google.generativeai
 
+    "google-genai>=1.0,<2", # isolated chatbot client; legacy scraper SDK stays intact
+
     # ── Scheduling ───────────────────────────────────────
     "apscheduler>=3.11.2",
 
@@ -67,3 +69,6 @@ markers = ["model_download: opt-in tests requiring CLIP model downloads"]
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["backend*", "scraper*", "embeddings*", "vector_db*", "jobs*"]
+
+[tool.setuptools.package-data]
+"backend.chatbot" = ["*.json", "static/*"]
