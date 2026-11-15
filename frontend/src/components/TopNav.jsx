@@ -1,4 +1,3 @@
-import { Image, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function TopNav() {
@@ -10,10 +9,10 @@ export default function TopNav() {
 
       <div className="flex items-center gap-5">
         <Link to="/admin" className="hidden md:block text-[12.5px] text-white/65 hover:text-white transition-colors no-underline font-sans">Admin</Link>
-        <a href="#" className="hidden md:block text-[12.5px] text-white/65 hover:text-white transition-colors no-underline font-sans">Inspirations</a>
-        <button className="px-[18px] py-[7px] border border-white/30 rounded-[20px] bg-transparent text-[12.5px] text-white/85 hover:bg-white/10 transition-colors cursor-pointer font-sans">
-          Sign in
-        </button>
+        <Link to="/onboarding" className="hidden md:block text-[12.5px] text-white/65 hover:text-white transition-colors no-underline font-sans">Inspirations</Link>
+        <Link to="/saved" className="px-[18px] py-[7px] border border-white/30 rounded-[20px] bg-transparent text-[12.5px] text-white/85 hover:bg-white/10 transition-colors cursor-pointer font-sans">
+          Saved items
+        </Link>
         <div className="hidden md:block bg-[#D4AF37] text-navy text-[10px] font-medium px-2.5 py-1 rounded-xl">New</div>
       </div>
     </nav>

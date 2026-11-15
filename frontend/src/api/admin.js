@@ -3,7 +3,8 @@
  * API calls for scraper management and analytics.
  */
 
-const API_BASE = "http://localhost:8000/admin";
+import { apiUrl } from "./config";
+const API_BASE = apiUrl("admin");
 
 export async function getScraperStats() {
   const resp = await fetch(`${API_BASE}/stats`);

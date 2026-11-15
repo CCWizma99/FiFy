@@ -3,19 +3,19 @@
  * API call helpers for the FiFy search backend.
  */
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
+import { apiUrl } from "./config";
 
 /**
  * Search by uploaded image file.
  * @param {File} file
  * @param {Object} filters - { category, gender, min_price, max_price }
  */
-export async function searchByImage(file, filters = {}) {
+export async function searchByImage(file, filters = {}, signal) {
   const form = new FormData();
   form.append("file", file);
   Object.entries(filters).forEach(([k, v]) => v != null && form.append(k, v));
 
-  const res = await fetch(`${API_BASE}/search/image`, { method: "POST", body: form });
+  const res = await fetch(apiUrl(`/search/image`), { method: "POST", body: form, signal });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.detail || `Search failed (${res.status})`);
@@ -28,12 +28,12 @@ export async function searchByImage(file, filters = {}) {
  * @param {string} query
  * @param {Object} filters
  */
-export async function searchByText(query, filters = {}) {
+export async function searchByText(query, filters = {}, signal) {
   const form = new FormData();
   form.append("query", query);
   Object.entries(filters).forEach(([k, v]) => v != null && form.append(k, v));
 
-  const res = await fetch(`${API_BASE}/search/text`, { method: "POST", body: form });
+  const res = await fetch(apiUrl(`/search/text`), { method: "POST", body: form, signal });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.detail || `Search failed (${res.status})`);
@@ -44,8 +44,8 @@ export async function searchByText(query, filters = {}) {
  * Fetch a single product by ID.
  * @param {string} id
  */
-export async function getProductById(id) {
-  const res = await fetch(`${API_BASE}/products/${id}`);
+export async function getProductById(id, signal) {
+  const res = await fetch(apiUrl(`/products/${encodeURIComponent(id)}`), { signal });
   if (!res.ok) {
     throw new Error(`Failed to fetch product ${id}`);
   }
@@ -54,13 +54,13 @@ export async function getProductById(id) {
 /**
  * Fetch a list of products for the home page.
  */
-export async function getAllProducts(limit = 20, filters = {}, query = "") {
+export async function getAllProducts(limit = 20, filters = {}, query = "", signal) {
   const params = new URLSearchParams({ limit });
   if (filters.category) params.append("category", filters.category);
   if (filters.gender) params.append("gender", filters.gender);
   if (query) params.append("q", query);
 
-  const res = await fetch(`${API_BASE}/products?${params.toString()}`);
+  const res = await fetch(apiUrl(`/products?${params.toString()}`), { signal });
   if (!res.ok) throw new Error("Failed to fetch products");
   return res.json();
 }
@@ -70,5 +70,5 @@ export async function getAllProducts(limit = 20, filters = {}, query = "") {
  */
 export function getProxyImageUrl(originalUrl) {
   if (!originalUrl) return "";
-  return `${API_BASE}/products/proxy-image?url=${encodeURIComponent(originalUrl)}`;
+  return apiUrl(`/products/proxy-image?url=${encodeURIComponent(originalUrl)}`);
 }
